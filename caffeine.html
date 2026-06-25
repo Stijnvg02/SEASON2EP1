@@ -159,6 +159,21 @@ body::after {
 .gm-add:hover { filter: brightness(1.06); transform: translateY(-1px); }
 .gm-add:active { transform: translateY(0); }
 
+/* ===== Time-picker popup ===== */
+.tp-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.55); z-index:200; align-items:center; justify-content:center; }
+.tp-overlay.open { display:flex; }
+.tp-box { background:#0e0e10; border:1px solid rgba(255,255,255,0.10); border-radius:18px; padding:22px; width:min(320px,90vw); }
+.tp-title { font-size:11px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--text-tertiary); margin-bottom:14px; }
+.tp-drink { display:flex; align-items:center; gap:10px; margin-bottom:18px; }
+.tp-emoji { font-size:24px; }
+.tp-name { font-size:14px; font-weight:600; color:var(--text-primary); flex:1; }
+.tp-mg { font-family:var(--font-mono); font-size:13px; font-weight:700; color:#E7C690; }
+.tp-label { font-size:11px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--text-tertiary); margin-bottom:6px; display:block; }
+.tp-time { width:100%; padding:11px 14px; border:1px solid rgba(255,255,255,0.10); border-radius:11px; background:rgba(255,255,255,0.06); color:var(--text-primary); font-family:var(--font-mono); font-size:16px; outline:none; margin-bottom:16px; }
+.tp-row { display:flex; gap:8px; }
+.tp-cancel { flex:1; padding:11px; border:1px solid rgba(255,255,255,0.10); border-radius:11px; background:transparent; color:var(--text-secondary); font-family:inherit; font-size:13px; font-weight:700; cursor:pointer; }
+.tp-confirm { flex:2; padding:11px; border:0; border-radius:11px; background:linear-gradient(180deg,#FFFFFF,#E8E5DD); color:#0A0A0B; font-family:inherit; font-size:13px; font-weight:700; cursor:pointer; }
+
 /* ===== Log list ===== */
 .log-list { list-style: none; margin: 0; padding: 0; }
 .empty-state { text-align: center; font-size: 12px; font-style: italic; color: var(--text-tertiary); padding: 16px 0; }
@@ -253,6 +268,24 @@ body::after {
       <div class="bar-track"><div class="bar-fill" id="dailyFill" style="width:0%"></div></div>
       <div class="daily-msg good" id="dailyMsg">You haven't logged anything today.</div>
       <div class="daily-note" id="dailyNote"></div>
+    </div>
+  </div>
+
+  <!-- TIME PICKER POPUP -->
+  <div class="tp-overlay" id="tpOverlay">
+    <div class="tp-box">
+      <div class="tp-title">Log a drink</div>
+      <div class="tp-drink">
+        <span class="tp-emoji" id="tpEmoji">☕</span>
+        <span class="tp-name" id="tpName"></span>
+        <span class="tp-mg" id="tpMg"></span>
+      </div>
+      <label class="tp-label" for="tpTime">Time you had it</label>
+      <input class="tp-time" id="tpTime" type="time">
+      <div class="tp-row">
+        <button class="tp-cancel" id="tpCancel" type="button">Cancel</button>
+        <button class="tp-confirm" id="tpConfirm" type="button">Log it</button>
+      </div>
     </div>
   </div>
 
@@ -584,7 +617,29 @@ body::after {
   function renderAll(){ renderRing(); renderChart(); renderPlan(); renderDaily(); renderLog(); }
 
   /* ============ Logging / search / custom ============ */
-  function logDrink(item){ logs.push({id:'c'+Date.now()+Math.floor(Math.random()*1000), n:item.n, mg:Math.round(item.mg), e:item.e||'☕', ts:Date.now()}); saveJSON(LOGS_KEY,logs); renderAll(); }
+  /* ---- time picker ---- */
+  let _tpItem = null;
+  function nowTimeValue() { const d=new Date(); return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0'); }
+  function showTimePicker(item) {
+    _tpItem = item;
+    $('tpEmoji').textContent = item.e||'☕';
+    $('tpName').textContent  = item.n;
+    $('tpMg').textContent    = item.mg+' mg';
+    $('tpTime').value        = nowTimeValue();
+    $('tpOverlay').classList.add('open');
+    setTimeout(()=>$('tpTime').focus(), 50);
+  }
+  $('tpCancel').addEventListener('click', ()=>{ $('tpOverlay').classList.remove('open'); _tpItem=null; });
+  $('tpOverlay').addEventListener('click', e=>{ if(e.target===$('tpOverlay')){ $('tpOverlay').classList.remove('open'); _tpItem=null; } });
+  $('tpConfirm').addEventListener('click', ()=>{
+    if(!_tpItem) return;
+    const [h,m] = $('tpTime').value.split(':').map(Number);
+    const d = new Date(); d.setHours(h,m,0,0);
+    logDrink(_tpItem, d.getTime());
+    $('tpOverlay').classList.remove('open'); _tpItem=null;
+  });
+
+  function logDrink(item, ts){ logs.push({id:'c'+Date.now()+Math.floor(Math.random()*1000), n:item.n, mg:Math.round(item.mg), e:item.e||'☕', ts:ts||Date.now()}); saveJSON(LOGS_KEY,logs); renderAll(); }
   function allDrinks(){ return DB.concat(custom.map(c=>({n:c.n,mg:c.mg,c:'Custom',e:'➕'}))); }
   function renderResults(q){
     const el=$('results'); const query=(q||'').trim().toLowerCase(); let items=allDrinks();
@@ -593,12 +648,12 @@ body::after {
     if(items.length===0){ const li=document.createElement('li'); li.className='results-empty'; li.textContent='No match — add it as a custom drink below.'; el.appendChild(li); return; }
     items.forEach(d=>{ const li=document.createElement('li'); li.className='result';
       li.innerHTML='<span class="result-emoji">'+(d.e||'☕')+'</span><span class="result-name">'+escapeHtml(d.n)+' <span class="result-cat">· '+d.c+'</span></span><span class="result-mg">'+d.mg+'<small> mg</small></span>';
-      li.addEventListener('click',()=>{ logDrink(d); $('search').value=''; renderResults(''); }); el.appendChild(li); });
+      li.addEventListener('click',()=>{ $('search').value=''; renderResults(''); showTimePicker(d); }); el.appendChild(li); });
   }
   function addCustom(){
     const name=$('customName').value.trim(); const mg=parseInt($('customMg').value,10);
     if(!name||!(mg>=0)) return; custom.push({n:name,mg:mg,e:'➕',c:'Custom'}); saveJSON(CUSTOM_KEY,custom);
-    logDrink({n:name,mg:mg,e:'➕'}); $('customName').value=''; $('customMg').value=''; renderResults($('search').value);
+    $('customName').value=''; $('customMg').value=''; renderResults($('search').value); showTimePicker({n:name,mg:mg,e:'➕'});
   }
 
   /* ============ Scrub interaction ============ */
