@@ -693,6 +693,15 @@ html, body { scrollbar-width: none; -ms-overflow-style: none; }
   white-space: nowrap;
   font-variant-numeric: tabular-nums;
 }
+.nw-act-del {
+  background: none; border: none; cursor: pointer;
+  color: #CCCCCC; font-size: 16px; line-height: 1;
+  padding: 2px 4px; flex-shrink: 0;
+  font-family: inherit;
+  transition: color 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.nw-act-del:hover { color: #8A8A8A; }
 .nw-activity-empty {
   text-align: center; padding: 12px 0;
   color: #AAAAAA; font-size: 11px;
@@ -2150,7 +2159,8 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     list.classList.remove('hidden');
     empty.classList.add('hidden');
     count.textContent = arr.length + ' event' + (arr.length === 1 ? '' : 's');
-    list.innerHTML = arr.slice(0, 30).map(e => {
+    const visible = arr.slice(0, 30);
+    list.innerHTML = visible.map((e, i) => {
       const meta = NW_SLICE_META[e.cat] || { name: e.cat, color: '#FFFFFF' };
       const sign = e.delta >= 0 ? '+' : '—';
       const cls = e.delta >= 0 ? 'up' : 'down';
@@ -2164,8 +2174,20 @@ input[type="date"]::-webkit-calendar-picker-indicator {
         + '</div>'
         + '<span class="nw-activity-amt ' + cls + '">' + sign + amt + '</span>'
         + '<span class="nw-activity-date">' + fmtActivityDate(e.ts) + '</span>'
+        + '<button class="nw-act-del" data-ts="' + e.ts + '" type="button" aria-label="Delete">×</button>'
         + '</div>';
     }).join('');
+
+    list.querySelectorAll('.nw-act-del').forEach(btn => {
+      btn.addEventListener('click', (ev) => {
+        ev.stopPropagation();
+        const ts = Number(btn.dataset.ts);
+        const all = storeGet(ACTIVITY_KEY) || [];
+        const updated = all.filter(e => e.ts !== ts);
+        storeSet(ACTIVITY_KEY, updated);
+        renderActivity();
+      });
+    });
   }
 
   // ============================================================
