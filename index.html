@@ -210,13 +210,40 @@ body::after { content: ""; display: none; }
   <div class="bento">
 
     <!-- Big tile -->
-    <a class="tile big" href="main.html" style="--accent:#6BE3A4">
+    <a class="tile big" href="main.html" style="--accent:#6BE3A4; display:flex; flex-direction:column; justify-content:space-between;">
       <div class="tile-top">
         <span class="tile-num">·01</span>
         <span class="tile-emoji">🏠</span>
       </div>
-      <div class="tile-spacer"></div>
-      <h2 class="tile-title">Main</h2>
+      <!-- Mini day ring -->
+      <div style="display:flex; align-items:center; gap:18px; padding:4px 0;">
+        <div style="position:relative; width:84px; height:84px; flex-shrink:0;">
+          <svg width="84" height="84" viewBox="0 0 84 84">
+            <circle cx="42" cy="42" r="36" fill="none" stroke="rgba(0,0,0,0.07)" stroke-width="7"/>
+            <circle id="hTileRingFill" cx="42" cy="42" r="36" fill="none"
+              stroke="url(#hTileGrad)" stroke-width="7"
+              stroke-linecap="round"
+              stroke-dasharray="226.19"
+              stroke-dashoffset="226.19"
+              transform="rotate(-90 42 42)"
+              style="transition:stroke-dashoffset 0.6s ease"/>
+            <defs>
+              <linearGradient id="hTileGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#C084FC"/>
+                <stop offset="100%" stop-color="#F0ABFC"/>
+              </linearGradient>
+            </defs>
+          </svg>
+          <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;">
+            <span id="hTilePct" style="font-size:18px;font-weight:800;color:#1A1A1A;line-height:1;">0%</span>
+            <span id="hTilePhase" style="font-size:8px;font-weight:700;letter-spacing:0.12em;color:#AAAAAA;text-transform:uppercase;">—</span>
+          </div>
+        </div>
+        <div style="min-width:0;">
+          <div id="hTileStatus" style="font-size:13px;font-weight:700;color:#1A1A1A;margin-bottom:3px;">—</div>
+          <div id="hTileLeft" style="font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace;font-size:11px;color:#AAAAAA;">—</div>
+        </div>
+      </div>
       <div class="tile-foot">
         <span class="tile-sub">Goals & daily plan</span>
         <span class="tile-arrow">→</span>
@@ -542,6 +569,70 @@ body::after { content: ""; display: none; }
     if (!t || !t.access) { window.location.href = 'health.html'; return; }
     $('whAction').textContent = 'Syncing…'; syncWhoop();
   });
+
+  // -------- Mini day ring on Main tile --------
+  function renderDayRing() {
+    const ringEl   = document.getElementById('hTileRingFill');
+    const pctEl    = document.getElementById('hTilePct');
+    const phaseEl  = document.getElementById('hTilePhase');
+    const statusEl = document.getElementById('hTileStatus');
+    const leftEl   = document.getElementById('hTileLeft');
+    if (!ringEl) return;
+
+    const saved = JSON.parse(localStorage.getItem('po_day_times') || 'null');
+    const WAKE  = saved ? saved.wake  : 7;
+    const SLEEP = saved ? saved.sleep : 24;
+
+    const now   = new Date();
+    const hours = now.getHours() + now.getMinutes() / 60;
+
+    function fmt(mins) {
+      const h = Math.floor(Math.abs(mins) / 60);
+      const m = Math.round(Math.abs(mins) % 60);
+      return (h > 0 ? h + 'h ' : '') + m + 'm';
+    }
+
+    const C = 2 * Math.PI * 36; // circumference
+
+    if (hours < WAKE) {
+      const minsLeft = (WAKE - hours) * 60;
+      ringEl.style.strokeDashoffset = C;
+      pctEl.textContent   = '0%';
+      phaseEl.textContent = 'SLEEPING';
+      statusEl.textContent = '🌙 Sleeping';
+      leftEl.textContent  = fmt(minsLeft) + ' until wake';
+      return;
+    }
+    if (hours >= SLEEP) {
+      ringEl.style.strokeDashoffset = 0;
+      pctEl.textContent   = '100%';
+      phaseEl.textContent = 'BEDTIME';
+      statusEl.textContent = '🌙 Bedtime soon';
+      leftEl.textContent  = 'Day complete';
+      return;
+    }
+
+    const span    = SLEEP - WAKE;
+    const pct     = Math.round((hours - WAKE) / span * 100);
+    const minsLeft = (SLEEP - hours) * 60;
+    ringEl.style.strokeDashoffset = C * (1 - pct / 100);
+    pctEl.textContent = pct + '%';
+
+    let phase, status;
+    if (pct < 25)      { phase = 'MORNING';   status = '☀️ Morning — fresh start'; }
+    else if (pct < 50) { phase = 'MIDDAY';    status = '⚡ Midday — keep moving'; }
+    else if (pct < 75) { phase = 'AFTERNOON'; status = '🔥 Afternoon — push it'; }
+    else if (pct < 90) { phase = 'EVENING';   status = '⏳ Evening — wrap up'; }
+    else               { phase = 'BEDTIME';   status = '🌙 Bedtime soon'; }
+
+    phaseEl.textContent  = phase;
+    statusEl.textContent = status;
+    leftEl.textContent   = fmt(minsLeft) + ' awake time left';
+  }
+
+  renderDayRing();
+  setInterval(renderDayRing, 60 * 1000);
+  window.addEventListener('storage', renderDayRing);
 })();
 </script>
 </body>
