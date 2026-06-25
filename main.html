@@ -5,27 +5,27 @@
 <script src="/api/config"></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#050506">
+<meta name="theme-color" content="#080e0b">
 <title>Stijn</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="sync.js" defer></script>
 <script src="topbar.js" defer></script>
 <style>
 :root {
-  --text-primary: #FAFAFA;
-  --text-secondary: #B8B6B0;
-  --text-tertiary: #76746E;
-  --success: #6BE3A4;
+  --text-primary: #FFFFFF;
+  --text-secondary: rgba(255,255,255,0.58);
+  --text-tertiary: rgba(255,255,255,0.36);
+  --success: #5CE8A0;
   --warning: #F2C063;
   --danger: #FF6B6B;
-  --font: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font: "Helvetica Neue", -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
 }
 
 * { box-sizing: border-box; }
 html, body {
   margin: 0; padding: 0;
-  background: #050506;
+  background: #080e0b;
   color: var(--text-secondary);
   font-family: var(--font);
   -webkit-font-smoothing: antialiased;
@@ -42,8 +42,8 @@ body::before {
   content: '';
   position: fixed; inset: 0;
   background:
-    radial-gradient(circle at 82% 14%, rgba(224, 118, 88, 0.16), transparent 45%),
-    radial-gradient(circle at 18% 90%, rgba(180, 180, 200, 0.06), transparent 50%);
+    radial-gradient(ellipse 70% 55% at 50% -5%, rgba(52,211,153,0.22), transparent 70%),
+    radial-gradient(circle at 80% 85%, rgba(52,211,153,0.09), transparent 50%);
   filter: blur(40px);
   pointer-events: none;
   z-index: -2;
@@ -73,7 +73,7 @@ body::after {
   font-size: 28px;
   font-weight: 700;
   letter-spacing: -0.025em;
-  background: linear-gradient(180deg, #FFFFFF 0%, #C7C4BC 120%);
+  background: linear-gradient(180deg, #FFFFFF 0%, rgba(255,255,255,0.75) 120%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -162,7 +162,7 @@ body::after {
   color: var(--text-secondary);
   padding: 3px 8px;
   border-radius: 999px;
-  background: rgba(255,255,255,0.04);
+  background: rgba(255,255,255,0.06);
 }
 @media (max-width: 480px) {
   .goal-ticker { padding: 9px 12px; }
@@ -325,8 +325,8 @@ body::after {
   display: inline-flex; align-items: center; gap: 6px;
   padding: 8px 12px;
   border-radius: 999px;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.06);
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.10);
   color: var(--text-tertiary);
   font-size: 11px; font-weight: 600;
   letter-spacing: 0.10em; text-transform: uppercase;
@@ -376,8 +376,8 @@ body::after {
   display: flex; align-items: center; gap: 12px;
   padding: 12px 14px;
   margin-bottom: 6px;
-  background: rgba(255,255,255,0.035);
-  border: 1px solid rgba(255,255,255,0.06);
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.10);
   border-radius: 12px;
   transition: background 0.2s, opacity 0.3s;
   position: relative;
@@ -399,9 +399,9 @@ body::after {
 .gm-row.is-drag-over { border-top: 2px solid #6BE3A4; }
 .gm-row.is-queue-flashing { animation: gm-queue-flash 0.48s ease-out; }
 @keyframes gm-queue-flash {
-  0%   { background: rgba(255,255,255,0.035); transform: scale(1); }
+  0%   { background: rgba(255,255,255,0.06); transform: scale(1); }
   40%  { background: rgba(242,192,99,0.32); transform: scale(1.015); }
-  100% { background: rgba(255,255,255,0.035); transform: scale(1); }
+  100% { background: rgba(255,255,255,0.06); transform: scale(1); }
 }
 
 .gm-handle {
@@ -527,7 +527,7 @@ body::after {
   color: var(--text-primary);
   border-color: rgba(255,255,255,0.30);
   border-style: solid;
-  background: rgba(255,255,255,0.04);
+  background: rgba(255,255,255,0.06);
 }
 
 .goal-input-wrap.gm-input-wrap {
@@ -539,7 +539,7 @@ body::after {
 .gm-input {
   flex: 1; min-width: 0;
   padding: 11px 14px;
-  border: 1px solid rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.10);
   border-radius: 12px;
   background: rgba(0,0,0,0.28);
   color: var(--text-primary);
@@ -553,14 +553,12 @@ body::after {
 .gm-add {
   padding: 11px 20px;
   border: 0; border-radius: 12px;
-  background: linear-gradient(180deg, #FFFFFF 0%, #E8E5DD 100%);
+  background: linear-gradient(135deg, #6EE7B7 0%, #34D399 100%);
   color: #0A0A0B;
   font-family: inherit; font-size: 13px; font-weight: 700;
   cursor: pointer;
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.9),
-    0 2px 8px rgba(0,0,0,0.35),
-    0 8px 22px rgba(0,0,0,0.25);
+    0 4px 18px rgba(52,211,153,0.45), 0 0 24px rgba(52,211,153,0.22);
   transition: transform 0.1s, filter 0.15s;
 }
 .gm-add:hover { filter: brightness(1.06); transform: translateY(-1px); }
@@ -570,7 +568,7 @@ body::after {
   padding: 11px 18px;
   border: 1px solid rgba(255,255,255,0.10);
   border-radius: 12px;
-  background: rgba(255,255,255,0.04);
+  background: rgba(255,255,255,0.06);
   color: var(--text-primary);
   font-family: inherit; font-size: 13px; font-weight: 600;
   cursor: pointer;
