@@ -1612,15 +1612,13 @@ input[type="date"]::-webkit-calendar-picker-indicator {
         <div id="netWorthTotal" style="font-size:34px;font-weight:700;color:var(--text-primary);line-height:1.05;margin-top:2px">CHF 0</div>
         <div id="netWorthBreakdown" style="font-size:11px;color:var(--text-tertiary);margin-top:4px"></div>
       </div>
-      <div style="display:flex;align-items:center;gap:6px">
-        <span style="font-size:11px;color:var(--text-tertiary)">CHF</span>
-        <select id="netWorthCurrency" style="background:var(--bg-card);color:var(--text-primary);border:1px solid var(--border);border-radius:6px;padding:4px 8px;font-size:12px;font-family:inherit;cursor:pointer">
-          <option value="CHF">CHF</option>
-          <option value="USD">USD</option>
-          <option value="EUR">EUR</option>
-          <option value="GBP">GBP</option>
-        </select>
-      </div>
+      <button id="netWorthCurrency" type="button" style="
+        background: none; border: none; cursor: pointer;
+        font-family: inherit; font-size: 13px; font-weight: 700;
+        color: var(--text-primary); letter-spacing: 0.04em;
+        padding: 4px 2px;
+        -webkit-tap-highlight-color: transparent;
+      ">EUR</button>
     </div>
 
     <!-- Overview row: stock-style line chart on the left, donut allocation chart on the right -->
@@ -1983,7 +1981,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   loadExchangeRates();
 
   function fmtMoney(amountCHF) {
-    const symbol = currencyEl ? currencyEl.value : 'CHF';
+    const symbol = currencyEl ? currencyEl.textContent.trim() : 'CHF';
     const rate = exchangeRates[symbol] || 1;
     const num = (Number(amountCHF) || 0) * rate;
     return symbol + ' ' + num.toLocaleString('en-US', { minimumFractionDigits: num % 1 === 0 ? 0 : 2, maximumFractionDigits: 2 });
@@ -2025,7 +2023,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
   function beginNwAmountEdit(amtEl, items, idx, catKey) {
     if (amtEl.querySelector('input')) return;
-    const symbol = currencyEl ? currencyEl.value : 'CHF';
+    const symbol = currencyEl ? currencyEl.textContent.trim() : 'CHF';
     const rate = exchangeRates[symbol] || 1;
     const curCHF = Number(items[idx].amount) || 0;
     const curDisplay = curCHF * rate;
@@ -2407,7 +2405,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
       // Interpret the input in the CURRENTLY SELECTED display currency, then
       // convert to CHF for storage. So if USD is selected and user types 40000,
       // we store 40000 / USD-per-CHF rate — 31,400 CHF; displays as $40,000.
-      const symbol = currencyEl ? currencyEl.value : 'CHF';
+      const symbol = currencyEl ? currencyEl.textContent.trim() : 'CHF';
       const rate = exchangeRates[symbol] || 1;
       const amountCHF = a / rate;
       const items = storeGet('nw:' + cat.key) || [];
@@ -2422,11 +2420,15 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     amtInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') doAdd(); });
   });
 
+  const CURRENCIES = ['EUR', 'CHF', 'USD', 'GBP'];
   if (currencyEl) {
     const savedCur = storeGet(CURRENCY_KEY);
-    if (savedCur) currencyEl.value = savedCur;
-    currencyEl.addEventListener('change', () => {
-      storeSet(CURRENCY_KEY, currencyEl.value);
+    currencyEl.textContent = savedCur || 'EUR';
+    currencyEl.addEventListener('click', () => {
+      const cur = currencyEl.textContent.trim();
+      const next = CURRENCIES[(CURRENCIES.indexOf(cur) + 1) % CURRENCIES.length];
+      currencyEl.textContent = next;
+      storeSet(CURRENCY_KEY, next);
       renderAllNetWorth();
       renderSubs();
     });
