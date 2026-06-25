@@ -81,16 +81,15 @@ body::after { content: ""; display: none; }
   display: flex; align-items: center; gap: 10px;
   padding: 7px 12px;
   border-radius: 12px;
-  background:
-    linear-gradient(180deg, rgba(0,0,0,0.42) 0%, rgba(0,0,0,0.30) 100%),
-    repeating-linear-gradient(0deg, rgba(255,255,255,0.025) 0, rgba(255,255,255,0.025) 1px, transparent 1px, transparent 3px);
-  box-shadow: ;
+  background: linear-gradient(135deg, #F45B8B, #FF6B6B);
+  box-shadow: 0 4px 14px rgba(244,91,139,0.35);
+  color: #FFFFFF;
 }
 .goal-ticker::after {
   content: '';
   position: absolute; top: 0; bottom: 0;
   width: 30%;
-  background: rgba(0,0,0,0.08);
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent);
   pointer-events: none;
   animation: ticker-sweep 8s linear infinite;
 }
@@ -101,8 +100,8 @@ body::after { content: ""; display: none; }
 .goal-ticker-led { display: inline-flex; align-items: center; }
 .goal-ticker-led-dot {
   width: 7px; height: 7px; border-radius: 50%;
-  background: #3EC98A;
-  box-shadow: 0 0 8px rgba(107,227,164,0.7);
+  background: #FFFFFF;
+  box-shadow: 0 0 8px rgba(255,255,255,0.8);
   animation: led-pulse 1.6s ease-in-out infinite;
 }
 @keyframes led-pulse {
@@ -113,7 +112,7 @@ body::after { content: ""; display: none; }
   font-family: var(--font-mono);
   font-size: 9.5px; font-weight: 800;
   letter-spacing: 0.18em;
-  color: #AAAAAA;
+  color: rgba(255,255,255,0.75);
 }
 .goal-ticker-stage {
   position: relative; overflow: hidden;
@@ -125,7 +124,7 @@ body::after { content: ""; display: none; }
   font-family: var(--font-mono);
   font-size: 12.5px; font-weight: 600;
   font-variant-numeric: tabular-nums;
-  color: #1A1A1A;
+  color: #FFFFFF;
   white-space: nowrap;
   opacity: 1;
   transition: opacity 0.22s ease;
@@ -134,10 +133,10 @@ body::after { content: ""; display: none; }
 .goal-ticker-status {
   display: inline-flex; justify-content: center;
   width: 18px;
-  color: #AAAAAA;
+  color: rgba(255,255,255,0.7);
 }
-.goal-ticker-status[data-status="done"]    { color: var(--success); }
-.goal-ticker-status[data-status="pending"] { color: #AAAAAA; }
+.goal-ticker-status[data-status="done"]    { color: #FFFFFF; }
+.goal-ticker-status[data-status="pending"] { color: rgba(255,255,255,0.7); }
 .goal-ticker-text {
   flex: 1;
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
@@ -147,7 +146,7 @@ body::after { content: ""; display: none; }
   font-size: 11px; font-weight: 700;
   font-variant-numeric: tabular-nums;
   letter-spacing: 0.04em;
-  color: #8A8A8A;
+  color: #F45B8B;
   padding: 3px 8px;
   border-radius: 999px;
   background: #FFFFFF;
