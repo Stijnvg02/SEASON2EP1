@@ -285,12 +285,33 @@ html, body { scrollbar-width: none; -ms-overflow-style: none; }
   background: transparent;
   border: none;
   outline: none;
+  appearance: none; -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23AAAAAA' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  padding-right: 26px;
   color: #1A1A1A;
   padding: 9px 12px;
   font-family: inherit;
   font-size: 14px;
 }
 .quick-add input::placeholder { color: #AAAAAA; }
+.fin-select {
+  padding: 9px 28px 9px 11px;
+  border-radius: 10px;
+  border: 1px solid rgba(0,0,0,0.08);
+  background: #F0F0F0;
+  color: #1A1A1A;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  outline: none;
+  appearance: none; -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23AAAAAA' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 9px center;
+}
 .quick-add-btn {
   padding: 0 14px;
   background: rgba(0,0,0,0.03);
@@ -1735,19 +1756,19 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     <div class="quick-add" style="flex-wrap:wrap;gap:6px">
       <input type="text" placeholder="Service (e.g. Netflix)" id="subName" style="flex:1.5;min-width:120px" />
       <input type="number" placeholder="Amount" id="subAmount" step="0.01" style="flex:1;max-width:100px" />
-      <select id="subCurrency" style="padding:6px 10px;border:0.5px solid var(--border);border-radius:var(--radius-md);font-size:12px;font-family:inherit;background:var(--bg-card);color:var(--text-primary);max-width:90px">
+      <select id="subCurrency" class="fin-select">
         <option value="CHF">CHF</option>
         <option value="USD">USD</option>
         <option value="EUR">EUR</option>
         <option value="GBP">GBP</option>
       </select>
-      <select id="subPeriod" style="padding:6px 10px;border:0.5px solid var(--border);border-radius:var(--radius-md);font-size:12px;font-family:inherit;background:var(--bg-card);color:var(--text-primary);max-width:100px">
+      <select id="subPeriod" class="fin-select">
         <option value="monthly">Monthly</option>
         <option value="yearly">Yearly</option>
         <option value="weekly">Weekly</option>
       </select>
       <label class="date-field" title="Next renewal date" style="min-width:150px"><span class="date-emoji" aria-hidden="true">📅</span><input type="date" id="subRenewal" /></label>
-      <select id="subFromCat" title="Which net worth account to deduct from" style="padding:6px 10px;border:0.5px solid var(--border);border-radius:var(--radius-md);font-size:12px;font-family:inherit;background:var(--bg-card);color:var(--text-primary);min-width:130px">
+      <select id="subFromCat" title="Which net worth account to deduct from" class="fin-select">
         <option value="">No accounts yet</option>
       </select>
       <label class="sub-auto-toggle" title="Auto-deduct from the linked account on each renewal">
