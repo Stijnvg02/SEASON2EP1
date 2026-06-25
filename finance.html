@@ -1072,35 +1072,35 @@ html, body { scrollbar-width: none; -ms-overflow-style: none; }
   gap: 12px;
   padding: 10px 14px;
   margin-bottom: 18px;
-  background: linear-gradient(90deg, rgba(110,231,183,0.06), rgba(125,211,252,0.04));
-  border: 1px solid rgba(110,231,183,0.14);
+  background: linear-gradient(135deg, #F45B8B, #FF6B6B);
+  border: none;
   border-radius: 12px;
   font-family: var(--font-mono);
   font-size: 12px;
   overflow: hidden;
   position: relative;
   min-height: 38px;
-  transition: background 0.4s, border-color 0.4s;
+  box-shadow: 0 4px 14px rgba(244,91,139,0.35);
+  transition: box-shadow 0.4s;
 }
 .finance-ticker.hidden { display: none; }
 .finance-ticker.urgent {
-  background: linear-gradient(90deg, rgba(255,138,138,0.10), rgba(255,138,138,0.04));
-  border-color: rgba(255,138,138,0.30);
+  background: linear-gradient(135deg, #F45B8B, #FF6B6B);
   animation: tickerPulse 1.2s ease-in-out infinite;
 }
 @keyframes tickerPulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(255,138,138,0.0); }
-  50%      { box-shadow: 0 0 14px 0 rgba(255,138,138,0.30); }
+  0%, 100% { box-shadow: 0 4px 14px rgba(244,91,139,0.35); }
+  50%      { box-shadow: 0 4px 22px rgba(244,91,139,0.60); }
 }
 .ticker-tag {
   font-size: 9.5px; letter-spacing: 0.18em; font-weight: 800;
-  text-transform: uppercase; color: #AAAAAA;
+  text-transform: uppercase; color: #F45B8B;
   padding: 3px 8px;
-  background: rgba(0,0,0,0.30);
+  background: #FFFFFF;
   border-radius: 999px;
   flex-shrink: 0;
 }
-.finance-ticker.urgent .ticker-tag { color: #FF8A8A; background: rgba(255,138,138,0.10); }
+.finance-ticker.urgent .ticker-tag { color: #F45B8B; background: #FFFFFF; }
 .ticker-stream {
   flex: 1;
   min-width: 0;
@@ -1116,7 +1116,7 @@ html, body { scrollbar-width: none; -ms-overflow-style: none; }
   transform: translateY(8px);
   transition: opacity 0.35s, transform 0.35s;
   font-variant-numeric: tabular-nums;
-  color: #8A8A8A;
+  color: rgba(255,255,255,0.80);
 }
 .ticker-item.active {
   opacity: 1;
@@ -1124,23 +1124,23 @@ html, body { scrollbar-width: none; -ms-overflow-style: none; }
 }
 .ticker-item-name {
   font-weight: 700;
-  color: #1A1A1A;
+  color: #FFFFFF;
   letter-spacing: 0.04em;
   text-transform: uppercase;
 }
 .ticker-item-amt {
   font-weight: 700;
-  color: #3EC98A;
+  color: #FFFFFF;
 }
-.finance-ticker.urgent .ticker-item-amt { color: #FF8A8A; }
+.finance-ticker.urgent .ticker-item-amt { color: #FFFFFF; }
 .ticker-item-days {
-  color: #AAAAAA;
+  color: rgba(255,255,255,0.75);
   letter-spacing: 0.06em;
   text-transform: uppercase;
   font-size: 11px;
 }
 .finance-ticker.urgent .ticker-item-days {
-  color: #FF8A8A;
+  color: #FFFFFF;
   font-weight: 700;
 }
 .ticker-dots {
@@ -1150,11 +1150,11 @@ html, body { scrollbar-width: none; -ms-overflow-style: none; }
 .ticker-dot {
   width: 5px; height: 5px;
   border-radius: 50%;
-  background: #E5E5E5;
+  background: rgba(255,255,255,0.35);
   transition: background 0.2s;
 }
-.ticker-dot.active { background: #3EC98A; }
-.finance-ticker.urgent .ticker-dot.active { background: #FF8A8A; }
+.ticker-dot.active { background: #FFFFFF; }
+.finance-ticker.urgent .ticker-dot.active { background: #FFFFFF; }
 
 /* ============================================================
    DEDUCT-FROM-NW BUTTON & CHOOSER (in order cards)
@@ -1220,8 +1220,8 @@ html, body { scrollbar-width: none; -ms-overflow-style: none; }
 .ord-deduct-chooser {
   margin-top: 10px;
   padding: 12px;
-  background: rgba(0,0,0,0.30);
-  border: 1px solid rgba(125,211,252,0.18);
+  background: #F5F5F5;
+  border: 1px solid rgba(0,0,0,0.06);
   border-radius: 10px;
 }
 .ord-deduct-chooser-title {
@@ -2007,7 +2007,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     input.type = 'text';
     input.inputMode = 'decimal';
     input.value = String(curDisplay.toFixed(curDisplay % 1 === 0 ? 0 : 2));
-    input.style.cssText = 'width:110px;padding:4px 8px;font-family:var(--font-mono);font-size:12px;background:rgba(0,0,0,0.30);border: 1px solid rgba(0,0,0,0.08);color:var(--text-primary);border-radius:6px;text-align:right;font-variant-numeric:tabular-nums;outline:none;';
+    input.style.cssText = 'width:110px;padding:4px 8px;font-family:var(--font-mono);font-size:12px;background:#F0F0F0;border: 1px solid rgba(0,0,0,0.08);color:var(--text-primary);border-radius:6px;text-align:right;font-variant-numeric:tabular-nums;outline:none;';
     amtEl.textContent = '';
     amtEl.appendChild(input);
     setTimeout(() => { input.focus(); input.select(); }, 0);
@@ -2047,7 +2047,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     const input = document.createElement('input');
     input.type = 'text';
     input.value = cur;
-    input.style.cssText = 'width:100%;padding:4px 8px;font-family:inherit;font-size:13px;background:rgba(0,0,0,0.30);border: 1px solid rgba(0,0,0,0.08);color:var(--text-primary);border-radius:6px;outline:none;';
+    input.style.cssText = 'width:100%;padding:4px 8px;font-family:inherit;font-size:13px;background:#F0F0F0;border: 1px solid rgba(0,0,0,0.08);color:var(--text-primary);border-radius:6px;outline:none;';
     nameEl.textContent = '';
     nameEl.appendChild(input);
     setTimeout(() => { input.focus(); input.select(); }, 0);
