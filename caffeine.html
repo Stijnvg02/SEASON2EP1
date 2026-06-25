@@ -114,7 +114,7 @@ body::after { content: ""; display: none; }
 .daily-of { font-family: var(--font-mono); font-size: 16px; color: #AAAAAA; }
 .daily-unit { font-size: 11px; font-weight: 700; letter-spacing: 0.10em; text-transform: uppercase; color: #AAAAAA; margin-left: 2px; }
 .daily-active { margin-left: auto; font-family: var(--font-mono); font-size: 12px; color: var(--caf); }
-.bar-track { position: relative; height: 14px; border-radius: 999px; background: rgba(0,0,0,0.03); margin: 14px 0 10px; overflow: hidden; }
+.bar-track { position: relative; height: 14px; border-radius: 999px; background: rgba(244,91,139,0.10); margin: 14px 0 10px; overflow: hidden; }
 .bar-fill { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 999px; transition: width 0.5s cubic-bezier(0.22,1,0.36,1), background 0.4s; }
 .daily-msg { font-size: 13px; line-height: 1.5; }
 .daily-msg.good { color: var(--success); } .daily-msg.warn { color: var(--warning); } .daily-msg.bad { color: var(--danger); }
@@ -141,7 +141,7 @@ body::after { content: ""; display: none; }
 .custom-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-top: 14px; padding-top: 14px; border-top: 1px solid rgba(0,0,0,0.08); }
 .custom-row .gm-input { flex: 1; min-width: 0; }
 .custom-row .mg-input { width: 92px; flex: none; }
-.gm-add { padding: 12px 18px; border: 0; border-radius: 12px; background: linear-gradient(135deg, #F45B8B, #FF6B6B); color: #1A1A1A;
+.gm-add { padding: 12px 18px; border: 0; border-radius: 12px; background: linear-gradient(135deg, #F45B8B, #FF6B6B); color: #FFFFFF;
   font-family: inherit; font-size: 13px; font-weight: 700; cursor: pointer;
   box-shadow: 0 2px 8px rgba(0,0,0,0.06), 0 8px 22px rgba(0,0,0,0.25); transition: transform 0.1s, filter 0.15s; white-space: nowrap; }
 .gm-add:hover { filter: brightness(1.06); transform: translateY(-1px); }
@@ -574,7 +574,7 @@ body::after { content: ""; display: none; }
     $('dailyActive').textContent = activeNow>0 ? (activeNow+' mg active now') : '';
     const pct=Math.min(100,(total/limit)*100); const fill=$('dailyFill'); fill.style.width=pct+'%';
     let color='linear-gradient(90deg,#6BE3A4,#A7F3D0)';
-    if(total>=limit) color='linear-gradient(90deg,#FF6B6B,#F2807A)'; else if(total>=target) color='linear-gradient(90deg,#F2C063,#F2A65A)';
+    if(total>=limit) color='linear-gradient(135deg,#F45B8B,#FF6B6B)'; else if(total>=target) color='linear-gradient(135deg,#F45B8B,#FF8B8B)';
     fill.style.background=color;
     const msg=$('dailyMsg'); msg.className='daily-msg';
     if(total===0){ msg.classList.add('good'); msg.textContent="You haven't logged anything today."; }
