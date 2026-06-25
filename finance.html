@@ -1769,9 +1769,9 @@ input[type="date"]::-webkit-calendar-picker-indicator {
       <input type="text" placeholder="Service (e.g. Netflix)" id="subName" style="flex:1.5;min-width:120px" />
       <input type="number" placeholder="Amount" id="subAmount" step="0.01" style="flex:1;max-width:100px" />
       <select id="subCurrency" class="fin-select">
+        <option value="EUR">EUR</option>
         <option value="CHF">CHF</option>
         <option value="USD">USD</option>
-        <option value="EUR">EUR</option>
         <option value="GBP">GBP</option>
       </select>
       <select id="subPeriod" class="fin-select">
@@ -1806,9 +1806,9 @@ input[type="date"]::-webkit-calendar-picker-indicator {
       <input type="text"   id="ordName"   placeholder="Item (e.g. New iPhone)" class="ord-input ord-input-name">
       <input type="number" id="ordCost"   placeholder="Cost" step="0.01" class="ord-input ord-input-cost">
       <select id="ordCurrency" class="ord-input ord-input-ccy">
+        <option value="EUR">EUR</option>
         <option value="CHF">CHF</option>
         <option value="USD">USD</option>
-        <option value="EUR">EUR</option>
         <option value="GBP">GBP</option>
       </select>
       <select id="ordFromCat" class="ord-input ord-input-from" title="Which net worth account this comes out of">
@@ -1863,9 +1863,9 @@ input[type="date"]::-webkit-calendar-picker-indicator {
       <input type="text"   id="wishName"   placeholder="Item name (e.g. New iPhone Pro Max)" class="wish-input wish-input-name">
       <input type="number" id="wishAmount" placeholder="Cost" step="0.01" class="wish-input wish-input-amt">
       <select id="wishCurrency" class="wish-input wish-input-ccy">
+        <option value="EUR">EUR</option>
         <option value="CHF">CHF</option>
         <option value="USD">USD</option>
-        <option value="EUR">EUR</option>
         <option value="GBP">GBP</option>
       </select>
       <button class="wish-add-btn" id="wishAddBtn" onclick="window.__addWish && window.__addWish()">+ Add</button>
@@ -2687,7 +2687,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     const rows = subsList.querySelectorAll('.sub-row');
     const row = rows[idx];
     if (!row) return;
-    const enteredCcy = it.entered_currency || 'CHF';
+    const enteredCcy = it.entered_currency || 'EUR';
     const enteredAmt = it.entered_amount != null ? it.entered_amount : it.amount;
     const periodOpts = ['monthly','yearly','weekly'].map(p =>
       '<option value="' + p + '"' + (p === it.period ? ' selected' : '') + '>' + p.charAt(0).toUpperCase() + p.slice(1) + '</option>'
@@ -2766,7 +2766,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
       const n = (nEl.value || '').trim();
       const aRaw = parseFloat(aEl.value);
       if (!n || isNaN(aRaw)) { nEl.focus(); return; }
-      const enteredCcy = ccEl ? ccEl.value : 'CHF';
+      const enteredCcy = ccEl ? ccEl.value : 'EUR';
       const rate = exchangeRates[enteredCcy] || 1;
       const amountCHF = aRaw / rate;
       // Parse "From" selection — value is "catKey::accountName"
@@ -2878,7 +2878,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
           '<div class="wish-row-h">'
         + '<div class="wish-row-info">'
         +   '<div class="wish-row-name">' + escapeHtml(it.name) + '</div>'
-        +   '<div class="wish-row-meta">' + (it.entered_currency || 'CHF') + ' ' + Number(it.entered_amount != null ? it.entered_amount : it.amount).toLocaleString('en-US', {maximumFractionDigits: 2}) + ' · added ' + fmtActivityDate(it.ts || Date.now()) + '</div>'
+        +   '<div class="wish-row-meta">' + (it.entered_currency || 'EUR') + ' ' + Number(it.entered_amount != null ? it.entered_amount : it.amount).toLocaleString('en-US', {maximumFractionDigits: 2}) + ' · added ' + fmtActivityDate(it.ts || Date.now()) + '</div>'
         + '</div>'
         + '<div class="wish-row-amt-wrap">'
         +   '<div class="wish-row-amt">' + fmtMoney(cost) + '</div>'
@@ -2908,7 +2908,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
       const n = (nEl.value || '').trim();
       const aRaw = parseFloat(aEl.value);
       if (!n || isNaN(aRaw)) { nEl.focus(); return; }
-      const enteredCcy = cEl ? cEl.value : 'CHF';
+      const enteredCcy = cEl ? cEl.value : 'EUR';
       const rate = exchangeRates[enteredCcy] || 1;
       const amountCHF = aRaw / rate;
       const arr = storeGet('wishlist') || [];
@@ -3220,7 +3220,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
       prev.className = 'ord-add-preview';
       return;
     }
-    const ccy = ccyEl ? ccyEl.value : 'CHF';
+    const ccy = ccyEl ? ccyEl.value : 'EUR';
     const rate = exchangeRates[ccy] || 1;
     const amountCHF = aRaw / rate;
     const grand = nwGrandCHF();
@@ -3247,7 +3247,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
       const n = (nEl.value || '').trim();
       const aRaw = parseFloat(aEl.value);
       if (!n || isNaN(aRaw)) { nEl.focus(); return; }
-      const ccy = cEl ? cEl.value : 'CHF';
+      const ccy = cEl ? cEl.value : 'EUR';
       const rate = exchangeRates[ccy] || 1;
       const amountCHF = aRaw / rate;
       const parsed = parseFromValue(fEl ? fEl.value : '');
