@@ -1251,6 +1251,29 @@ html, body {
 
   // BOOT
   renderAll();
+
+  // Re-read state from localStorage whenever the page becomes visible again
+  // (handles navigating back from gym page, browser back/forward cache, etc.)
+  function reloadStateAndRender() {
+    const fresh = loadState();
+    // Only re-render if weight or anything meaningful changed
+    if (JSON.stringify(fresh.profile) !== JSON.stringify(state.profile) ||
+        JSON.stringify(fresh.logs) !== JSON.stringify(state.logs)) {
+      state = fresh;
+      renderAll();
+      renderSettings();
+    }
+  }
+
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) reloadStateAndRender();
+  });
+  window.addEventListener('pageshow', (e) => {
+    if (e.persisted) reloadStateAndRender(); // bfcache restore
+  });
+  window.addEventListener('storage', (e) => {
+    if (e.key === LS_KEY || e.key === null) reloadStateAndRender();
+  });
 })();
 </script>
 <style>

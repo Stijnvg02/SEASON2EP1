@@ -2664,15 +2664,17 @@ img, video, canvas, svg { max-width: 100%; }
     if (existing) existing.weight = weight;
     else { wtEntries.push({ dateKey: key, weight }); wtEntries.sort((a,b) => a.dateKey.localeCompare(b.dateKey)); }
     wtSave(wtEntries);
-    // sync to water coach so weight doesn't need to be entered twice
+    // sync body weight to water coach
     try {
       const wRaw = localStorage.getItem('po_water_v1');
-      const wState = wRaw ? JSON.parse(wRaw) : {};
+      const wState = (wRaw ? JSON.parse(wRaw) : {});
       if (!wState.profile) wState.profile = {};
-      const weightKg = state.units === 'lb' ? weight / 2.20462 : weight;
-      wState.profile.weightKg = Math.round(weightKg * 10) / 10;
+      const weightKg = state.units === 'lb' ? Math.round((weight / 2.20462) * 10) / 10 : weight;
+      wState.profile.weightKg = weightKg;
       localStorage.setItem('po_water_v1', JSON.stringify(wState));
-    } catch(e) {}
+      // notify any open tab
+      window.dispatchEvent(new StorageEvent('storage', { key: 'po_water_v1' }));
+    } catch(e) { console.warn('[gym→water sync]', e); }
     wtRender();
   }
 
