@@ -36,17 +36,17 @@
 .topbar-water-pill {
   display: inline-flex; align-items: center; gap: 8px;
   padding: 9px 14px;
-  background: #FFFFFF;
-  border: 1px solid rgba(0,0,0,0.10);
-  border-right: none;
+  background: linear-gradient(135deg, #3B82F6, #60A5FA);
+  border: none;
   border-radius: 12px 0 0 12px;
   text-decoration: none;
-  color: #1A1A1A;
+  color: #FFFFFF;
+  box-shadow: 0 4px 14px rgba(59,130,246,0.35);
   -webkit-tap-highlight-color: transparent;
 }
 .topbar-water-pill .topbar-pill-dot {
   width: 8px; height: 8px; border-radius: 50%;
-  background: #7DD3FC; flex-shrink: 0;
+  background: rgba(255,255,255,0.7); flex-shrink: 0;
 }
 .topbar-water-pill.warn .topbar-pill-dot { background: #fbbf24; }
 .topbar-water-pill.miss .topbar-pill-dot {
@@ -60,20 +60,21 @@
 .topbar-pill-count {
   font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
   font-size: 13px; font-weight: 700;
-  color: #1A1A1A;
+  color: #FFFFFF;
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
 .topbar-water-add {
   width: 44px;
-  border: 1px solid rgba(0,0,0,0.10);
-  background: linear-gradient(135deg, #F45B8B, #FF6B6B);
+  border: none;
+  background: linear-gradient(135deg, #2563EB, #3B82F6);
   color: #FFFFFF;
   font-family: inherit; font-size: 20px; font-weight: 700; line-height: 1;
   cursor: pointer;
   border-radius: 0 12px 12px 0;
   -webkit-tap-highlight-color: transparent;
   transition: filter 0.15s, transform 0.10s;
+  box-shadow: 0 4px 14px rgba(59,130,246,0.35);
 }
 .topbar-water-add:active { transform: scale(0.94); }
 .topbar-water-add.flash { filter: brightness(1.1); }
