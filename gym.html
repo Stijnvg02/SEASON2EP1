@@ -459,21 +459,22 @@ img, video, canvas, svg { max-width: 100%; }
 /* ----- Prescription card ----- */
 .po-rx-card {
   padding: 18px 20px; border-radius: 14px;
-  background: #FAFAFA;
-  border: 1px solid rgba(0,0,0,0.08);
+  background: linear-gradient(135deg, #3B82F6, #60A5FA);
+  border: none;
+  box-shadow: 0 6px 22px rgba(59,130,246,0.35);
   position: relative;
 }
-.po-rx-card.po-rx-up   { background: linear-gradient(180deg, rgba(110,231,183,0.08), rgba(255,255,255,0.025)); border-color: rgba(110,231,183,0.18); }
-.po-rx-card.po-rx-down { background: linear-gradient(180deg, rgba(255,138,138,0.08), rgba(255,138,138,0.04)); border-color: rgba(255,138,138,0.25); }
+.po-rx-card.po-rx-up   { background: linear-gradient(135deg, #3B82F6, #60A5FA); box-shadow: 0 6px 22px rgba(59,130,246,0.35); }
+.po-rx-card.po-rx-down { background: linear-gradient(135deg, #3B82F6, #60A5FA); box-shadow: 0 6px 22px rgba(59,130,246,0.35); }
 .po-rx-label {
-  font-size: 10.5px; color: var(--text-3); font-weight: 700;
+  font-size: 10.5px; color: rgba(255,255,255,0.70); font-weight: 700;
   letter-spacing: 0.10em; text-transform: uppercase; margin-bottom: 6px;
 }
 .po-rx-headline {
   font-size: 26px; font-weight: 700; letter-spacing: -0.01em;
-  line-height: 1.2; margin-bottom: 10px;
+  line-height: 1.2; margin-bottom: 10px; color: #FFFFFF;
 }
-.po-accent { color: var(--text-1); }
+.po-accent { color: #FFFFFF; }
 .po-rx-tag {
   display: inline-block; padding: 4px 10px; border-radius: 999px;
   font-size: 10px; font-weight: 700; letter-spacing: 0.08em;
@@ -485,7 +486,7 @@ img, video, canvas, svg { max-width: 100%; }
 .po-rx-tag.down { background: rgba(255,138,138,0.14); color: var(--bad); }
 .po-rx-tag.hold { background: rgba(251,191,36,0.14); color: var(--warn); }
 .po-rx-reason {
-  margin: 0; font-size: 13px; line-height: 1.5; color: var(--text-2);
+  margin: 0; font-size: 13px; line-height: 1.5; color: rgba(255,255,255,0.80);
 }
 .po-rx-empty {
   font-size: 13px; color: var(--text-3); padding: 16px 0; text-align: center;
