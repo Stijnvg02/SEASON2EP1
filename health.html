@@ -937,6 +937,49 @@ main {
     <iframe src="po-water.html" class="water-iframe" loading="lazy" title="Water Tracker"></iframe>
   </section>
 
+  <!-- ===== SKINCARE SECTION ===== -->
+  <div class="section-title" style="margin-top:28px;">Skincare Routine</div>
+
+  <div class="stack-card">
+    <div class="stack-ticker" id="skinTicker">
+      <span class="stack-ticker-dot"></span>
+      <span class="stack-ticker-label">SKIN</span>
+      <span class="stack-ticker-sep">·</span>
+      <span class="stack-ticker-msg" id="skinTickerMsg">All caught up — skin is glowing</span>
+      <span class="stack-ticker-count" id="skinTickerCount">0/0</span>
+    </div>
+
+    <div class="stack-head">
+      <div class="sf-eyebrow">Daily routine</div>
+      <div class="sf-title">Tap each as you apply it</div>
+      <div class="stack-progress-text" id="skinProgressText">— / — done today · resets at 6 AM</div>
+    </div>
+
+    <div class="stack-progress-track">
+      <div id="skinProgressBar" class="stack-progress-fill"></div>
+    </div>
+
+    <div id="skinGroups"></div>
+
+    <div class="stack-add-wrap">
+      <div class="sf-eyebrow stack-add-label">Add to routine</div>
+      <div class="stack-add-row">
+        <div class="stack-name-wrap">
+          <input id="skinAddName" type="text" placeholder="Product (e.g. Vitamin C serum)" class="stack-input" autocomplete="off" spellcheck="false" />
+          <div id="skinSearchResults" class="stack-search-results" hidden></div>
+        </div>
+        <input id="skinAddStep" type="text" placeholder="Step / notes" class="stack-input" />
+        <select id="skinAddWindow" class="stack-input stack-select">
+          <option value="morning">Morning</option>
+          <option value="evening">Evening</option>
+          <option value="weekly">Weekly</option>
+          <option value="anytime">Anytime</option>
+        </select>
+        <button id="skinAddBtn" class="stack-add-btn">+ Add</button>
+      </div>
+    </div>
+  </div>
+
   <div class="attribution">// editable template · all data stays in your browser</div>
 </main>
 
@@ -1448,6 +1491,399 @@ main {
   setInterval(() => {
     const newKey = `stack:taken:${getActiveDate()}`;
     if (newKey !== todayKey) todayKey = newKey;
+    render();
+  }, 60 * 1000);
+
+  render();
+  startTicker();
+})();
+</script>
+
+<script>
+// ===== SKINCARE ROUTINE =====
+(() => {
+  'use strict';
+
+  const storeGet = (k) => { try { return JSON.parse(localStorage.getItem(k)); } catch { return null; } };
+  const storeSet = (k, v) => localStorage.setItem(k, JSON.stringify(v));
+
+  function getActiveDate() {
+    const now = new Date();
+    if (now.getHours() < 6) now.setDate(now.getDate() - 1);
+    return now.toISOString().slice(0, 10);
+  }
+
+  const SKIN_DEFAULTS = [
+    { id: 'sm1', name: 'Cleanser', dose: '', window: 'morning', note: 'Gentle, sulfate-free', tag: null },
+    { id: 'sm2', name: 'Toner / Essence', dose: '', window: 'morning', note: 'Hydrating or balancing', tag: null },
+    { id: 'sm3', name: 'Moisturiser', dose: '', window: 'morning', note: 'Lightweight for daytime', tag: null },
+    { id: 'sm4', name: 'SPF sunscreen', dose: 'SPF 30+', window: 'morning', note: 'Last step — every day', tag: null },
+    { id: 'se1', name: 'Cleanser', dose: '', window: 'evening', note: 'Double-cleanse if wearing makeup/SPF', tag: null },
+    { id: 'se2', name: 'Treatment serum', dose: '', window: 'evening', note: 'Retinol, AHA/BHA, niacinamide…', tag: null },
+    { id: 'se3', name: 'Moisturiser / Night cream', dose: '', window: 'evening', note: 'Richer than morning', tag: null },
+  ];
+
+  const SKIN_WINDOWS = [
+    { key: 'morning', icon: '🌅', title: 'Morning', time: 'AM routine',  cutoffHour: 12 },
+    { key: 'evening', icon: '🌙', title: 'Evening', time: 'PM routine',  cutoffHour: 23 },
+    { key: 'weekly',  icon: '📅', title: 'Weekly',  time: '1–2×/week',  cutoffHour: null },
+    { key: 'anytime', icon: '⏱️', title: 'Anytime', time: 'As needed',   cutoffHour: null },
+  ];
+
+  const SKINCARE_DB = [
+    { name: 'Gentle cleanser', step: 'Step 1', window: 'morning', note: 'Sulfate-free, pH-balanced', icon: '🧴', aliases: ['cleanser', 'face wash'] },
+    { name: 'Micellar water', step: 'Step 1', window: 'evening', note: 'Pre-cleanse to remove SPF/makeup', icon: '🧴', aliases: ['micellar'] },
+    { name: 'Oil cleanser', step: 'Step 1', window: 'evening', note: 'First step of double cleanse', icon: '🧴', aliases: ['oil cleanser', 'cleansing oil', 'double cleanse'] },
+    { name: 'Hydrating toner', step: 'Step 2', window: 'morning', note: 'Pat in — adds moisture layer', icon: '💧', aliases: ['toner', 'essence'] },
+    { name: 'Exfoliating toner', step: 'Step 2', window: 'evening', note: 'AHA/BHA — not with retinol', icon: '💧', aliases: ['aha', 'bha', 'exfoliating', 'pha'] },
+    { name: 'Vitamin C serum', step: 'Step 3', window: 'morning', note: 'L-ascorbic acid 10–20% — brightening', icon: '🍊', aliases: ['vitamin c', 'vit c', 'ascorbic', 'vitamin c serum'] },
+    { name: 'Niacinamide serum', step: 'Step 3', window: 'morning', note: '10% — pores, texture, oil control', icon: '✨', aliases: ['niacinamide', 'b3'] },
+    { name: 'Hyaluronic acid serum', step: 'Step 3', window: 'morning', note: 'Apply to damp skin', icon: '💦', aliases: ['hyaluronic', 'ha serum'] },
+    { name: 'Retinol', step: 'Step 3', window: 'evening', note: 'Start 2×/week — build up slowly', icon: '⭐', aliases: ['retinol', 'retinoid', 'retin-a', 'tretinoin'] },
+    { name: 'Retinal (Retinaldehyde)', step: 'Step 3', window: 'evening', note: 'Stronger than retinol — convert to retinoic acid', icon: '⭐', aliases: ['retinal', 'retinaldehyde'] },
+    { name: 'Bakuchiol', step: 'Step 3', window: 'evening', note: 'Plant retinol alternative — gentler', icon: '🌿', aliases: ['bakuchiol'] },
+    { name: 'Peptide serum', step: 'Step 3', window: 'evening', note: 'Collagen-boosting — after actives', icon: '✨', aliases: ['peptide', 'peptides'] },
+    { name: 'Azelaic acid', step: 'Step 3', window: 'evening', note: 'Redness, PIH, rosacea — 10–20%', icon: '🧪', aliases: ['azelaic'] },
+    { name: 'Eye cream', step: 'Step 4', window: 'morning', note: 'Before moisturiser — pat gently', icon: '👁️', aliases: ['eye cream'] },
+    { name: 'Lightweight moisturiser', step: 'Step 4', window: 'morning', note: 'Lock in hydration before SPF', icon: '🧴', aliases: ['moisturiser', 'moisturizer', 'day cream'] },
+    { name: 'Rich moisturiser / night cream', step: 'Step 4', window: 'evening', note: 'Repair and seal overnight', icon: '🧴', aliases: ['night cream', 'rich moisturiser', 'night moisturiser'] },
+    { name: 'SPF sunscreen', step: 'Last step', window: 'morning', note: 'SPF 30–50+ — reapply every 2h', icon: '☀️', aliases: ['spf', 'sunscreen', 'sun cream', 'sun protection'] },
+    { name: 'Lip balm with SPF', step: 'Last step', window: 'morning', note: 'Protect lips daily', icon: '💋', aliases: ['lip balm', 'lip spf'] },
+    { name: 'Face mask — hydrating', step: 'Weekly', window: 'weekly', note: '1–2×/week — 10–20 min', icon: '🎭', aliases: ['hydrating mask', 'sheet mask', 'face mask'] },
+    { name: 'Face mask — clay / pore', step: 'Weekly', window: 'weekly', note: '1×/week — deep clean', icon: '🎭', aliases: ['clay mask', 'pore mask', 'kaolin'] },
+    { name: 'Chemical exfoliant', step: 'Weekly', window: 'weekly', note: 'AHA/BHA — 1–2×/week max', icon: '🔬', aliases: ['chemical exfoliant', 'exfoliant', 'peeling'] },
+    { name: 'Gua sha / facial massage', step: 'Weekly', window: 'weekly', note: 'Lymphatic drainage', icon: '💆', aliases: ['gua sha', 'jade roller', 'facial massage'] },
+    { name: 'Rosehip oil', step: 'Step 4', window: 'evening', note: 'Vitamin A + C — on top of serum', icon: '🌹', aliases: ['rosehip', 'rosehip oil'] },
+    { name: 'Squalane', step: 'Step 4', window: 'anytime', note: 'Lightweight — seals in moisture', icon: '🌿', aliases: ['squalane'] },
+    { name: 'Ceramide moisturiser', step: 'Step 4', window: 'evening', note: 'Barrier repair — fragrance-free', icon: '🧴', aliases: ['ceramide', 'ceramides'] },
+    { name: 'Tretinoin', step: 'Step 3', window: 'evening', note: 'Rx retinoid — start slow, buffer if needed', icon: '⭐', aliases: ['tretinoin', 'retinoic acid', 'retin'] },
+    { name: 'Benzoyl peroxide', step: 'Spot', window: 'evening', note: 'Acne — 2.5–5% spot treat', icon: '🔴', aliases: ['benzoyl peroxide', 'bp'] },
+    { name: 'Salicylic acid cleanser', step: 'Step 1', window: 'morning', note: 'BHA — oily/acne-prone skin', icon: '🧴', aliases: ['salicylic', 'salicylic acid'] },
+    { name: 'Snail mucin', step: 'Step 3', window: 'evening', note: 'Healing, hydration, brightening', icon: '🐌', aliases: ['snail mucin', 'snail secretion', 'cgf'] },
+    { name: 'Tranexamic acid', step: 'Step 3', window: 'morning', note: 'Brightening — fades hyperpigmentation', icon: '✨', aliases: ['tranexamic', 'txa'] },
+  ];
+
+  let skinTodayKey = `skin:taken:${getActiveDate()}`;
+
+  function getItems() {
+    const stored = storeGet('skin:items');
+    if (!stored || !Array.isArray(stored) || !stored.length) {
+      const fresh = JSON.parse(JSON.stringify(SKIN_DEFAULTS));
+      storeSet('skin:items', fresh);
+      return fresh;
+    }
+    return stored;
+  }
+  function setItems(items) { storeSet('skin:items', items); }
+  function getTaken()  { return storeGet(skinTodayKey) || {}; }
+  function setTaken(m) { storeSet(skinTodayKey, m); }
+  function getLow()    { return storeGet('skin:low') || []; }
+  function setLow(a)   { storeSet('skin:low', a); }
+
+  function toggleTaken(id) {
+    const t = getTaken();
+    if (t[id]) delete t[id]; else t[id] = Date.now();
+    setTaken(t); render();
+  }
+  function toggleLow(id) {
+    const l = getLow();
+    if (l.includes(id)) setLow(l.filter(x => x !== id));
+    else { l.push(id); setLow(l); }
+    render();
+  }
+  function deleteItem(id) {
+    setItems(getItems().filter(i => i.id !== id));
+    const t = getTaken(); delete t[id]; setTaken(t);
+    setLow(getLow().filter(x => x !== id));
+    render();
+  }
+  function addItem(name, step, windowKey, note = '') {
+    const v = String(name || '').trim();
+    if (!v) return;
+    const items = getItems();
+    const id = 'skin_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6);
+    items.push({
+      id, name: v,
+      dose: String(step || '').trim(),
+      window: ['morning','evening','weekly','anytime'].includes(windowKey) ? windowKey : 'anytime',
+      note: String(note || '').trim(),
+      tag: null
+    });
+    setItems(items); render();
+  }
+  function updateItem(id, field, value) {
+    const items = getItems();
+    const item = items.find(i => i.id === id);
+    if (!item) return;
+    item[field] = value;
+    setItems(items);
+  }
+
+  function metaText(item) {
+    const parts = [];
+    if (item.dose) parts.push(item.dose);
+    if (item.note) parts.push(item.note);
+    return parts.join(' · ');
+  }
+  function escapeHtml(str) {
+    return String(str).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+
+  function render() {
+    const items  = getItems();
+    const taken  = getTaken();
+    const low    = getLow();
+    const takenCount = items.filter(i => taken[i.id]).length;
+    document.getElementById('skinProgressText').textContent =
+      `${takenCount} / ${items.length} done today · resets at 6 AM`;
+    const pct = items.length === 0 ? 0 : (takenCount / items.length) * 100;
+    document.getElementById('skinProgressBar').style.width = pct + '%';
+
+    const groupsEl = document.getElementById('skinGroups');
+    groupsEl.innerHTML = '';
+
+    const now = new Date();
+    const nowHour = now.getHours() + now.getMinutes() / 60;
+
+    SKIN_WINDOWS.forEach(win => {
+      const winItems = items.filter(i => (i.window || 'anytime') === win.key);
+      if (winItems.length === 0) return;
+
+      const group = document.createElement('div');
+      group.className = 'stack-window';
+      group.innerHTML = `
+        <div class="stack-window-header">
+          <span class="stack-window-icon">${win.icon}</span>
+          <span class="stack-window-title">${win.title}</span>
+          <span class="stack-window-time">${win.time}</span>
+        </div>`;
+
+      const isPastCutoff = win.cutoffHour !== null && nowHour > win.cutoffHour;
+
+      winItems.forEach(item => {
+        const isTaken  = !!taken[item.id];
+        const isLow    = low.includes(item.id);
+        const isMissed = !isTaken && isPastCutoff;
+
+        const row = document.createElement('div');
+        row.className = 'stack-item' + (isTaken ? ' taken' : '') + (isMissed ? ' missed' : '');
+        row.innerHTML = `
+          <button class="stack-check ${isTaken ? 'checked' : ''}" data-action="toggle" data-id="${item.id}" aria-label="Mark done">${isTaken ? '✓' : ''}</button>
+          <div class="stack-item-body">
+            <div class="stack-item-name" data-edit="name" data-id="${item.id}">
+              <span class="stack-item-name-text">${escapeHtml(item.name)}</span>
+            </div>
+            <div class="stack-item-meta" data-edit="meta" data-id="${item.id}">${escapeHtml(metaText(item))}</div>
+          </div>
+          <button class="stack-low-btn ${isLow ? 'is-low' : ''}" data-action="low" data-id="${item.id}">↓ Running low</button>
+          <button class="stack-item-del" data-action="del" data-id="${item.id}" aria-label="Delete">×</button>`;
+        group.appendChild(row);
+      });
+      groupsEl.appendChild(group);
+    });
+
+    if (groupsEl.children.length === 0) {
+      groupsEl.innerHTML = `<div class="stack-window-empty">No products yet — add one below to start your routine.</div>`;
+    }
+    renderTicker();
+  }
+
+  // ====== TICKER ======
+  let skinTickerIndex = 0;
+  let skinTickerInterval = null;
+  let skinCachedIssues = [];
+
+  function getIssues() {
+    const items = getItems();
+    const taken = getTaken();
+    const low   = getLow();
+    const now = new Date();
+    const nowHour = now.getHours() + now.getMinutes() / 60;
+    const missed = [];
+    const lowList = [];
+    items.forEach(item => {
+      const win = SKIN_WINDOWS.find(w => w.key === (item.window || 'anytime'));
+      if (win && win.cutoffHour !== null && nowHour > win.cutoffHour && !taken[item.id]) {
+        missed.push({ type: 'missed', text: `${item.name} — missed ${win.title.toLowerCase()} routine` });
+      }
+      if (low.includes(item.id)) {
+        lowList.push({ type: 'low', text: `${item.name} — running low, reorder soon` });
+      }
+    });
+    return [...missed, ...lowList];
+  }
+
+  function renderTicker() {
+    const issues  = getIssues();
+    const tickerEl = document.getElementById('skinTicker');
+    const msgEl   = document.getElementById('skinTickerMsg');
+    const countEl = document.getElementById('skinTickerCount');
+    skinCachedIssues = issues;
+    if (issues.length === 0) {
+      msgEl.textContent = 'All caught up — skin is glowing';
+      tickerEl.classList.remove('status-low', 'status-missed');
+      countEl.textContent = `0/${getItems().length}`;
+      skinTickerIndex = 0;
+      return;
+    }
+    tickerEl.classList.remove('status-low', 'status-missed');
+    tickerEl.classList.add(issues.some(i => i.type === 'missed') ? 'status-missed' : 'status-low');
+    if (skinTickerIndex >= issues.length) skinTickerIndex = 0;
+    msgEl.textContent = issues[skinTickerIndex].text;
+    countEl.textContent = `${issues.length}/${getItems().length}`;
+  }
+
+  function cycleTicker() {
+    if (skinCachedIssues.length <= 1) { renderTicker(); return; }
+    const msgEl = document.getElementById('skinTickerMsg');
+    msgEl.classList.add('is-fading');
+    setTimeout(() => { skinTickerIndex++; renderTicker(); msgEl.classList.remove('is-fading'); }, 280);
+  }
+
+  function startTicker() {
+    if (skinTickerInterval) clearInterval(skinTickerInterval);
+    skinTickerInterval = setInterval(cycleTicker, 5000);
+  }
+
+  // ====== CLICK HANDLERS ======
+  document.getElementById('skinGroups').addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-action]');
+    if (!btn) return;
+    e.stopPropagation();
+    const id = btn.dataset.id;
+    if (btn.dataset.action === 'toggle') toggleTaken(id);
+    else if (btn.dataset.action === 'low')   toggleLow(id);
+    else if (btn.dataset.action === 'del')   deleteItem(id);
+  });
+  document.getElementById('skinGroups').addEventListener('pointerdown', (e) => {
+    const btn = e.target.closest('[data-action="del"]');
+    if (!btn) return;
+    e.preventDefault(); e.stopPropagation();
+    deleteItem(btn.dataset.id);
+  });
+  document.getElementById('skinGroups').addEventListener('click', (e) => {
+    const editEl = e.target.closest('[data-edit]');
+    if (!editEl || e.target.closest('[data-action]') || editEl.getAttribute('contenteditable') === 'true') return;
+    startEdit(editEl);
+  });
+
+  function placeCaretAtEnd(el) {
+    const r = document.createRange(); r.selectNodeContents(el); r.collapse(false);
+    const s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+  }
+
+  function startEdit(el) {
+    const id = el.dataset.id, field = el.dataset.edit;
+    if (field === 'name') {
+      const textSpan = el.querySelector('.stack-item-name-text');
+      if (!textSpan) return;
+      textSpan.setAttribute('contenteditable', 'true');
+      textSpan.style.outline = '1px solid rgba(0,0,0,0.20)';
+      textSpan.style.outlineOffset = '4px';
+      textSpan.style.borderRadius = '4px';
+      textSpan.focus(); placeCaretAtEnd(textSpan);
+      const finish = (commit) => {
+        textSpan.removeAttribute('contenteditable');
+        textSpan.style.outline = ''; textSpan.style.outlineOffset = '';
+        if (commit) { const v = textSpan.textContent.trim(); if (v) updateItem(id, 'name', v); else render(); } else render();
+      };
+      textSpan.addEventListener('blur', () => finish(true), { once: true });
+      textSpan.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') { e.preventDefault(); textSpan.blur(); }
+        if (e.key === 'Escape') { textSpan.blur(); render(); }
+      });
+    }
+    if (field === 'meta') {
+      el.setAttribute('contenteditable', 'true');
+      el.focus(); placeCaretAtEnd(el);
+      const finish = (commit) => {
+        el.removeAttribute('contenteditable');
+        if (commit) {
+          const parts = el.textContent.trim().split(/\s*·\s*/);
+          updateItem(id, 'dose', parts[0] || '');
+          updateItem(id, 'note', parts.slice(1).join(' · '));
+        }
+        render();
+      };
+      el.addEventListener('blur', () => finish(true), { once: true });
+      el.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') { e.preventDefault(); el.blur(); }
+        if (e.key === 'Escape') { el.blur(); render(); }
+      });
+    }
+  }
+
+  // ====== ADD FORM + SEARCH ======
+  const nameInput   = document.getElementById('skinAddName');
+  const stepInput   = document.getElementById('skinAddStep');
+  const winSelect   = document.getElementById('skinAddWindow');
+  const addBtn      = document.getElementById('skinAddBtn');
+  const resultsEl   = document.getElementById('skinSearchResults');
+  let pendingNote   = '';
+
+  function searchProducts(q) {
+    const query = q.toLowerCase().trim();
+    if (!query) return [];
+    const starts = [], contains = [];
+    SKINCARE_DB.forEach(s => {
+      const all = [s.name.toLowerCase(), ...(s.aliases || []).map(a => a.toLowerCase())];
+      if (all.some(n => n.startsWith(query))) starts.push(s);
+      else if (all.some(n => n.includes(query))) contains.push(s);
+    });
+    return [...starts, ...contains].slice(0, 6);
+  }
+
+  function renderSearchResults(q) {
+    const matches = searchProducts(q);
+    if (!q.trim() || !matches.length) { resultsEl.hidden = true; resultsEl.innerHTML = ''; return; }
+    resultsEl.hidden = false;
+    resultsEl.innerHTML = matches.map(s => {
+      const winMeta = SKIN_WINDOWS.find(w => w.key === s.window) || SKIN_WINDOWS[3];
+      return `<button class="stack-result" data-name="${escapeHtml(s.name)}" data-dose="${escapeHtml(s.step)}" data-window="${s.window}" data-note="${escapeHtml(s.note)}">
+        <div class="stack-result-icon">${s.icon || '🧴'}</div>
+        <div class="stack-result-body">
+          <div class="stack-result-name">${escapeHtml(s.name)}</div>
+          <div class="stack-result-meta">${escapeHtml(s.step)} · ${winMeta.icon} ${winMeta.title.toLowerCase()} · ${escapeHtml(s.note)}</div>
+        </div></button>`;
+    }).join('');
+  }
+
+  nameInput.addEventListener('input', () => { renderSearchResults(nameInput.value); pendingNote = ''; });
+  nameInput.addEventListener('focus', () => { if (nameInput.value.trim()) renderSearchResults(nameInput.value); });
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.stack-name-wrap')) resultsEl.hidden = true;
+  });
+  resultsEl.addEventListener('click', (e) => {
+    const btn = e.target.closest('.stack-result');
+    if (!btn) return;
+    nameInput.value  = btn.dataset.name;
+    stepInput.value  = btn.dataset.dose;
+    winSelect.value  = btn.dataset.window;
+    pendingNote      = btn.dataset.note;
+    resultsEl.hidden = true;
+    addBtn.focus();
+  });
+  addBtn.addEventListener('click', () => {
+    addItem(nameInput.value, stepInput.value, winSelect.value, pendingNote);
+    nameInput.value = ''; stepInput.value = ''; pendingNote = '';
+    resultsEl.hidden = true; nameInput.focus();
+  });
+  [nameInput, stepInput].forEach(i => {
+    i.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        if (!resultsEl.hidden && i === nameInput) {
+          const first = resultsEl.querySelector('.stack-result');
+          if (first) { e.preventDefault(); first.click(); return; }
+        }
+        addBtn.click();
+      }
+      if (e.key === 'Escape') resultsEl.hidden = true;
+    });
+  });
+
+  setInterval(() => {
+    const newKey = `skin:taken:${getActiveDate()}`;
+    if (newKey !== skinTodayKey) skinTodayKey = newKey;
     render();
   }, 60 * 1000);
 
