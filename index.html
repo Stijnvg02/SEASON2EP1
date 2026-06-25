@@ -221,18 +221,12 @@ body::after { content: ""; display: none; }
           <svg width="84" height="84" viewBox="0 0 84 84">
             <circle cx="42" cy="42" r="36" fill="none" stroke="rgba(0,0,0,0.07)" stroke-width="7"/>
             <circle id="hTileRingFill" cx="42" cy="42" r="36" fill="none"
-              stroke="url(#hTileGrad)" stroke-width="7"
+              stroke="#FFD89E" stroke-width="7"
               stroke-linecap="round"
               stroke-dasharray="226.19"
               stroke-dashoffset="226.19"
               transform="rotate(-90 42 42)"
-              style="transition:stroke-dashoffset 0.6s ease"/>
-            <defs>
-              <linearGradient id="hTileGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stop-color="#C084FC"/>
-                <stop offset="100%" stop-color="#F0ABFC"/>
-              </linearGradient>
-            </defs>
+              style="transition:stroke-dashoffset 0.6s ease, stroke 0.7s ease"/>
           </svg>
           <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;">
             <span id="hTilePct" style="font-size:18px;font-weight:800;color:#1A1A1A;line-height:1;">0%</span>
@@ -571,6 +565,32 @@ body::after { content: ""; display: none; }
   });
 
   // -------- Mini day ring on Main tile --------
+  const DR_PALETTE = [
+    [0,    [255, 216, 158]],
+    [12.5, [255, 205, 121]],
+    [25,   [255, 227, 143]],
+    [37.5, [255, 183, 106]],
+    [50,   [255, 149,  89]],
+    [62.5, [243, 111,  79]],
+    [75,   [226,  93, 122]],
+    [87.5, [123,  91, 176]],
+    [100,  [ 47,  58, 102]]
+  ];
+  function drLerp(a, b, t) { return a + (b - a) * t; }
+  function drPaletteAt(p) {
+    if (p <= DR_PALETTE[0][0]) return DR_PALETTE[0][1];
+    if (p >= DR_PALETTE[DR_PALETTE.length - 1][0]) return DR_PALETTE[DR_PALETTE.length - 1][1];
+    for (let i = 0; i < DR_PALETTE.length - 1; i++) {
+      const [p0, c0] = DR_PALETTE[i], [p1, c1] = DR_PALETTE[i + 1];
+      if (p >= p0 && p <= p1) {
+        const t = (p - p0) / (p1 - p0);
+        return [drLerp(c0[0], c1[0], t), drLerp(c0[1], c1[1], t), drLerp(c0[2], c1[2], t)];
+      }
+    }
+    return [255, 255, 255];
+  }
+  function drRgb(c) { return 'rgb(' + Math.round(c[0]) + ',' + Math.round(c[1]) + ',' + Math.round(c[2]) + ')'; }
+
   function renderDayRing() {
     const ringEl   = document.getElementById('hTileRingFill');
     const pctEl    = document.getElementById('hTilePct');
@@ -597,6 +617,7 @@ body::after { content: ""; display: none; }
     if (hours < WAKE) {
       const minsLeft = (WAKE - hours) * 60;
       ringEl.style.strokeDashoffset = C;
+      ringEl.style.stroke = '#4D4B47';
       pctEl.textContent   = '0%';
       phaseEl.textContent = 'SLEEPING';
       statusEl.textContent = '🌙 Sleeping';
@@ -605,6 +626,7 @@ body::after { content: ""; display: none; }
     }
     if (hours >= SLEEP) {
       ringEl.style.strokeDashoffset = 0;
+      ringEl.style.stroke = drRgb(drPaletteAt(100));
       pctEl.textContent   = '100%';
       phaseEl.textContent = 'BEDTIME';
       statusEl.textContent = '🌙 Bedtime soon';
@@ -616,6 +638,7 @@ body::after { content: ""; display: none; }
     const pct     = Math.round((hours - WAKE) / span * 100);
     const minsLeft = (SLEEP - hours) * 60;
     ringEl.style.strokeDashoffset = C * (1 - pct / 100);
+    ringEl.style.stroke = drRgb(drPaletteAt(pct));
     pctEl.textContent = pct + '%';
 
     let phase, status;
