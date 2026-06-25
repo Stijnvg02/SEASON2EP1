@@ -796,18 +796,13 @@ html, body {
   //   adjustments: +200 ml male, +100 ml age 50+
   // ============================================================
   function computeTargetMl() {
-    const p = state.profile;
-    const wKg = state.weightUnit === 'lb' ? p.weightKg / 2.20462 : p.weightKg;
-    const base = wKg * 35;
-    const exercise = (p.activityHrsPerWeek || 0) / 7 * 500;
+    const base = 2800;
+    const exercise = (state.profile.activityHrsPerWeek || 0) / 7 * 500;
     const caffeine = Math.max(0, (state.caffeineMgPerDay || 0) - 200) * 1.5;
     const subs = (state.substances || []).reduce((s, x) => s + subExtraMl(x), 0);
-    let adjust = 0;
-    if (p.sex === 'm') adjust += 200;
-    if ((p.age || 0) >= 50) adjust += 100;
     return {
-      base, exercise, caffeine, subs, adjust,
-      total: base + exercise + caffeine + subs + adjust
+      base, exercise, caffeine, subs, adjust: 0,
+      total: base + exercise + caffeine + subs
     };
   }
 
