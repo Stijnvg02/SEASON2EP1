@@ -117,15 +117,15 @@
 }
 .bottombar-tab-icon {
   font-size: 24px; line-height: 1;
-  filter: grayscale(100%) brightness(1.2);
+  filter: saturate(0.6) brightness(1.0);
   opacity: 0.55;
   transition: opacity 0.15s, filter 0.15s, transform 0.10s;
 }
 .bottombar-tab.active {
-  color: #1A1A1A;
+  color: #F45B8B;
 }
 .bottombar-tab.active .bottombar-tab-icon {
-  filter: grayscale(100%) brightness(1.6);
+  filter: saturate(1.4) brightness(1.05) drop-shadow(0 0 6px rgba(244,91,139,0.45));
   opacity: 1;
 }
 .bottombar-tab:active .bottombar-tab-icon { transform: scale(0.92); }
