@@ -431,14 +431,12 @@ main {
   top: calc(100% + 6px);
   left: 0;
   width: max(100%, 320px);
-  background: var(--bg-dropdown);
-  border: 1px solid var(--border-strong);
+  background: linear-gradient(135deg, #3B82F6, #60A5FA);
+  border: none;
   border-radius: 12px;
   max-height: 280px;
   overflow-y: auto;
-  /* backdrop removed */
-  -webkit-/* backdrop removed */
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.65);
+  box-shadow: 0 8px 28px rgba(59,130,246,0.45), 0 0 0 1px rgba(96,165,250,0.30);
   z-index: 50;
   padding: 6px;
 }
@@ -454,19 +452,19 @@ main {
   cursor: pointer;
   text-align: left;
   font-family: inherit;
-  color: #8A8A8A;
+  color: rgba(255,255,255,0.80);
   transition: background 0.12s;
 }
-.stack-result:hover, .stack-result.is-focused { background: #F0F0F0; }
+.stack-result:hover, .stack-result.is-focused { background: rgba(255,255,255,0.15); }
 
 .stack-result-icon { font-size: 17px; flex-shrink: 0; width: 24px; text-align: center; }
 .stack-result-body { min-width: 0; flex: 1; }
 .stack-result-name {
   font-size: 13px; font-weight: 600;
-  color: #1A1A1A; line-height: 1.2;
+  color: #FFFFFF; line-height: 1.2;
 }
 .stack-result-meta {
-  font-size: 11px; color: #AAAAAA;
+  font-size: 11px; color: rgba(255,255,255,0.75);
   margin-top: 2px;
 }
 
