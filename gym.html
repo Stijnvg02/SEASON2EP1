@@ -2660,6 +2660,15 @@ img, video, canvas, svg { max-width: 100%; }
     if (existing) existing.weight = weight;
     else { wtEntries.push({ dateKey: key, weight }); wtEntries.sort((a,b) => a.dateKey.localeCompare(b.dateKey)); }
     wtSave(wtEntries);
+    // sync to water coach so weight doesn't need to be entered twice
+    try {
+      const wRaw = localStorage.getItem('po_water_v1');
+      const wState = wRaw ? JSON.parse(wRaw) : {};
+      if (!wState.profile) wState.profile = {};
+      const weightKg = state.units === 'lb' ? weight / 2.20462 : weight;
+      wState.profile.weightKg = Math.round(weightKg * 10) / 10;
+      localStorage.setItem('po_water_v1', JSON.stringify(wState));
+    } catch(e) {}
     wtRender();
   }
 
