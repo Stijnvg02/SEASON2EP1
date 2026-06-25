@@ -20,7 +20,7 @@
 <script src="lock.js"></script>                                  <!-- passcode lock screen -->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#080e0b">
+<meta name="theme-color" content="#050506">
 <title>New Section · Dashboard</title>
 
 <!-- Shared dashboard scripts. Keep these in this order. -->
@@ -36,20 +36,20 @@
 /*  instead of hard-coding colors.                                */
 /* ============================================================= */
 :root {
-  --text-primary: #FFFFFF;   /* headings, key numbers   */
-  --text-secondary: rgba(255,255,255,0.58); /* body text               */
-  --text-tertiary: rgba(255,255,255,0.36);  /* labels, captions, hints */
-  --success: #5CE8A0;        /* green  — done / good    */
+  --text-primary: #FAFAFA;   /* headings, key numbers   */
+  --text-secondary: #B8B6B0; /* body text               */
+  --text-tertiary: #76746E;  /* labels, captions, hints */
+  --success: #6BE3A4;        /* green  — done / good    */
   --warning: #F2C063;        /* amber  — caution        */
   --danger:  #FF6B6B;        /* red    — bad / delete   */
-  --font: "Helvetica Neue", -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
 }
 
 * { box-sizing: border-box; }
 html, body {
   margin: 0; padding: 0;
-  background: #080e0b;
+  background: #050506;
   color: var(--text-secondary);
   font-family: var(--font);
   -webkit-font-smoothing: antialiased;
@@ -67,8 +67,8 @@ body::before {
   content: '';
   position: fixed; inset: 0;
   background:
-    radial-gradient(ellipse 70% 55% at 50% -5%, rgba(52,211,153,0.22), transparent 70%),
-    radial-gradient(circle at 80% 85%, rgba(52,211,153,0.09), transparent 50%);
+    radial-gradient(circle at 82% 14%, rgba(224, 118, 88, 0.16), transparent 45%),
+    radial-gradient(circle at 18% 90%, rgba(180, 180, 200, 0.06), transparent 50%);
   filter: blur(40px);
   pointer-events: none;
   z-index: -2;
@@ -95,7 +95,7 @@ body::after {
   margin: 0 0 14px;
   font-size: 28px; font-weight: 700;
   letter-spacing: -0.025em;
-  background: linear-gradient(180deg, #FFFFFF 0%, rgba(255,255,255,0.75) 120%);
+  background: linear-gradient(180deg, #FFFFFF 0%, #C7C4BC 120%);
   -webkit-background-clip: text; background-clip: text;
   -webkit-text-fill-color: transparent; color: transparent;
 }
@@ -160,8 +160,8 @@ body::after {
 .gm-streak {
   display: inline-flex; align-items: center; gap: 6px;
   padding: 8px 12px; border-radius: 999px;
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.10);
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.06);
   color: var(--text-tertiary);
   font-size: 11px; font-weight: 600;
   letter-spacing: 0.10em; text-transform: uppercase;
@@ -174,8 +174,8 @@ body::after {
   gap: 12px;
 }
 .stat {
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.10);
+  background: rgba(255,255,255,0.035);
+  border: 1px solid rgba(255,255,255,0.06);
   border-radius: 12px; padding: 14px;
 }
 .stat-num {
@@ -199,8 +199,8 @@ body::after {
 .gm-row {
   display: flex; align-items: center; gap: 12px;
   padding: 12px 14px; margin-bottom: 6px;
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.10);
+  background: rgba(255,255,255,0.035);
+  border: 1px solid rgba(255,255,255,0.06);
   border-radius: 12px;
   transition: background 0.2s, opacity 0.3s;
 }
@@ -251,7 +251,7 @@ body::after {
 .gm-input {
   flex: 1; min-width: 0;
   padding: 11px 14px;
-  border: 1px solid rgba(255,255,255,0.10);
+  border: 1px solid rgba(255,255,255,0.08);
   border-radius: 12px; background: rgba(0,0,0,0.28);
   color: var(--text-primary);
   font-family: inherit; font-size: 14px; outline: none;
@@ -263,7 +263,7 @@ body::after {
 /* Primary (light) button. */
 .gm-add {
   padding: 11px 20px; border: 0; border-radius: 12px;
-  background: linear-gradient(135deg, #6EE7B7 0%, #34D399 100%);
+  background: linear-gradient(180deg, #FFFFFF 0%, #E8E5DD 100%);
   color: #0A0A0B; font-family: inherit; font-size: 13px; font-weight: 700;
   cursor: pointer;
   box-shadow:
@@ -279,7 +279,7 @@ body::after {
 .gm-ghost {
   padding: 11px 18px;
   border: 1px solid rgba(255,255,255,0.10);
-  border-radius: 12px; background: rgba(255,255,255,0.06);
+  border-radius: 12px; background: rgba(255,255,255,0.04);
   color: var(--text-primary);
   font-family: inherit; font-size: 13px; font-weight: 600; cursor: pointer;
   transition: background 0.15s, border-color 0.15s;

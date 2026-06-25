@@ -5,7 +5,7 @@
 <script src="/api/config"></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#080e0b">
+<meta name="theme-color" content="#050506">
 <title>Caffeine · Dashboard</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -14,20 +14,20 @@
 
 <style>
 :root {
-  --text-primary: #FFFFFF;
-  --text-secondary: rgba(255,255,255,0.58);
-  --text-tertiary: rgba(255,255,255,0.36);
-  --success: #5CE8A0;
+  --text-primary: #FAFAFA;
+  --text-secondary: #B8B6B0;
+  --text-tertiary: #76746E;
+  --success: #6BE3A4;
   --warning: #F2C063;
   --danger:  #FF6B6B;
   --caf: #C9A36B;
-  --energy: #5CE8A0;
-  --font: "Helvetica Neue", -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --energy: #6BE3A4;
+  --font: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
 }
 * { box-sizing: border-box; }
 html, body {
-  margin: 0; padding: 0; background: #080e0b; color: var(--text-secondary);
+  margin: 0; padding: 0; background: #050506; color: var(--text-secondary);
   font-family: var(--font); -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
 }
@@ -39,7 +39,7 @@ body::before {
   content: ''; position: fixed; inset: 0;
   background:
     radial-gradient(circle at 82% 14%, rgba(107,227,164,0.12), transparent 45%),
-    radial-gradient(circle at 80% 85%, rgba(52,211,153,0.09), transparent 50%);
+    radial-gradient(circle at 18% 90%, rgba(201,163,107,0.07), transparent 50%);
   filter: blur(40px); pointer-events: none; z-index: -2;
   animation: drift 36s ease-in-out infinite alternate;
 }
@@ -53,7 +53,7 @@ body::after {
 .page { max-width: 1100px; margin: 0 auto; }
 .dash-title {
   margin: 0 0 14px; font-size: 28px; font-weight: 700; letter-spacing: -0.025em;
-  background: linear-gradient(180deg, #FFFFFF 0%, rgba(255,255,255,0.75) 120%);
+  background: linear-gradient(180deg, #FFFFFF 0%, #C7C4BC 120%);
   -webkit-background-clip: text; background-clip: text;
   -webkit-text-fill-color: transparent; color: transparent;
 }
@@ -68,7 +68,7 @@ body::after {
 .section-title::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, rgba(255,255,255,0.08), transparent); }
 
 .gm-card {
-  position: relative; background: rgba(255,255,255,0.06); border-radius: 16px; padding: 20px;
+  position: relative; background: rgba(255,255,255,0.04); border-radius: 16px; padding: 20px;
   margin-bottom: 14px; backdrop-filter: blur(24px) saturate(1.2); -webkit-backdrop-filter: blur(24px) saturate(1.2);
   box-shadow: 0 12px 40px rgba(0,0,0,0.45); overflow: hidden;
 }
@@ -110,7 +110,7 @@ body::after {
 
 /* ===== Smart timing tiles + tips ===== */
 .tile-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px,1fr)); gap: 12px; }
-.mini { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.10); border-radius: 12px; padding: 15px; }
+.mini { background: rgba(255,255,255,0.035); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 15px; }
 .mini .k { font-size: 9.5px; font-weight: 700; letter-spacing: 0.10em; text-transform: uppercase; color: var(--text-tertiary); }
 .mini .v { font-size: 20px; font-weight: 700; color: var(--text-primary); margin-top: 7px; font-variant-numeric: tabular-nums; line-height: 1.1; }
 .mini .s { font-size: 11.5px; color: var(--text-tertiary); margin-top: 5px; line-height: 1.4; }
@@ -134,7 +134,7 @@ body::after {
 
 /* ===== Search + log ===== */
 .gm-input {
-  width: 100%; padding: 12px 14px; border: 1px solid rgba(255,255,255,0.10); border-radius: 12px;
+  width: 100%; padding: 12px 14px; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px;
   background: rgba(0,0,0,0.28); color: var(--text-primary); font-family: inherit; font-size: 14px; outline: none;
   transition: border-color 0.2s, background 0.2s;
 }
@@ -142,7 +142,7 @@ body::after {
 .gm-input:focus { border-color: rgba(201,163,107,0.45); background: rgba(0,0,0,0.36); }
 .results { list-style: none; margin: 12px 0 0; padding: 0; max-height: 320px; overflow-y: auto; }
 .result { display: flex; align-items: center; gap: 12px; padding: 11px 12px; margin-bottom: 6px;
-  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.10); border-radius: 12px; cursor: pointer; transition: background 0.15s, border-color 0.15s; }
+  background: rgba(255,255,255,0.035); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; cursor: pointer; transition: background 0.15s, border-color 0.15s; }
 .result:hover { background: rgba(201,163,107,0.10); border-color: rgba(201,163,107,0.30); }
 .result-emoji { font-size: 20px; flex-shrink: 0; width: 24px; text-align: center; }
 .result-name { flex: 1; font-size: 14px; color: var(--text-primary); }
@@ -153,16 +153,16 @@ body::after {
 .custom-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-top: 14px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.06); }
 .custom-row .gm-input { flex: 1; min-width: 0; }
 .custom-row .mg-input { width: 92px; flex: none; }
-.gm-add { padding: 12px 18px; border: 0; border-radius: 12px; background: linear-gradient(135deg, #6EE7B7 0%, #34D399 100%); color: #0A0A0B;
+.gm-add { padding: 12px 18px; border: 0; border-radius: 12px; background: linear-gradient(180deg, #FFFFFF 0%, #E8E5DD 100%); color: #0A0A0B;
   font-family: inherit; font-size: 13px; font-weight: 700; cursor: pointer;
-  box-shadow: 0 4px 18px rgba(52,211,153,0.45), 0 0 24px rgba(52,211,153,0.22); transition: transform 0.1s, filter 0.15s; white-space: nowrap; }
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 2px 8px rgba(0,0,0,0.35), 0 8px 22px rgba(0,0,0,0.25); transition: transform 0.1s, filter 0.15s; white-space: nowrap; }
 .gm-add:hover { filter: brightness(1.06); transform: translateY(-1px); }
 .gm-add:active { transform: translateY(0); }
 
 /* ===== Time-picker popup ===== */
 .tp-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.55); z-index:200; align-items:center; justify-content:center; }
 .tp-overlay.open { display:flex; }
-.tp-box { background:#0d1a11; border:1px solid rgba(255,255,255,0.10); border-radius:18px; padding:22px; width:min(320px,90vw); }
+.tp-box { background:#0e0e10; border:1px solid rgba(255,255,255,0.10); border-radius:18px; padding:22px; width:min(320px,90vw); }
 .tp-title { font-size:11px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--text-tertiary); margin-bottom:14px; }
 .tp-drink { display:flex; align-items:center; gap:10px; margin-bottom:18px; }
 .tp-emoji { font-size:24px; }
@@ -178,7 +178,7 @@ body::after {
 .log-list { list-style: none; margin: 0; padding: 0; }
 .empty-state { text-align: center; font-size: 12px; font-style: italic; color: var(--text-tertiary); padding: 16px 0; }
 .log-row { display: flex; align-items: center; gap: 12px; padding: 12px 14px; margin-bottom: 8px;
-  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.10); border-radius: 12px; }
+  background: rgba(255,255,255,0.035); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; }
 .log-emoji { font-size: 20px; flex-shrink: 0; }
 .log-main { flex: 1; min-width: 0; }
 .log-name { font-size: 14px; color: var(--text-primary); font-weight: 600; }
