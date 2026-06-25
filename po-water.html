@@ -550,6 +550,10 @@ html, body {
     </div>
     <div class="water-helper" id="waterHelper">Start the day — first one in.</div>
 
+    <div id="weatherBadge" style="display:none; margin-top:10px; padding:9px 12px; background:#F0F8FF; border:1px solid rgba(59,130,246,0.18); border-radius:10px; font-size:12.5px; color:#3B82F6; font-weight:600; display:flex; align-items:center; gap:8px;">
+      <span id="weatherBadgeText">🌡️ Fetching weather…</span>
+    </div>
+
     <button class="why-toggle" id="whyToggle" type="button" aria-expanded="false">
       <span>Why this target?</span>
       <span class="why-arrow">▾</span>
@@ -798,6 +802,15 @@ html, body {
   //   substances = sum of extraMl for each added med/stim
   //   adjustments: +200 ml male, +100 ml age 50+
   // ============================================================
+  // Weather state
+  let weatherTempC = null;
+  let weatherExtra = 0;
+
+  function heatAdjustMl(tempC) {
+    if (tempC == null || tempC <= 25) return 0;
+    return Math.round(Math.min((tempC - 25) * 150, 1000));
+  }
+
   function computeTargetMl() {
     const p = state.profile;
     const wKg = state.weightUnit === 'lb' ? p.weightKg / 2.20462 : p.weightKg;
@@ -808,10 +821,62 @@ html, body {
     let adjust = 0;
     if (p.sex === 'm') adjust += 200;
     if ((p.age || 0) >= 50) adjust += 100;
+    const heat = weatherExtra;
     return {
-      base, exercise, caffeine, subs, adjust,
-      total: base + exercise + caffeine + subs + adjust
+      base, exercise, caffeine, subs, adjust, heat,
+      total: base + exercise + caffeine + subs + adjust + heat
     };
+  }
+
+  async function fetchWeather() {
+    const badge = document.getElementById('weatherBadge');
+    const badgeText = document.getElementById('weatherBadgeText');
+    if (!badge) return;
+
+    // Check cache (refresh every 30 min)
+    const cached = JSON.parse(localStorage.getItem('water_weather') || 'null');
+    if (cached && (Date.now() - cached.ts) < 30 * 60 * 1000) {
+      weatherTempC = cached.temp;
+      weatherExtra = heatAdjustMl(weatherTempC);
+      updateWeatherBadge(badge, badgeText);
+      renderWater();
+      return;
+    }
+
+    if (!navigator.geolocation) return;
+
+    navigator.geolocation.getCurrentPosition(async (pos) => {
+      try {
+        const { latitude: lat, longitude: lon } = pos.coords;
+        const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m&forecast_days=1`;
+        const res = await fetch(url);
+        const data = await res.json();
+        weatherTempC = data.current.temperature_2m;
+        weatherExtra = heatAdjustMl(weatherTempC);
+        localStorage.setItem('water_weather', JSON.stringify({ temp: weatherTempC, ts: Date.now() }));
+        updateWeatherBadge(badge, badgeText);
+        renderWater();
+      } catch (e) {
+        badge.style.display = 'none';
+      }
+    }, () => { badge.style.display = 'none'; });
+  }
+
+  function updateWeatherBadge(badge, badgeText) {
+    if (weatherTempC == null) { badge.style.display = 'none'; return; }
+    badge.style.display = 'flex';
+    const temp = Math.round(weatherTempC);
+    if (weatherExtra > 0) {
+      badge.style.background = '#FFF7ED';
+      badge.style.borderColor = 'rgba(249,115,22,0.25)';
+      badge.style.color = '#EA580C';
+      badgeText.textContent = `🌡️ ${temp}°C outside — +${fmtMl(weatherExtra)} added to your target`;
+    } else {
+      badge.style.background = '#F0F9FF';
+      badge.style.borderColor = 'rgba(59,130,246,0.18)';
+      badge.style.color = '#3B82F6';
+      badgeText.textContent = `🌡️ ${temp}°C outside — no heat adjustment needed`;
+    }
   }
 
   function unitVolMl() {
@@ -907,6 +972,8 @@ html, body {
     });
     if (calc.adjust > 0)
       html += '<div class="why-row"><span class="why-label">+ Sex / age adjustment</span><span class="why-val">+ ' + fmtMl(calc.adjust) + '</span></div>';
+    if (calc.heat > 0)
+      html += '<div class="why-row"><span class="why-label">🌡️ + Heat (' + Math.round(weatherTempC) + '°C outside)</span><span class="why-val">+ ' + fmtMl(calc.heat) + '</span></div>';
     html += '<div class="why-row total"><span class="why-label">Daily target</span><span class="why-val">' + fmtMl(calc.total) + ' ≈ ' + targetUnits + ' ' + unitLabelPlural() + '</span></div>';
     wrap.innerHTML = html;
   }
@@ -968,6 +1035,9 @@ html, body {
   }
 
   function renderAll() { renderDayPill(); renderWater(); }
+
+  // Kick off weather fetch after first render
+  setTimeout(fetchWeather, 500);
 
   // ============================================================
   // EVENT WIRING
