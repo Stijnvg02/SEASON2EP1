@@ -3539,12 +3539,7 @@ img, video, canvas, svg { max-width: 100%; }
   /* Anchor the avatar to the top-right of the page content, not the far corner. */
   .po-shell { position: relative; }
   #nvFab {
-    position: absolute; top: 16px; right: 16px; z-index: 30;
-    width: 46px; height: 46px; border-radius: 50%; border: 0; cursor: pointer; padding: 0;
-    overflow: hidden; -webkit-tap-highlight-color: transparent; transition: transform 0.12s;
-    background: radial-gradient(circle at 50% 58%, #8A6CFF, #4C2EC9 80%);
-    box-shadow: 0 0 0 1px rgba(255,255,255,0.14), 0 6px 22px rgba(124,92,255,0.55),
-                inset 0 -6px 14px rgba(38,10,86,0.65);
+    display: none;
   }
   #nvFab:active { transform: scale(0.93); }
   /* swirling conic plasma */
