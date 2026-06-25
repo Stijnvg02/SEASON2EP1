@@ -95,10 +95,10 @@ const CONFIG = {
 
 <style>
 :root {
-  --bg: #0a0a0b;
-  --bg-card: #111113;
-  --text-1: #ffffff;
-  --text-2: rgba(255,255,255,0.6);
+  --bg: linear-gradient(135deg, #FDE8DC 0%, #F5D5F0 55%, #DDD5F5 100%) fixed;
+  --bg-card: rgba(255,255,255,0.82);
+  --text-1: #1A1A1A;
+  --text-2: rgba(0,0,0,0.50);
   --text-3: rgba(255,255,255,0.4);
   --text-4: rgba(255,255,255,0.25);
   --border: rgba(255,255,255,0.06);
@@ -114,7 +114,7 @@ const CONFIG = {
 * { box-sizing: border-box; }
 html, body {
   margin: 0; padding: 0;
-  background: radial-gradient(ellipse 80% 60% at 50% 0%, #14141a 0%, #0a0a0b 60%);
+  background: linear-gradient(135deg, #FDE8DC 0%, #F5D5F0 55%, #DDD5F5 100%) fixed;
   color: var(--text-1);
   font-family: var(--font);
   -webkit-font-smoothing: antialiased;
@@ -1122,7 +1122,7 @@ img, video, canvas, svg { max-width: 100%; }
 .wt-photo-card {
   position: relative; aspect-ratio: 3 / 4;
   border-radius: 12px; overflow: hidden;
-  background: linear-gradient(135deg, #1a1a24, #0a0f0a);
+  background: linear-gradient(135deg, #FDE8DC 0%, #F5D5F0 55%, #DDD5F5 100%) fixed;
   cursor: pointer; border: 1px solid rgba(110,231,183,0.08);
   font-family: inherit;
   -webkit-tap-highlight-color: transparent;
@@ -3552,7 +3552,7 @@ img, video, canvas, svg { max-width: 100%; }
                 radial-gradient(circle at 72% 82%, rgba(18,7,40,0.5), transparent 55%);
   }
   @keyframes nvspin { to { transform: rotate(360deg); } }
-  #nvFab .nv-online { position: absolute; right: 1px; bottom: 1px; z-index: 2; width: 11px; height: 11px; border-radius: 50%; background: #6ee7b7; border: 2px solid #0a0a0b; box-shadow: 0 0 6px rgba(110,231,183,0.7); }
+  #nvFab .nv-online { position: absolute; right: 1px; bottom: 1px; z-index: 2; width: 11px; height: 11px; border-radius: 50%; background: #6ee7b7; border: 2px solid rgba(255,255,255,0.6); box-shadow: 0 0 6px rgba(110,231,183,0.7); }
   #nvPanel {
     position: absolute; top: 72px; right: 16px; z-index: 30;
     width: min(340px, calc(100vw - 28px)); max-height: 66vh; display: none; flex-direction: column;
