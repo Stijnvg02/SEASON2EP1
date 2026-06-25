@@ -946,8 +946,10 @@ html, body { scrollbar-width: none; -ms-overflow-style: none; }
   display: flex; gap: 6px; align-items: stretch;
   flex-wrap: wrap;
   padding: 4px;
-  background: rgba(0, 0, 0, 0.30);
+  background: #FFFFFF;
+  border: 1px solid rgba(0,0,0,0.08);
   border-radius: 12px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
 }
 .wish-input {
   background: transparent; border: none; outline: none;
@@ -963,27 +965,29 @@ html, body { scrollbar-width: none; -ms-overflow-style: none; }
 .wish-input-amt  { flex: 1; min-width: 80px; max-width: 110px; text-align: right; font-variant-numeric: tabular-nums; }
 .wish-input-ccy {
   flex: 0 1 80px;
-  background: #FFFFFF;
+  background: #F0F0F0;
+  border: 1px solid rgba(0,0,0,0.08);
   border-radius: 9px;
   color: #1A1A1A;
   font-family: inherit; font-size: 12px;
   font-weight: 600;
   cursor: pointer;
   appearance: none; -webkit-appearance: none;
+  padding: 0 8px;
   text-align: center;
 }
 .wish-add-btn {
   padding: 0 18px;
-  background: linear-gradient(180deg, #B794F4, #9F7DD4);
-  color: #1A1A1A; border: none;
+  background: linear-gradient(135deg, #F45B8B, #FF6B6B);
+  color: #FFFFFF; border: none;
   border-radius: 9px;
   font-family: inherit; font-size: 14px; font-weight: 700;
   cursor: pointer;
   white-space: nowrap;
-  box-shadow: 0 4px 14px rgba(183,148,244,0.30);
+  box-shadow: 0 4px 14px rgba(244,91,139,0.35);
   transition: transform 0.12s, box-shadow 0.18s;
 }
-.wish-add-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(183,148,244,0.45); }
+.wish-add-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(244,91,139,0.50); }
 .wish-add-btn:active { transform: scale(0.97); }
 
 .wish-section-h {
