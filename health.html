@@ -317,11 +317,12 @@ main {
   gap: 12px;
   padding: 10px 14px;
   margin-bottom: 14px;
-  background: rgba(0, 0, 0, 0.28);
-  border: 1px solid rgba(0,0,0,0.08);
+  background: linear-gradient(135deg, #F45B8B, #FF6B6B);
+  border: 0;
   border-radius: 10px;
   font-size: 12px;
   min-height: 36px;
+  box-shadow: 0 4px 14px rgba(244,91,139,0.35);
 }
 .stack-ticker-dot {
   width: 8px; height: 8px;
@@ -345,15 +346,15 @@ main {
   font-weight: 700;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: #AAAAAA;
+  color: rgba(255,255,255,0.75);
   flex-shrink: 0;
 }
-.stack-ticker-sep { color: var(--text-quaternary); flex-shrink: 0; }
+.stack-ticker-sep { color: rgba(255,255,255,0.55); flex-shrink: 0; }
 .stack-ticker-msg {
   flex: 1;
   font-size: 12px;
   font-weight: 600;
-  color: #1A1A1A;
+  color: #FFFFFF;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -363,7 +364,7 @@ main {
 .stack-ticker-count {
   font-family: var(--font-mono);
   font-size: 11px;
-  color: #AAAAAA;
+  color: rgba(255,255,255,0.75);
   font-variant-numeric: tabular-nums;
   flex-shrink: 0;
 }
