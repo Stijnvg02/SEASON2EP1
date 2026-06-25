@@ -194,17 +194,19 @@ html, body {
   display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 8px;
 }
 .wq-chip {
-  background: rgba(0,0,0,0.03); border: 1px solid rgba(0,0,0,0.08);
-  border-radius: 14px; color: var(--text-1);
+  background: linear-gradient(135deg, #3B82F6, #60A5FA);
+  border: none;
+  border-radius: 14px; color: #FFFFFF;
   font-family: inherit; font-size: 13px; font-weight: 600;
   cursor: pointer; padding: 12px 8px;
   display: flex; flex-direction: column; align-items: center; gap: 3px;
-  -webkit-tap-highlight-color: transparent; transition: background 0.12s, transform 0.1s;
+  box-shadow: 0 4px 14px rgba(59,130,246,0.30);
+  -webkit-tap-highlight-color: transparent; transition: filter 0.12s, transform 0.1s;
 }
-.wq-chip:hover { background: rgba(0,0,0,0.08); }
+.wq-chip:hover { filter: brightness(1.07); }
 .wq-chip:active { transform: scale(0.96); }
 .wq-chip .wq-emoji { font-size: 20px; }
-.wq-chip .wq-sub  { font-size: 10px; color: var(--text-3); font-weight: 500; }
+.wq-chip .wq-sub  { font-size: 10px; color: rgba(255,255,255,0.75); font-weight: 500; }
 .wq-custom {
   display: flex; gap: 8px; align-items: center; margin-bottom: 8px;
 }
