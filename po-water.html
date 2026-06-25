@@ -129,12 +129,12 @@ html, body {
 }
 .divider span {
   font-size: 11px; letter-spacing: 0.22em; font-weight: 600;
-  color: rgba(255,255,255,0.85);
+  color: #1A1A1A;
 }
 
 /* ----- Card ----- */
 .card {
-  background: var(--bg-card);
+  background: #FFFFFF;
   border: 1px solid rgba(0,0,0,0.08);
   border-radius: 18px;
   padding: 22px 20px 18px;
@@ -217,7 +217,7 @@ html, body {
 .wq-custom input::placeholder { color: var(--text-3); font-weight: 400; }
 .wq-add-btn {
   background: linear-gradient(135deg, #F45B8B, #FF6B6B);
-  color: #FFFFFF; border: none; border-radius: 12px;
+  color: #1A1A1A; border: none; border-radius: 12px;
   font-family: inherit; font-size: 13px; font-weight: 700;
   cursor: pointer; padding: 11px 18px; white-space: nowrap;
   -webkit-tap-highlight-color: transparent;
@@ -262,7 +262,7 @@ html, body {
 .why-body {
   margin-top: 8px;
   padding: 14px 16px;
-  background: rgba(255,255,255,0.025);
+  background: #FAFAFA;
   border: 1px solid rgba(0,0,0,0.08);
   border-radius: 10px;
   display: none;
@@ -310,7 +310,7 @@ html, body {
 .spark-bar { fill: var(--good); }
 .spark-bar.miss { fill: rgba(255,138,138,0.5); }
 .spark-target {
-  stroke: rgba(255,255,255,0.20);
+  stroke: rgba(0,0,0,0.10);
   stroke-width: 1; stroke-dasharray: 3 3;
   vector-effect: non-scaling-stroke;
 }
@@ -318,13 +318,13 @@ html, body {
 /* ----- Modal ----- */
 .modal-bg {
   display: none; position: fixed; inset: 0;
-  background: rgba(0,0,0,0.65); backdrop-filter: blur(6px);
+  background: rgba(0,0,0,0.35); /* backdrop removed */
   z-index: 100; align-items: center; justify-content: center; padding: 20px;
 }
 .modal-bg.show { display: flex; }
 .modal {
   width: 100%; max-width: 480px;
-  background: var(--bg-card);
+  background: #FFFFFF;
   border: 1px solid var(--border-strong);
   border-radius: 16px;
   padding: 22px; max-height: 88vh; overflow-y: auto;
@@ -387,7 +387,7 @@ html, body {
 .search-input:focus { border-color: rgba(110,231,183,0.40); }
 .search-results {
   position: absolute; top: calc(100% + 4px); left: 0; right: 0;
-  background: var(--bg-card);
+  background: #FFFFFF;
   border: 1px solid var(--border-strong);
   border-radius: 10px; padding: 4px;
   max-height: 240px; overflow-y: auto;
@@ -413,7 +413,7 @@ html, body {
 .sub-row {
   display: flex; align-items: center; gap: 10px;
   padding: 10px 12px;
-  background: rgba(255,255,255,0.025);
+  background: #FAFAFA;
   border: 1px solid rgba(0,0,0,0.08);
   border-radius: 10px;
   flex-wrap: wrap;
@@ -574,7 +574,7 @@ html, body {
       <div class="field-row">
         <div class="field">
           <label>Weight <span style="font-size:10px;opacity:0.5;font-weight:400">(synced from Fitness)</span></label>
-          <div id="setWeightDisplay" style="padding:10px 12px;border-radius:10px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.10);font-size:15px;font-weight:700;color:var(--text-1);min-width:80px;">—</div>
+          <div id="setWeightDisplay" style="padding:10px 12px;border-radius:10px;background: #F0F0F0;border: 1px solid rgba(0,0,0,0.08);font-size:15px;font-weight:700;color:var(--text-1);min-width:80px;">—</div>
           <input type="number" id="setWeight" step="0.5" min="20" max="300" style="display:none">
         </div>
         <div class="field">

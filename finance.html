@@ -54,28 +54,8 @@ html, body {
 }
 
 /* Backdrop — black with subtle warm + cool washes */
-body::before {
-  content: '';
-  position: fixed;
-  inset: -10%;
-  z-index: -2;
-  background:
-    radial-gradient(60% 45% at 82% 14%, rgba(224, 118, 88, 0.16) 0%, transparent 55%),
-    radial-gradient(55% 45% at 18% 90%, rgba(180, 180, 200, 0.06) 0%, transparent 55%),
-    linear-gradient(180deg, #0A0A0B 0%, #050506 100%);
-  filter: blur(40px) saturate(1.05);
-  pointer-events: none;
-}
-body::after {
-  content: '';
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  /* noise removed */
-  background-size: 3px 3px;
-  opacity: 0.7;
-  pointer-events: none;
-}
+body::before { content: ""; display: none; }
+body::after { content: ""; display: none; }
 
 .shell {
   max-width: 880px;
@@ -118,15 +98,15 @@ body::after {
   gap: 4px;
   padding: 8px max(12px, env(safe-area-inset-left)) calc(8px + env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-right));
   background: linear-gradient(180deg, transparent, rgba(5,5,6,0.92) 30%);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  /* backdrop removed */
+  -webkit-/* backdrop removed */
 }
 .bottom-tabs::before {
   content: '';
   position: absolute;
   top: 0; left: 12px; right: 12px;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.10), transparent);
+  background: rgba(0,0,0,0.06);
   pointer-events: none;
 }
 .bot-tab {
@@ -142,11 +122,11 @@ body::after {
   -webkit-tap-highlight-color: transparent;
   transition: background 0.15s, color 0.15s, border-color 0.15s;
 }
-.bot-tab:hover { color: #8A8A8A; background: rgba(255,255,255,0.025); }
+.bot-tab:hover { color: #8A8A8A; background: #FAFAFA; }
 .bot-tab.active {
   color: #1A1A1A;
   background: rgba(0,0,0,0.03);
-  border-color: rgba(255,255,255,0.10);
+  border-color: rgba(0,0,0,0.08);
 }
 .bot-tab-icon { font-size: 18px; line-height: 1; }
 .bot-tab-label {
@@ -205,7 +185,7 @@ html, body { scrollbar-width: none; -ms-overflow-style: none; }
   content: '';
   flex: 1;
   height: 1px;
-  background: linear-gradient(90deg, rgba(255,255,255,0.08), transparent);
+  background: rgba(0,0,0,0.06);
 }
 
 /* Card */
@@ -226,7 +206,7 @@ html, body { scrollbar-width: none; -ms-overflow-style: none; }
   position: absolute;
   top: 0; left: 14px; right: 14px;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.16), transparent);
+  background: rgba(0,0,0,0.06);
   pointer-events: none;
 }
 .card-grid {
@@ -247,7 +227,7 @@ html, body { scrollbar-width: none; -ms-overflow-style: none; }
   font-weight: 700;
   letter-spacing: 0.04em;
   border: none;
-  background: rgba(255, 255, 255, 0.05);
+  background: #F5F5F5;
   color: #8A8A8A;
   font-family: var(--font-mono);
   text-transform: uppercase;
@@ -257,7 +237,7 @@ html, body { scrollbar-width: none; -ms-overflow-style: none; }
   width: 5px; height: 5px;
   border-radius: 50%;
   flex-shrink: 0;
-  background: rgba(255,255,255,0.30);
+  background: #DDDDDD;
 }
 .tag-green::before { background: #3EC98A; box-shadow: 0 0 6px rgba(107,227,164,0.55); }
 .tag-green { background: rgba(107, 227, 164, 0.10); color: #8EE9B7; }
@@ -325,7 +305,7 @@ html, body { scrollbar-width: none; -ms-overflow-style: none; }
   cursor: pointer;
   white-space: nowrap;
 }
-.quick-add-btn:hover { background: rgba(255,255,255,0.12); color: #1A1A1A; }
+.quick-add-btn:hover { background: #EBEBEB; color: #1A1A1A; }
 .quick-add-btn:active { transform: scale(0.96); }
 
 /* Custom list rows */
@@ -334,7 +314,7 @@ html, body { scrollbar-width: none; -ms-overflow-style: none; }
   align-items: center;
   gap: 10px;
   padding: 9px 12px;
-  background: rgba(255,255,255,0.025);
+  background: #FAFAFA;
   border: none;
   border-radius: 10px;
   margin-bottom: 5px;
@@ -345,7 +325,7 @@ html, body { scrollbar-width: none; -ms-overflow-style: none; }
 .custom-item .item-dot {
   width: 5px; height: 5px;
   border-radius: 50%;
-  background: rgba(255,255,255,0.30);
+  background: #DDDDDD;
   flex-shrink: 0;
 }
 .custom-item span { flex: 1; word-break: break-word; }
@@ -392,7 +372,7 @@ html, body { scrollbar-width: none; -ms-overflow-style: none; }
   cursor: pointer; border-radius: 4px;
   padding: 2px 4px; margin: -2px -4px;
 }
-.nw-name-edit:hover, .nw-amt-edit:hover { background: rgba(255, 255, 255, 0.06); }
+.nw-name-edit:hover, .nw-amt-edit:hover { background: #F0F0F0; }
 .nw-del {
   background: none; border: none;
   color: #AAAAAA; cursor: pointer;
@@ -402,7 +382,7 @@ html, body { scrollbar-width: none; -ms-overflow-style: none; }
 .nw-del:hover { color: var(--danger); }
 
 .nw-subcard {
-  background: rgba(255,255,255,0.025) !important;
+  background: #FAFAFA !important;
   border: none;
   margin-bottom: 0;
   min-width: 0;
@@ -435,7 +415,7 @@ html, body { scrollbar-width: none; -ms-overflow-style: none; }
 .nw-chart-wrap {
   margin: 14px 0 18px;
   padding: 14px 16px 12px;
-  background: rgba(255, 255, 255, 0.025);
+  background: #FAFAFA;
   border: none;
   border-radius: 12px;
   position: relative;
@@ -465,7 +445,7 @@ html, body { scrollbar-width: none; -ms-overflow-style: none; }
   transition: color 0.4s ease;
 }
 .nw-chart-grid {
-  stroke: rgba(255,255,255,0.05);
+  stroke: rgba(0,0,0,0.10);
   stroke-width: 1;
   stroke-dasharray: 2 4;
   vector-effect: non-scaling-stroke;
@@ -530,7 +510,7 @@ html, body { scrollbar-width: none; -ms-overflow-style: none; }
 .nw-donut-wrap {
   position: relative;
   padding: 14px 16px 12px;
-  background: rgba(255, 255, 255, 0.025);
+  background: #FAFAFA;
   border-radius: 12px;
   display: flex;
   flex-direction: column;
@@ -618,7 +598,7 @@ html, body { scrollbar-width: none; -ms-overflow-style: none; }
 .nw-activity {
   margin-top: 14px;
   padding: 14px 16px 12px;
-  background: rgba(255, 255, 255, 0.025);
+  background: #FAFAFA;
   border-radius: 12px;
 }
 .nw-activity-h {
@@ -647,7 +627,7 @@ html, body { scrollbar-width: none; -ms-overflow-style: none; }
   display: grid; grid-template-columns: 4px 1fr auto auto;
   gap: 10px; align-items: center;
   padding: 8px 12px;
-  background: rgba(255,255,255,0.025);
+  background: #FAFAFA;
   border-radius: 8px;
   font-size: 12.5px;
   transition: background 0.15s;
@@ -699,8 +679,8 @@ html, body { scrollbar-width: none; -ms-overflow-style: none; }
    ORDERS — full-spec form (name, cost, ccy, from-category, date)
    ============================================================ */
 .ord-add-card {
-  background: rgba(255,255,255,0.025) !important;
-  border: 1px solid rgba(255,255,255,0.05) !important;
+  background: #FAFAFA !important;
+  border: 1px solid rgba(0,0,0,0.08) !important;
 }
 .ord-add-eyebrow {
   font-size: 10px; letter-spacing: 0.18em; font-weight: 800;
@@ -780,14 +760,14 @@ html, body { scrollbar-width: none; -ms-overflow-style: none; }
 }
 
 .ord-card {
-  background: rgba(255,255,255,0.025);
+  background: #FAFAFA;
   border-radius: 14px;
   padding: 14px 16px;
   margin-bottom: 8px;
   border-left: 3px solid var(--text-tertiary);
   transition: background 0.15s;
 }
-.ord-card:hover { background: rgba(255,255,255,0.045); }
+.ord-card:hover { background: #F0F0F0; }
 .ord-card.cat-bank   { border-left-color: #7DD3FC; }
 .ord-card.cat-stocks { border-left-color: #6EE7B7; }
 .ord-card.cat-crypto { border-left-color: #FBBF24; }
@@ -841,9 +821,9 @@ html, body { scrollbar-width: none; -ms-overflow-style: none; }
 
 .ord-empty-card {
   text-align: center; padding: 32px 20px;
-  background: rgba(255,255,255,0.025);
+  background: #FAFAFA;
   border-radius: 14px;
-  border: 1px dashed rgba(255,255,255,0.08);
+  border: 1px dashed rgba(0,0,0,0.08);
 }
 .ord-empty-card.hidden { display: none; }
 .ord-empty-icon {
@@ -926,8 +906,8 @@ html, body { scrollbar-width: none; -ms-overflow-style: none; }
 
 /* Add card */
 .wish-add-card {
-  background: rgba(255,255,255,0.025) !important;
-  border: 1px solid rgba(255,255,255,0.05) !important;
+  background: #FAFAFA !important;
+  border: 1px solid rgba(0,0,0,0.08) !important;
 }
 .wish-add-eyebrow {
   font-size: 10px; letter-spacing: 0.18em; font-weight: 800;
@@ -968,7 +948,7 @@ html, body { scrollbar-width: none; -ms-overflow-style: none; }
 .wish-add-btn {
   padding: 0 18px;
   background: linear-gradient(180deg, #B794F4, #9F7DD4);
-  color: #ffffff; border: none;
+  color: #1A1A1A; border: none;
   border-radius: 9px;
   font-family: inherit; font-size: 14px; font-weight: 700;
   cursor: pointer;
@@ -996,9 +976,9 @@ html, body { scrollbar-width: none; -ms-overflow-style: none; }
 
 .wish-empty-card {
   text-align: center; padding: 32px 20px;
-  background: rgba(255,255,255,0.025);
+  background: #FAFAFA;
   border-radius: 14px;
-  border: 1px dashed rgba(255,255,255,0.08);
+  border: 1px dashed rgba(0,0,0,0.08);
 }
 .wish-empty-card.hidden { display: none; }
 .wish-empty-icon {
@@ -1016,7 +996,7 @@ html, body { scrollbar-width: none; -ms-overflow-style: none; }
 
 /* ===== Wishlist rows ===== */
 .wish-row {
-  background: rgba(255,255,255,0.025);
+  background: #FAFAFA;
   border-radius: 12px;
   padding: 12px 14px;
   margin-bottom: 8px;
@@ -1076,7 +1056,7 @@ html, body { scrollbar-width: none; -ms-overflow-style: none; }
 .wish-row-bar-fill.good { background: #3EC98A; box-shadow: 0 0 6px rgba(107,227,164,0.5); }
 .wish-row-bar-fill.warn { background: #F2C063; box-shadow: 0 0 6px rgba(242,192,99,0.5); }
 .wish-row-bar-fill.bad  { background: #FF8A8A; box-shadow: 0 0 6px rgba(255,138,138,0.5); }
-.wish-row-bar-fill.flat { background: rgba(255,255,255,0.20); }
+.wish-row-bar-fill.flat { background: #E5E5E5; }
 
 /* ============================================================
    FINANCE TICKER — rotating Nasdaq-style subscription renewal
@@ -1165,7 +1145,7 @@ html, body { scrollbar-width: none; -ms-overflow-style: none; }
 .ticker-dot {
   width: 5px; height: 5px;
   border-radius: 50%;
-  background: rgba(255,255,255,0.18);
+  background: #E5E5E5;
   transition: background 0.2s;
 }
 .ticker-dot.active { background: #3EC98A; }
@@ -1230,7 +1210,7 @@ html, body { scrollbar-width: none; -ms-overflow-style: none; }
   border-radius: 6px;
   cursor: pointer;
 }
-.ord-deduct-undo:hover { color: #1A1A1A; border-color: rgba(255,255,255,0.20); }
+.ord-deduct-undo:hover { color: #1A1A1A; border-color: rgba(0,0,0,0.18); }
 
 .ord-deduct-chooser {
   margin-top: 10px;
@@ -1280,7 +1260,7 @@ html, body { scrollbar-width: none; -ms-overflow-style: none; }
 }
 .ord-deduct-opt.insufficient:hover {
   background: #FFFFFF;
-  border-color: rgba(255,255,255,0.06);
+  border-color: rgba(0,0,0,0.08);
 }
 .ord-deduct-cancel {
   background: transparent;
@@ -1292,7 +1272,7 @@ html, body { scrollbar-width: none; -ms-overflow-style: none; }
   text-decoration: underline;
 }
 .ord-card.is-deducted { opacity: 0.85; }
-.ord-card.is-deducted .ord-card-name { text-decoration: line-through; text-decoration-thickness: 1px; text-decoration-color: rgba(255,255,255,0.20); }
+.ord-card.is-deducted .ord-card-name { text-decoration: line-through; text-decoration-thickness: 1px; text-decoration-color: rgba(0,0,0,0.35); }
 .ord-meta-pill.pct.frozen { font-style: italic; }
 .ord-meta-pill.pct.frozen::after { content: ' · frozen'; opacity: 0.6; font-style: normal; }
 
@@ -1419,8 +1399,8 @@ html, body { scrollbar-width: none; -ms-overflow-style: none; }
   align-items: center;
   gap: 8px;
   padding: 9px 12px;
-  background: var(--bg-card);
-  border: 0.5px solid rgba(255,255,255,0.10);
+  background: #FFFFFF;
+  border: 0.5px solid rgba(0,0,0,0.08);
   border-radius: var(--radius-md);
   font-family: inherit;
   color: #1A1A1A;
@@ -1468,8 +1448,8 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   align-items: center;
   gap: 8px;
   padding: 6px 12px;
-  background: var(--bg-card);
-  border: 0.5px solid rgba(255,255,255,0.10);
+  background: #FFFFFF;
+  border: 0.5px solid rgba(0,0,0,0.08);
   border-radius: var(--radius-md);
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
@@ -1546,7 +1526,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 .sub-row-toggle .sub-row-toggle-dot {
   width: 6px; height: 6px; border-radius: 50%;
-  background: rgba(255,255,255,0.25);
+  background: #DDDDDD;
 }
 .sub-row-toggle.is-on .sub-row-toggle-dot {
   background: #3EC98A;
@@ -2022,7 +2002,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     input.type = 'text';
     input.inputMode = 'decimal';
     input.value = String(curDisplay.toFixed(curDisplay % 1 === 0 ? 0 : 2));
-    input.style.cssText = 'width:110px;padding:4px 8px;font-family:var(--font-mono);font-size:12px;background:rgba(0,0,0,0.30);border:1px solid rgba(255,255,255,0.10);color:var(--text-primary);border-radius:6px;text-align:right;font-variant-numeric:tabular-nums;outline:none;';
+    input.style.cssText = 'width:110px;padding:4px 8px;font-family:var(--font-mono);font-size:12px;background:rgba(0,0,0,0.30);border: 1px solid rgba(0,0,0,0.08);color:var(--text-primary);border-radius:6px;text-align:right;font-variant-numeric:tabular-nums;outline:none;';
     amtEl.textContent = '';
     amtEl.appendChild(input);
     setTimeout(() => { input.focus(); input.select(); }, 0);
@@ -2062,7 +2042,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     const input = document.createElement('input');
     input.type = 'text';
     input.value = cur;
-    input.style.cssText = 'width:100%;padding:4px 8px;font-family:inherit;font-size:13px;background:rgba(0,0,0,0.30);border:1px solid rgba(255,255,255,0.10);color:var(--text-primary);border-radius:6px;outline:none;';
+    input.style.cssText = 'width:100%;padding:4px 8px;font-family:inherit;font-size:13px;background:rgba(0,0,0,0.30);border: 1px solid rgba(0,0,0,0.08);color:var(--text-primary);border-radius:6px;outline:none;';
     nameEl.textContent = '';
     nameEl.appendChild(input);
     setTimeout(() => { input.focus(); input.select(); }, 0);
@@ -2496,7 +2476,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
       const isUrgent = daysToRenew != null && daysToRenew <= 5;
       const row = document.createElement('div');
       row.className = 'sub-row' + (isUrgent ? ' is-urgent' : '');
-      row.style.cssText = 'display:grid;grid-template-columns:1fr auto auto;align-items:center;padding:12px 14px;background:rgba(255,255,255,0.025);border-radius:var(--radius-md);margin-bottom:8px;gap:12px;';
+      row.style.cssText = 'display:grid;grid-template-columns:1fr auto auto;align-items:center;padding:12px 14px;background: #FAFAFA;border-radius:var(--radius-md);margin-bottom:8px;gap:12px;';
       const renewLine = it.renewal
         ? '<div class="sub-renew-line" style="font-size:10px;color:#F2C063;margin-top:3px">↻ Renews ' + formatRenewal(it.renewal) + '</div>'
         : '';
@@ -2535,12 +2515,12 @@ input[type="date"]::-webkit-calendar-picker-indicator {
       actions.style.cssText = 'display:flex;flex-direction:column;gap:4px;align-items:center';
       const editBtn = document.createElement('button');
       editBtn.title = 'Edit';
-      editBtn.style.cssText = 'background:transparent;border:1px solid rgba(255,255,255,0.10);color:var(--text-tertiary);cursor:pointer;font-size:12px;padding:3px 7px;border-radius:5px;font-family:inherit;line-height:1';
+      editBtn.style.cssText = 'background:transparent;border: 1px solid rgba(0,0,0,0.08);color:var(--text-tertiary);cursor:pointer;font-size:12px;padding:3px 7px;border-radius:5px;font-family:inherit;line-height:1';
       editBtn.textContent = '✏';
       editBtn.addEventListener('click', () => editSubInline(idx));
       const del = document.createElement('button');
       del.title = 'Delete';
-      del.style.cssText = 'background:transparent;border:1px solid rgba(255,255,255,0.10);color:var(--text-tertiary);cursor:pointer;font-size:12px;padding:3px 7px;border-radius:5px;font-family:inherit;line-height:1';
+      del.style.cssText = 'background:transparent;border: 1px solid rgba(0,0,0,0.08);color:var(--text-tertiary);cursor:pointer;font-size:12px;padding:3px 7px;border-radius:5px;font-family:inherit;line-height:1';
       del.textContent = '×';
       del.addEventListener('click', () => {
         if (!confirm('Delete "' + it.name + '"?')) return;
@@ -2673,15 +2653,15 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     const form = document.createElement('div');
     form.style.cssText = 'display:flex;flex-wrap:wrap;gap:6px;align-items:center';
     form.innerHTML =
-      '<input type="text" class="se-name" value="' + escapeHtml(it.name) + '" style="flex:1.5;min-width:120px;padding:6px 10px;border:0.5px solid rgba(255,255,255,0.10);border-radius:var(--radius-md);font-size:12px;font-family:inherit;background:var(--bg-card);color:var(--text-primary)" />' +
-      '<input type="number" step="0.01" class="se-amt" value="' + Number(enteredAmt).toFixed(2) + '" style="width:90px;padding:6px 10px;border:0.5px solid rgba(255,255,255,0.10);border-radius:var(--radius-md);font-size:12px;font-family:inherit;background:var(--bg-card);color:var(--text-primary)" />' +
-      '<select class="se-ccy" style="padding:6px 10px;border:0.5px solid rgba(255,255,255,0.10);border-radius:var(--radius-md);font-size:12px;font-family:inherit;background:var(--bg-card);color:var(--text-primary)">' + ccyOpts + '</select>' +
-      '<select class="se-per" style="padding:6px 10px;border:0.5px solid rgba(255,255,255,0.10);border-radius:var(--radius-md);font-size:12px;font-family:inherit;background:var(--bg-card);color:var(--text-primary)">' + periodOpts + '</select>' +
+      '<input type="text" class="se-name" value="' + escapeHtml(it.name) + '" style="flex:1.5;min-width:120px;padding:6px 10px;border: 0.5px solid rgba(0,0,0,0.08);border-radius:var(--radius-md);font-size:12px;font-family:inherit;background:var(--bg-card);color:var(--text-primary)" />' +
+      '<input type="number" step="0.01" class="se-amt" value="' + Number(enteredAmt).toFixed(2) + '" style="width:90px;padding:6px 10px;border: 0.5px solid rgba(0,0,0,0.08);border-radius:var(--radius-md);font-size:12px;font-family:inherit;background:var(--bg-card);color:var(--text-primary)" />' +
+      '<select class="se-ccy" style="padding:6px 10px;border: 0.5px solid rgba(0,0,0,0.08);border-radius:var(--radius-md);font-size:12px;font-family:inherit;background:var(--bg-card);color:var(--text-primary)">' + ccyOpts + '</select>' +
+      '<select class="se-per" style="padding:6px 10px;border: 0.5px solid rgba(0,0,0,0.08);border-radius:var(--radius-md);font-size:12px;font-family:inherit;background:var(--bg-card);color:var(--text-primary)">' + periodOpts + '</select>' +
       '<label class="date-field" style="min-width:140px"><span class="date-emoji" aria-hidden="true">📅</span><input type="date" class="se-ren" value="' + (it.renewal && /^\d{4}-\d{2}-\d{2}/.test(it.renewal) ? it.renewal.slice(0,10) : '') + '" /></label>' +
-      '<select class="se-from" style="padding:6px 10px;border:0.5px solid rgba(255,255,255,0.10);border-radius:var(--radius-md);font-size:12px;font-family:inherit;background:var(--bg-card);color:var(--text-primary);min-width:130px">' + fromOpts + '</select>' +
+      '<select class="se-from" style="padding:6px 10px;border: 0.5px solid rgba(0,0,0,0.08);border-radius:var(--radius-md);font-size:12px;font-family:inherit;background:var(--bg-card);color:var(--text-primary);min-width:130px">' + fromOpts + '</select>' +
       '<label class="sub-auto-toggle" style="padding:6px 10px"><input type="checkbox" class="se-auto"' + (it.autoDeduct ? ' checked' : '') + ' /><span class="sub-auto-track"><span class="sub-auto-thumb"></span></span><span class="sub-auto-label">Auto-deduct</span></label>' +
       '<button class="se-save quick-add-btn">Save</button>' +
-      '<button class="se-cancel" style="background:transparent;border:1px solid rgba(255,255,255,0.10);color:var(--text-tertiary);cursor:pointer;font-size:12px;padding:6px 10px;border-radius:var(--radius-md);font-family:inherit">Cancel</button>';
+      '<button class="se-cancel" style="background:transparent;border: 1px solid rgba(0,0,0,0.08);color:var(--text-tertiary);cursor:pointer;font-size:12px;padding:6px 10px;border-radius:var(--radius-md);font-family:inherit">Cancel</button>';
     row.appendChild(form);
     const save = () => {
       const newName = row.querySelector('.se-name').value.trim();

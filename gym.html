@@ -114,7 +114,7 @@ const CONFIG = {
 * { box-sizing: border-box; }
 html, body {
   margin: 0; padding: 0;
-  background: radial-gradient(ellipse 80% 60% at 50% 0%, #14141a 0%, #0a0a0b 60%);
+  background: #F5F5F5;
   color: var(--text-1);
   font-family: var(--font);
   -webkit-font-smoothing: antialiased;
@@ -162,7 +162,7 @@ img, video, canvas, svg { max-width: 100%; }
   background: rgba(20, 20, 22, 0.72);
   border: 1px solid rgba(0,0,0,0.08);
   border-radius: 18px;
-  box-shadow: 0 12px 36px rgba(0,0,0,0.55);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
 }
 .tab {
   flex: 1 1 0;
@@ -186,7 +186,7 @@ img, video, canvas, svg { max-width: 100%; }
 .tab[aria-current="page"] {
   color: var(--text-1);
   background: rgba(0,0,0,0.03);
-  border-color: rgba(255,255,255,0.10);
+  border-color: rgba(0,0,0,0.08);
 }
 .tab-icon {
   width: 18px;
@@ -242,7 +242,7 @@ img, video, canvas, svg { max-width: 100%; }
 .po-icon-btn:hover { background: rgba(0,0,0,0.04); color: var(--text-1); }
 
 .card {
-  background: var(--bg-card);
+  background: #FFFFFF;
   border: 1px solid rgba(0,0,0,0.08);
   border-radius: 16px;
   padding: 20px;
@@ -276,7 +276,7 @@ img, video, canvas, svg { max-width: 100%; }
 .po-seg-btn.active {
   background: linear-gradient(135deg, #F45B8B, #FF6B6B);
   color: #1A1A1A;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.5), 0 4px 12px rgba(0,0,0,0.35);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
 }
 
 /* ----- Sub-section title ----- */
@@ -307,8 +307,8 @@ img, video, canvas, svg { max-width: 100%; }
   text-overflow: ellipsis; overflow: hidden;
 }
 .po-ex-select:focus {
-  outline: none; border-color: rgba(255,255,255,0.40);
-  box-shadow: 0 0 0 3px rgba(255,255,255,0.06);
+  outline: none; border-color: rgba(0,0,0,0.18);
+  box-shadow: 0 0 0 3px rgba(244,91,139,0.15);
 }
 .po-ex-select:disabled { opacity: 0.5; }
 .po-btn-icon {
@@ -325,7 +325,7 @@ img, video, canvas, svg { max-width: 100%; }
 .po-btn-icon:hover { background: rgba(0,0,0,0.04); color: var(--text-1); }
 .po-btn-icon:disabled { opacity: 0.4; cursor: not-allowed; }
 .po-no-ex {
-  background: rgba(255,255,255,0.025);
+  background: #FAFAFA;
   border: 1px dashed var(--border);
   border-radius: 12px; padding: 16px; text-align: center;
   font-size: 13px; color: var(--text-3); margin-top: 10px;
@@ -346,7 +346,7 @@ img, video, canvas, svg { max-width: 100%; }
 .po-last-set {
   display: none; align-items: center; gap: 12px;
   padding: 11px 14px;
-  background: rgba(255,255,255,0.025);
+  background: #FAFAFA;
   border: 1px solid rgba(0,0,0,0.08);
   border-radius: 10px;
   margin-bottom: 12px; font-size: 12px;
@@ -390,8 +390,8 @@ img, video, canvas, svg { max-width: 100%; }
   -webkit-appearance: none; margin: 0;
 }
 .po-field input:focus {
-  outline: none; border-color: rgba(255,255,255,0.40);
-  box-shadow: 0 0 0 3px rgba(255,255,255,0.06);
+  outline: none; border-color: rgba(0,0,0,0.18);
+  box-shadow: 0 0 0 3px rgba(244,91,139,0.15);
 }
 .po-weight-row {
   display: grid; grid-template-columns: auto 1fr auto; gap: 6px; align-items: stretch;
@@ -433,7 +433,7 @@ img, video, canvas, svg { max-width: 100%; }
 /* ----- Primary button ----- */
 .po-btn-primary {
   width: 100%; padding: 14px;
-  border: 1px solid rgba(255,255,255,0.85);
+  border: 1px solid rgba(0,0,0,0.20);
   background: linear-gradient(135deg, #F45B8B, #FF6B6B);
   color: #1A1A1A; border-radius: 12px;
   font-family: inherit; font-size: 14px; font-weight: 700;
@@ -459,12 +459,12 @@ img, video, canvas, svg { max-width: 100%; }
 /* ----- Prescription card ----- */
 .po-rx-card {
   padding: 18px 20px; border-radius: 14px;
-  background: rgba(255,255,255,0.025);
+  background: #FAFAFA;
   border: 1px solid rgba(0,0,0,0.08);
   position: relative;
 }
 .po-rx-card.po-rx-up   { background: linear-gradient(180deg, rgba(110,231,183,0.08), rgba(255,255,255,0.025)); border-color: rgba(110,231,183,0.18); }
-.po-rx-card.po-rx-down { background: linear-gradient(180deg, rgba(255,138,138,0.08), rgba(255,255,255,0.025)); border-color: rgba(255,138,138,0.18); }
+.po-rx-card.po-rx-down { background: linear-gradient(180deg, rgba(255,138,138,0.08), rgba(255,138,138,0.04)); border-color: rgba(255,138,138,0.25); }
 .po-rx-label {
   font-size: 10.5px; color: var(--text-3); font-weight: 700;
   letter-spacing: 0.10em; text-transform: uppercase; margin-bottom: 6px;
@@ -497,7 +497,7 @@ img, video, canvas, svg { max-width: 100%; }
 }
 .po-stat-box {
   padding: 14px 12px;
-  background: rgba(255,255,255,0.025);
+  background: #FAFAFA;
   border: 1px solid rgba(0,0,0,0.08);
   border-radius: 12px; text-align: center;
 }
@@ -544,14 +544,14 @@ img, video, canvas, svg { max-width: 100%; }
 /* ----- Modals ----- */
 .po-modal-bg {
   display: none; position: fixed; inset: 0;
-  background: rgba(0,0,0,0.65); backdrop-filter: blur(6px);
+  background: rgba(0,0,0,0.35); /* backdrop removed */
   z-index: 100; align-items: center; justify-content: center;
   padding: 24px;
 }
 .po-modal-bg.show { display: flex; }
 .po-modal {
   width: 100%; max-width: 420px;
-  background: var(--bg-card);
+  background: #FFFFFF;
   border: 1px solid var(--border-strong);
   border-radius: 16px;
   padding: 22px; max-height: 88vh; overflow-y: auto;
@@ -602,7 +602,7 @@ img, video, canvas, svg { max-width: 100%; }
 .po-set-row {
   display: flex; align-items: center; gap: 8px;
   padding: 8px 10px;
-  background: rgba(255,255,255,0.025);
+  background: #FAFAFA;
   border: 1px solid rgba(0,0,0,0.08);
   border-radius: 8px;
 }
@@ -620,7 +620,7 @@ img, video, canvas, svg { max-width: 100%; }
 .po-set-row .po-mini-btn:hover { color: var(--bad); }
 .po-add-row-btn {
   width: 100%; margin-top: 6px;
-  padding: 10px; background: rgba(255,255,255,0.025);
+  padding: 10px; background: #FAFAFA;
   border: 1px dashed var(--border);
   color: var(--text-2);
   border-radius: 8px; cursor: pointer;
@@ -636,7 +636,7 @@ img, video, canvas, svg { max-width: 100%; }
   grid-template-columns: auto 1fr auto auto auto auto;
   gap: 6px; align-items: center;
   padding: 8px 10px;
-  background: rgba(255,255,255,0.025);
+  background: #FAFAFA;
   border: 1px solid rgba(0,0,0,0.08);
   border-radius: 8px;
   transition: border-color 0.15s, background 0.15s;
@@ -743,7 +743,7 @@ img, video, canvas, svg { max-width: 100%; }
 
 /* Today's Workout + Past Workouts */
 .po-tw {
-  background: rgba(255,255,255,0.025);
+  background: #FAFAFA;
   border: 1px solid rgba(0,0,0,0.08);
   border-radius: 14px;
   padding: 16px;
@@ -792,7 +792,7 @@ img, video, canvas, svg { max-width: 100%; }
 .po-tw-row {
   display: flex; align-items: center; justify-content: space-between;
   padding: 10px 12px;
-  background: rgba(255,255,255,0.025);
+  background: #FAFAFA;
   border: 1px solid rgba(0,0,0,0.08);
   border-radius: 10px;
   font-size: 13px;
@@ -838,7 +838,7 @@ img, video, canvas, svg { max-width: 100%; }
   display: flex; flex-direction: column; gap: 6px;
 }
 .po-tw-past-day {
-  background: rgba(255,255,255,0.025);
+  background: #FAFAFA;
   border: 1px solid rgba(0,0,0,0.08);
   border-radius: 10px;
   padding: 10px 12px;
@@ -879,10 +879,10 @@ img, video, canvas, svg { max-width: 100%; }
 }
 .wt-divider span {
   font-size: 11px; letter-spacing: 0.22em; font-weight: 600;
-  color: rgba(255,255,255,0.85);
+  color: #1A1A1A;
 }
 .wt-card {
-  background: var(--bg-card);
+  background: #FFFFFF;
   border: 1px solid rgba(110,231,183,0.10);
   border-radius: 18px;
   padding: 22px 20px 18px;
@@ -925,7 +925,7 @@ img, video, canvas, svg { max-width: 100%; }
   height: 130px; display: block;
   margin-left: 36px; width: calc(100% - 36px);
 }
-.wt-grid { stroke: rgba(255,255,255,0.05); stroke-width: 1; }
+.wt-grid { stroke: rgba(0,0,0,0.08); stroke-width: 1; }
 .wt-area { fill: url(#wtFill); }
 .wt-line { fill: none; stroke: var(--good); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .wt-avg-line { fill: none; stroke: rgba(110,231,183,0.45); stroke-width: 1.5; stroke-dasharray: 4 3; opacity: 0.6; }
@@ -954,7 +954,7 @@ img, video, canvas, svg { max-width: 100%; }
 /* Composition estimate */
 .wt-comp {
   margin-top: 18px; padding: 14px 16px;
-  background: rgba(255,255,255,0.025);
+  background: #FAFAFA;
   border: 1px solid rgba(0,0,0,0.08);
   border-radius: 12px;
 }
@@ -1047,7 +1047,7 @@ img, video, canvas, svg { max-width: 100%; }
 /* Progress link */
 .wt-progress-link {
   display: flex; align-items: center; justify-content: space-between;
-  background: var(--bg-card);
+  background: #FFFFFF;
   border: 1px solid rgba(110,231,183,0.10);
   border-radius: 16px;
   padding: 18px 20px;
@@ -1167,7 +1167,7 @@ img, video, canvas, svg { max-width: 100%; }
 .wt-cam-shutter {
   width: 64px; height: 64px; border-radius: 50%;
   background: #fff;
-  border: 4px solid rgba(255,255,255,0.3);
+  border: 4px solid rgba(0,0,0,0.20);
   box-shadow: 0 0 0 2px #fff inset;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
@@ -1177,7 +1177,7 @@ img, video, canvas, svg { max-width: 100%; }
 /* Photo viewer */
 .wt-viewer {
   position: fixed; inset: 0;
-  background: rgba(0,0,0,0.96); z-index: 200;
+  background: rgba(0,0,0,0.35); z-index: 200;
   opacity: 0; pointer-events: none;
   transition: opacity 0.2s;
   display: flex; flex-direction: column;
@@ -1538,8 +1538,8 @@ img, video, canvas, svg { max-width: 100%; }
         <svg class="po-spark-svg" id="sparkline" viewBox="0 0 300 60" preserveAspectRatio="none">
           <defs>
             <linearGradient id="sparkGrad" x1="0" x2="0" y1="0" y2="1">
-              <stop offset="0%" stop-color="rgba(255,255,255,0.18)"/>
-              <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+              <stop offset="0%" stop-color="rgba(0,0,0,0.06)"/>
+              <stop offset="100%" stop-color="rgba(0,0,0,0.06)"/>
             </linearGradient>
           </defs>
         </svg>
@@ -1954,7 +1954,7 @@ img, video, canvas, svg { max-width: 100%; }
     const linePath = pts.map((p, i) => (i === 0 ? 'M' : 'L') + p[0].toFixed(1) + ' ' + p[1].toFixed(1)).join(' ');
     const fillPath = linePath + ' L' + pts[pts.length - 1][0].toFixed(1) + ' ' + H + ' L' + pts[0][0].toFixed(1) + ' ' + H + ' Z';
     // Keep <defs> in place; replace any prior paths
-    const defsHTML = '<defs><linearGradient id="sparkGrad" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="rgba(255,255,255,0.18)"/><stop offset="100%" stop-color="rgba(255,255,255,0)"/></linearGradient></defs>';
+    const defsHTML = '<defs><linearGradient id="sparkGrad" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="rgba(0,0,0,0.06)"/><stop offset="100%" stop-color="rgba(0,0,0,0.06)"/></linearGradient></defs>';
     svg.innerHTML = defsHTML
       + '<path class="po-spark-fill" d="' + fillPath + '"/>'
       + '<path class="po-spark-line" d="' + linePath + '"/>';
@@ -3552,22 +3552,21 @@ img, video, canvas, svg { max-width: 100%; }
   /* glassy gloss highlight + bottom shade */
   #nvFab::after {
     content: ''; position: absolute; inset: 0; border-radius: 50%; pointer-events: none;
-    background: radial-gradient(circle at 34% 26%, rgba(255,255,255,0.92), rgba(255,255,255,0) 40%),
-                radial-gradient(circle at 72% 82%, rgba(18,7,40,0.5), transparent 55%);
+    background: rgba(255,255,255,0.2);
   }
   @keyframes nvspin { to { transform: rotate(360deg); } }
-  #nvFab .nv-online { position: absolute; right: 1px; bottom: 1px; z-index: 2; width: 11px; height: 11px; border-radius: 50%; background: #3EC98A; border: 2px solid #0a0a0b; box-shadow: 0 0 6px rgba(110,231,183,0.7); }
+  #nvFab .nv-online { position: absolute; right: 1px; bottom: 1px; z-index: 2; width: 11px; height: 11px; border-radius: 50%; background: #3EC98A; border: 2px solid #FFFFFF; box-shadow: 0 0 6px rgba(110,231,183,0.7); }
   #nvPanel {
     position: absolute; top: 72px; right: 16px; z-index: 30;
     width: min(340px, calc(100vw - 28px)); max-height: 66vh; display: none; flex-direction: column;
-    background: #111016; border: 1px solid rgba(0,0,0,0.08); border-radius: 18px;
-    box-shadow: 0 24px 70px rgba(0,0,0,0.65); overflow: hidden;
+    background: #FFFFFF; border: 1px solid rgba(0,0,0,0.08); border-radius: 18px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06); overflow: hidden;
     font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
   }
   #nvPanel.open { display: flex; }
-  .nv-head { display: flex; align-items: center; gap: 9px; padding: 13px 14px; border-bottom: 1px solid rgba(255,255,255,0.07); }
+  
   .nv-head .nv-av { position: relative; overflow: hidden; width: 26px; height: 26px; border-radius: 50%; flex-shrink: 0;
-    background: radial-gradient(circle at 34% 26%, rgba(255,255,255,0.85), rgba(255,255,255,0) 42%),
+    background:
                conic-gradient(from 0deg, #6D4AE0, #C9B8FF, #7C5CFF, #B98AFF, #6D4AE0); }
   .nv-head .nv-name { font-size: 14px; font-weight: 700; color: #1A1A1A; }
   .nv-head .nv-sub { font-size: 10.5px; color: #76746E; }
@@ -3580,7 +3579,7 @@ img, video, canvas, svg { max-width: 100%; }
   .nv-quick { display: flex; gap: 6px; flex-wrap: wrap; padding: 0 14px 10px; }
   .nv-chip { border: 1px solid rgba(124,92,255,0.35); background: rgba(124,92,255,0.12); color: #CBBDFF; font-size: 11px; font-weight: 600; padding: 6px 10px; border-radius: 999px; cursor: pointer; }
   .nv-chip:active { transform: scale(0.96); }
-  .nv-foot { display: flex; gap: 7px; padding: 11px 12px; border-top: 1px solid rgba(255,255,255,0.07); }
+  .nv-foot { display: flex; gap: 7px; padding: 11px 12px; border-top: 1px solid rgba(0,0,0,0.08); }
   .nv-input { flex: 1; min-width: 0; padding: 9px 12px; border-radius: 11px; border: 1px solid rgba(0,0,0,0.08); background: rgba(0,0,0,0.32); color: #1A1A1A; font-family: inherit; font-size: 13px; outline: none; }
   .nv-input::placeholder { color: #6c6a64; }
   .nv-send { border: 0; border-radius: 11px; padding: 0 14px; background: linear-gradient(180deg,#C9B8FF,#7C5CFF); color: #14081f; font-weight: 700; font-size: 15px; cursor: pointer; }

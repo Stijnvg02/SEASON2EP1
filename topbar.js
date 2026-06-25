@@ -27,7 +27,7 @@
   gap: 8px;
   padding: max(10px, env(safe-area-inset-top)) 14px 8px;
   background: #F5F5F5;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid rgba(0,0,0,0.08);
   font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
 }
 .topbar-water-wrap {
@@ -100,7 +100,7 @@
   display: flex; justify-content: space-around; align-items: stretch;
   padding: 6px 0 calc(6px + env(safe-area-inset-bottom));
   background: #F5F5F5;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 1px solid rgba(0,0,0,0.08);
   font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
 }
 .bottombar-tab {
@@ -109,7 +109,7 @@
   gap: 3px;
   padding: 6px 0 4px;
   text-decoration: none;
-  color: rgba(255, 255, 255, 0.45);
+  color: #8A8A8A;
   font-size: 10px; font-weight: 600;
   letter-spacing: 0.04em;
   -webkit-tap-highlight-color: transparent;

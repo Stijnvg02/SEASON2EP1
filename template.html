@@ -74,14 +74,7 @@ body::before {
   animation: drift 36s ease-in-out infinite alternate;
 }
 /* Faint dot texture. */
-body::after {
-  content: '';
-  position: fixed; inset: 0;
-  /* noise removed */
-  background-size: 3px 3px;
-  pointer-events: none;
-  z-index: -1;
-}
+body::after { content: ""; display: none; }
 @keyframes drift {
   0%   { transform: translate3d(0,0,0); }
   100% { transform: translate3d(-22px, 14px, 0); }
@@ -94,9 +87,7 @@ body::after {
   margin: 0 0 14px;
   font-size: 28px; font-weight: 700;
   letter-spacing: -0.025em;
-  background: linear-gradient(180deg, #FFFFFF 0%, #C7C4BC 120%);
-  -webkit-background-clip: text; background-clip: text;
-  -webkit-text-fill-color: transparent; color: transparent;
+  color: #1A1A1A; -webkit-text-fill-color: #1A1A1A;
 }
 @media (max-width: 480px) { .dash-title { font-size: 22px; } }
 
@@ -115,7 +106,7 @@ body::after {
 }
 .section-title::after {
   content: ''; flex: 1; height: 1px;
-  background: linear-gradient(90deg, rgba(255,255,255,0.08), transparent);
+  background: linear-gradient(90deg, transparent, rgba(0,0,0,0.10), transparent);
 }
 
 /* THE GLASS CARD — the main building block. Wrap any section in this. */
@@ -206,12 +197,12 @@ body::after {
 .gm-row:hover { background: rgba(0,0,0,0.03); }
 .gm-row.gm-row-done { opacity: 0.45; background: rgba(107,227,164,0.04); }
 .gm-row.gm-row-done .gm-text {
-  text-decoration: line-through; text-decoration-color: rgba(255,255,255,0.4);
+  text-decoration: line-through; text-decoration-color: rgba(0,0,0,0.35);
 }
 .gm-check {
   appearance: none; -webkit-appearance: none;
   width: 22px; height: 22px; flex-shrink: 0; margin: 0;
-  border: 1.5px solid rgba(255,255,255,0.18);
+  border: 1.5px solid rgba(0,0,0,0.14);
   background: #F0F0F0; border-radius: 7px;
   position: relative; cursor: pointer;
   transition: background 0.2s, border-color 0.2s, box-shadow 0.25s;
@@ -231,7 +222,7 @@ body::after {
   outline: none; border-radius: 4px; padding: 2px 4px; margin: -2px -4px;
 }
 .gm-text[contenteditable="true"] {
-  outline: 1px solid rgba(255,255,255,0.18); background: #F0F0F0;
+  outline: 1px solid rgba(0,0,0,0.18); background: #F0F0F0;
 }
 .goal-delete {
   border: 0; background: transparent; color: #AAAAAA;
