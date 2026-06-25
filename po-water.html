@@ -531,8 +531,9 @@ html, body {
       <h4>Profile</h4>
       <div class="field-row">
         <div class="field">
-          <label>Weight</label>
-          <input type="number" id="setWeight" step="0.5" min="20" max="300">
+          <label>Weight <span style="font-size:10px;opacity:0.5;font-weight:400">(synced from Fitness)</span></label>
+          <div id="setWeightDisplay" style="padding:10px 12px;border-radius:10px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.10);font-size:15px;font-weight:700;color:var(--text-1);min-width:80px;">—</div>
+          <input type="number" id="setWeight" step="0.5" min="20" max="300" style="display:none">
         </div>
         <div class="field">
           <label>Weight unit</label>
@@ -924,6 +925,8 @@ html, body {
   // ============================================================
   function renderSettings() {
     $('setWeight').value = state.profile.weightKg;
+    const wDisp = state.weightUnit === 'lb' ? (state.profile.weightKg * 2.20462).toFixed(1) : state.profile.weightKg.toFixed(1);
+    $('setWeightDisplay').textContent = wDisp + ' ' + (state.weightUnit || 'kg');
     $('setAge').value = state.profile.age;
     $('setActivity').value = state.profile.activityHrsPerWeek;
     $('setCaffeine').value = state.caffeineMgPerDay;
@@ -953,7 +956,7 @@ html, body {
     });
   }
   bindSeg('setUnit', 'u', (v) => { state.unit = v; saveState(); renderWater(); });
-  bindSeg('setWeightUnit', 'u', (v) => { state.weightUnit = v; saveState(); renderWater(); });
+  bindSeg('setWeightUnit', 'u', (v) => { state.weightUnit = v; saveState(); renderWater(); renderSettings(); });
   bindSeg('setSex', 's', (v) => { state.profile.sex = v; saveState(); renderWater(); });
 
   ['setWeight','setAge','setActivity','setCaffeine','setBottleMl','setGlassMl'].forEach(id => {
