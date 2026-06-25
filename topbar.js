@@ -334,8 +334,8 @@ body.topbar-modal-open {
     const done = (state.logs || {})[todayKey] || 0;
     const p = state.profile || { weightKg: 75 };
     const wKg = state.weightUnit === 'lb' ? (p.weightKg || 0) / 2.20462 : (p.weightKg || 0);
-    const base = wKg * 35;
-    const exercise = (p.activityHrsPerWeek || 0) / 7 * 500;
+    const base = wKg * 30;
+    const exercise = (p.activityHrsPerWeek || 0) / 7 * 350;
     const caffeine = Math.max(0, (state.caffeineMgPerDay || 0) - 200) * 1.5;
     const subs = (state.substances || []).reduce((s, x) => {
       const dose = (x && x.dose != null ? x.dose : (x && x.defaultDose)) || 0;
@@ -348,10 +348,10 @@ body.topbar-modal-open {
     try {
       const wx = JSON.parse(localStorage.getItem('water_weather'));
       if (wx && (Date.now() - wx.ts) < 30 * 60 * 1000 && wx.temp > 25) {
-        heat = Math.round(Math.min((wx.temp - 25) * 150, 1000));
+        heat = Math.round(Math.min((wx.temp - 25) * 120, 600));
       }
     } catch (e) {}
-    const totalMl = base + exercise + caffeine + subs + adjust + heat;
+    const totalMl = Math.min(base + exercise + caffeine + subs + adjust + heat, 4000);
     let unitVol;
     if (state.unit === 'glass') unitVol = state.glassMl || 250;
     else if (state.unit === 'oz') unitVol = 30;

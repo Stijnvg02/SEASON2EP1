@@ -797,11 +797,13 @@ html, body {
   // ============================================================
   // CALCULATOR — daily water target in ml
   //
-  //   base_ml    = weight_kg × 35 ml      (NAM/IOM standard)
-  //   exercise   = activity_hrs/wk ÷ 7 × 500 ml/day   (≈500 ml/hr training)
+  //   base_ml    = weight_kg × 30 ml      (WHO/EFSA standard; 35 was too high)
+  //   exercise   = activity_hrs/wk ÷ 7 × 350 ml/day   (≈350 ml/hr — sports med consensus)
   //   caffeine   = max(0, caffeineMg − 200) × 1.5 ml  (mild diuresis)
   //   substances = sum of extraMl for each added med/stim
   //   adjustments: +200 ml male, +100 ml age 50+
+  //   heat       = (temp − 25°C) × 120 ml, capped at 600 ml
+  //   hard cap   = 4000 ml (above this hyponatremia risk rises sharply)
   // ============================================================
   // Weather state
   let weatherTempC = null;
@@ -809,24 +811,23 @@ html, body {
 
   function heatAdjustMl(tempC) {
     if (tempC == null || tempC <= 25) return 0;
-    return Math.round(Math.min((tempC - 25) * 150, 1000));
+    return Math.round(Math.min((tempC - 25) * 120, 600));
   }
 
   function computeTargetMl() {
     const p = state.profile;
     const wKg = state.weightUnit === 'lb' ? p.weightKg / 2.20462 : p.weightKg;
-    const base = wKg * 35;
-    const exercise = (p.activityHrsPerWeek || 0) / 7 * 500;
+    const base = wKg * 30;
+    const exercise = (p.activityHrsPerWeek || 0) / 7 * 350;
     const caffeine = Math.max(0, (state.caffeineMgPerDay || 0) - 200) * 1.5;
     const subs = (state.substances || []).reduce((s, x) => s + subExtraMl(x), 0);
     let adjust = 0;
     if (p.sex === 'm') adjust += 200;
     if ((p.age || 0) >= 50) adjust += 100;
     const heat = weatherExtra;
-    return {
-      base, exercise, caffeine, subs, adjust, heat,
-      total: base + exercise + caffeine + subs + adjust + heat
-    };
+    const raw = base + exercise + caffeine + subs + adjust + heat;
+    const total = Math.min(raw, 4000);
+    return { base, exercise, caffeine, subs, adjust, heat, total };
   }
 
   async function fetchWeather() {
