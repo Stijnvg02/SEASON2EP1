@@ -337,7 +337,9 @@ body.topbar-modal-open {
     else if (state.unit === 'ml') unitVol = 1;
     else unitVol = state.bottleMl || 500;
     const total = Math.max(1, Math.ceil(totalMl / unitVol));
-    return { done, total };
+    // logs stored in ml (>=50) since quick-pick update; convert to units for display
+    const doneUnits = done >= 50 ? Math.round((done / unitVol) * 10) / 10 : done;
+    return { done: doneUnits, total };
   }
 
   function classifyStatus(done, total) {
@@ -361,7 +363,7 @@ body.topbar-modal-open {
 
     const w = getWaterProgress();
     const countEl = document.getElementById('topbarWaterCount');
-    if (countEl) countEl.textContent = w.total ? w.done + '/' + w.total : '0/0';
+    if (countEl) countEl.textContent = w.total ? (Number.isInteger(w.done) ? w.done : w.done.toFixed(1)) + '/' + w.total : '0/0';
     setPillStatus(waterEl, classifyStatus(w.done, w.total));
   }
 
@@ -402,7 +404,11 @@ body.topbar-modal-open {
     if (!state || typeof state !== 'object') state = defaultWaterState();
     state.logs = state.logs || {};
     const k = calendarDateKey();
-    state.logs[k] = (state.logs[k] || 0) + 1;
+    const addMl = state.unit === 'glass' ? (state.glassMl || 250)
+                : state.unit === 'oz'    ? 30
+                : state.unit === 'ml'    ? 1
+                : (state.bottleMl || 500);
+    state.logs[k] = (state.logs[k] || 0) + addMl;
     try { localStorage.setItem('po_water_v1', JSON.stringify(state)); } catch (e) {}
     render();
 
