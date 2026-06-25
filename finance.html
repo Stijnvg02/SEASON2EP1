@@ -21,10 +21,7 @@
   --glass-bg: #FFFFFF;
   --glass-border: transparent;
   --glass-border-strong: transparent;
-  --glass-shadow:
-    0 1px 0 0 rgba(255, 255, 255, 0.06) inset,
-    0 12px 40px rgba(0, 0, 0, 0.45),
-    0 1px 2px rgba(0, 0, 0, 0.25);
+  --glass-shadow: 0 2px 12px rgba(0,0,0,0.06);
   --text-primary: #1A1A1A;
   --text-secondary: #8A8A8A;
   --text-tertiary: #AAAAAA;
@@ -97,7 +94,8 @@ body::after { content: ""; display: none; }
   justify-content: center;
   gap: 4px;
   padding: 8px max(12px, env(safe-area-inset-left)) calc(8px + env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-right));
-  background: linear-gradient(180deg, transparent, rgba(5,5,6,0.92) 30%);
+  background: #F5F5F5;
+  border-top: 1px solid rgba(0,0,0,0.08);
   /* backdrop removed */
   -webkit-/* backdrop removed */
 }
@@ -124,9 +122,9 @@ body::after { content: ""; display: none; }
 }
 .bot-tab:hover { color: #8A8A8A; background: #FAFAFA; }
 .bot-tab.active {
-  color: #1A1A1A;
-  background: rgba(0,0,0,0.03);
-  border-color: rgba(0,0,0,0.08);
+  color: #F45B8B;
+  background: rgba(244,91,139,0.06);
+  border-color: rgba(244,91,139,0.15);
 }
 .bot-tab-icon { font-size: 18px; line-height: 1; }
 .bot-tab-label {
@@ -273,9 +271,9 @@ html, body { scrollbar-width: none; -ms-overflow-style: none; }
   align-items: stretch;
   margin-top: 10px;
   padding: 4px;
-  background: rgba(0, 0, 0, 0.30);
+  background: #F0F0F0;
   border-radius: 12px;
-  border: none;
+  border: 1px solid rgba(0,0,0,0.06);
 }
 .quick-add input,
 .quick-add input[type="text"],
@@ -2213,8 +2211,8 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     const sliceTotal = slices.reduce((s, x) => s + x.value, 0);
 
     if (!slices.length || sliceTotal <= 0) {
-      svg.innerHTML = '<circle cx="70" cy="70" r="60" fill="rgba(255,255,255,0.025)"/>'
-                    + '<circle cx="70" cy="70" r="44" fill="#0A0A0B"/>';
+      svg.innerHTML = '<circle cx="70" cy="70" r="60" fill="rgba(244,91,139,0.08)"/>'
+                    + '<circle cx="70" cy="70" r="44" fill="#FFFFFF"/>';
       total.textContent = '—';
       empty.classList.remove('hidden');
       legend.innerHTML = '';
