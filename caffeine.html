@@ -354,8 +354,7 @@ body::after {
     h = ((h % 24) + 24) % 24;
     let hr = Math.floor(h), m = Math.round((h-hr)*60);
     if (m === 60) { m = 0; hr = (hr+1)%24; }
-    const ap = hr >= 12 ? 'PM' : 'AM'; let h12 = hr % 12; if (h12===0) h12=12;
-    return h12 + ':' + String(m).padStart(2,'0') + ' ' + ap;
+    return String(hr).padStart(2,'0') + ':' + String(m).padStart(2,'0');
   }
   function fmtTime(ts) { const d=new Date(ts); return fmtClock(d.getHours()+d.getMinutes()/60); }
 
