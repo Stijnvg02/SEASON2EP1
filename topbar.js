@@ -356,6 +356,7 @@ body.topbar-modal-open {
     if (state.unit === 'glass') unitVol = state.glassMl || 250;
     else if (state.unit === 'oz') unitVol = 30;
     else if (state.unit === 'ml') unitVol = 1;
+    else if (state.unit === 'L') unitVol = 1000;
     else unitVol = state.bottleMl || 500;
     const total = Math.max(1, Math.ceil(totalMl / unitVol));
     // logs stored in ml (>=50) since quick-pick update; convert to units for display

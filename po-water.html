@@ -620,6 +620,7 @@ html, body {
           <button data-u="glass">Glasses</button>
           <button data-u="oz">oz</button>
           <button data-u="ml">ml</button>
+          <button data-u="L">L</button>
         </div>
       </div>
       <div class="field-row">
@@ -882,19 +883,22 @@ html, body {
   function unitVolMl() {
     if (state.unit === 'bottle') return state.bottleMl || 500;
     if (state.unit === 'glass')  return state.glassMl  || 250;
-    if (state.unit === 'oz')     return 30;     // 1 fl oz ≈ 29.57 ml
+    if (state.unit === 'oz')     return 30;
+    if (state.unit === 'L')      return 1000;
     return 1;                                   // ml
   }
   function unitLabelPlural() {
     if (state.unit === 'bottle') return 'bottles';
     if (state.unit === 'glass')  return 'glasses';
     if (state.unit === 'oz')     return 'oz';
+    if (state.unit === 'L')      return 'L';
     return 'ml';
   }
   function unitLabelSingular() {
     if (state.unit === 'bottle') return 'bottle';
     if (state.unit === 'glass')  return 'glass';
     if (state.unit === 'oz')     return 'oz';
+    if (state.unit === 'L')      return 'L';
     return 'ml';
   }
   function fmtMl(ml) {
