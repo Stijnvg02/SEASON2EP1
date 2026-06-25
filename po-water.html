@@ -62,14 +62,14 @@ const CONFIG = {
 
 <style>
 :root {
-  --bg: #0a0a0b;
-  --bg-card: #111113;
-  --text-1: #ffffff;
-  --text-2: rgba(255,255,255,0.6);
-  --text-3: rgba(255,255,255,0.4);
-  --text-4: rgba(255,255,255,0.25);
-  --border: rgba(255,255,255,0.06);
-  --border-strong: rgba(255,255,255,0.14);
+  --bg: linear-gradient(135deg, #FDE8DC 0%, #F5D5F0 55%, #DDD5F5 100%) fixed;
+  --bg-card: rgba(255,255,255,0.82);
+  --text-1: #1A1A1A;
+  --text-2: rgba(0,0,0,0.55);
+  --text-3: rgba(0,0,0,0.40);
+  --text-4: rgba(0,0,0,0.25);
+  --border: rgba(0,0,0,0.08);
+  --border-strong: rgba(0,0,0,0.14);
   --good: #6ee7b7;
   --warn: #fbbf24;
   --bad: #ff8a8a;
@@ -81,7 +81,7 @@ const CONFIG = {
 * { box-sizing: border-box; }
 html, body {
   margin: 0; padding: 0;
-  background: radial-gradient(ellipse 80% 60% at 50% 0%, #14141a 0%, #0a0a0b 60%);
+  background: linear-gradient(135deg, #FDE8DC 0%, #F5D5F0 55%, #DDD5F5 100%) fixed;
   color: var(--text-1);
   font-family: var(--font);
   -webkit-font-smoothing: antialiased;
@@ -238,7 +238,7 @@ html, body {
 .why-body {
   margin-top: 8px;
   padding: 14px 16px;
-  background: rgba(255,255,255,0.025);
+  background: rgba(255,255,255,0.82);
   border: 1px solid var(--border);
   border-radius: 10px;
   display: none;
@@ -389,7 +389,7 @@ html, body {
 .sub-row {
   display: flex; align-items: center; gap: 10px;
   padding: 10px 12px;
-  background: rgba(255,255,255,0.025);
+  background: rgba(255,255,255,0.82);
   border: 1px solid var(--border);
   border-radius: 10px;
   flex-wrap: wrap;
