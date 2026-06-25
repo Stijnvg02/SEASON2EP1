@@ -240,18 +240,6 @@ canvas { max-width: 100%; }
 }
 .filter-chip.active { background: rgba(244,91,139,0.10); border-color: var(--pink); color: var(--pink); }
 
-/* SCAN */
-.scan-drop {
-  border: 2px dashed var(--border-strong); border-radius: var(--radius);
-  padding: 36px 20px; text-align: center; cursor: pointer;
-  transition: border-color .2s, background .2s;
-  background: var(--card);
-}
-.scan-drop:hover, .scan-drop.drag-over { border-color: var(--pink); background: rgba(244,91,139,0.03); }
-.scan-drop-icon { font-size: 40px; margin-bottom: 10px; }
-.scan-drop-text { font-size: 15px; font-weight: 600; color: var(--text-1); margin-bottom: 4px; }
-.scan-drop-sub { font-size: 12px; color: var(--text-2); }
-.api-key-note { font-size: 11px; color: var(--text-2); margin-top: 5px; line-height: 1.5; }
 
 /* TOAST */
 .toast {
@@ -494,39 +482,6 @@ Netflix, 13.99, Abonnementen, 2026-06-05, uitgave"></textarea>
 
 </section>
 
-<!-- ══ TAB: SCAN ══ -->
-<section class="fin-section" id="sec-scan">
-
-  <div class="card">
-    <div class="card-title">AI Screenshot scan</div>
-    <div class="form-group">
-      <label class="form-label">Anthropic API sleutel</label>
-      <input type="password" class="form-input" id="apiKeyInput" placeholder="sk-ant-...">
-      <div class="api-key-note">Eenmalig invullen — wordt lokaal opgeslagen.<br>Sleutel aanmaken via console.anthropic.com</div>
-    </div>
-    <div class="scan-drop" id="scanDrop">
-      <div class="scan-drop-icon">📷</div>
-      <div class="scan-drop-text">Upload bankapp screenshot</div>
-      <div class="scan-drop-sub">Tik om te kiezen of sleep een afbeelding hierheen</div>
-      <input type="file" id="scanFile" accept="image/*" style="display:none">
-    </div>
-    <div id="scanStatus" style="margin-top:12px;font-size:13px;color:var(--text-2);text-align:center;display:none"></div>
-  </div>
-
-  <div id="scanPreviewCard" style="display:none">
-    <div class="card">
-      <div style="font-size:14px;font-weight:700;color:var(--green);margin-bottom:12px">
-        ✓ <span id="scanFoundCount">0</span> transacties gevonden — controleer voor import
-      </div>
-      <div id="scanPreviewList"></div>
-      <div style="display:flex;gap:10px;margin-top:14px">
-        <button class="btn-danger" id="scanCancelBtn" style="flex:1">✕ Annuleren</button>
-        <button class="btn-primary" id="scanImportBtn" style="flex:2">↓ Importeer alles</button>
-      </div>
-    </div>
-  </div>
-
-</section>
 
 <!-- ══ TAB: TRANSACTIES ══ -->
 <section class="fin-section" id="sec-transactions">
@@ -567,10 +522,6 @@ Netflix, 13.99, Abonnementen, 2026-06-05, uitgave"></textarea>
     <span class="fin-tab-icon">➕</span>
     <span>Invoeren</span>
   </button>
-  <button class="fin-tab" data-tab="scan" type="button">
-    <span class="fin-tab-icon">📷</span>
-    <span>Scan</span>
-  </button>
   <button class="fin-tab" data-tab="transactions" type="button">
     <span class="fin-tab-icon">💳</span>
     <span>Transacties</span>
@@ -583,12 +534,6 @@ Netflix, 13.99, Abonnementen, 2026-06-05, uitgave"></textarea>
     <div class="modal-handle"></div>
     <button class="modal-close-btn" id="settingsClose" type="button">×</button>
     <div class="modal-title">⚙️ Instellingen</div>
-    <div class="form-group">
-      <label class="form-label">Anthropic API sleutel</label>
-      <input type="password" class="form-input" id="settingsApiKey" placeholder="sk-ant-...">
-    </div>
-    <button class="btn-primary" id="settingsSaveBtn" style="margin-bottom:12px" type="button">Opslaan</button>
-    <br>
     <button class="btn-danger" id="settingsClearBtn" style="width:100%" type="button">🗑️ Alle data wissen</button>
   </div>
 </div>
@@ -602,7 +547,6 @@ Netflix, 13.99, Abonnementen, 2026-06-05, uitgave"></textarea>
 
 /* ════ CONSTANTS ════ */
 const STORAGE_KEY = 'fin2_data';
-const API_KEY_KEY = 'fin2_apikey';
 
 const CAT_COLORS = {
   'Huur/wonen':   '#3B82F6',
@@ -1003,49 +947,6 @@ function renderTransactions() {
     : '<div class="empty-state"><div class="empty-icon">🔍</div><div class="empty-title">Geen resultaten</div><div class="empty-sub">Pas je zoekterm of filter aan.</div></div>';
 }
 
-/* ════ SCAN ════ */
-let scanPending = [];
-
-async function runScan(file) {
-  const apiKey = document.getElementById('apiKeyInput').value.trim() || localStorage.getItem(API_KEY_KEY) || '';
-  if (!apiKey) { alert('Vul eerst je Anthropic API sleutel in.'); return; }
-  if (apiKey) localStorage.setItem(API_KEY_KEY, apiKey);
-
-  const statusEl = document.getElementById('scanStatus');
-  statusEl.style.display = 'block'; statusEl.textContent = '⏳ Analyseren...';
-  document.getElementById('scanPreviewCard').style.display = 'none';
-
-  const reader = new FileReader();
-  reader.onload = async (ev) => {
-    try {
-      const base64 = ev.target.result.split(',')[1];
-      const res = await fetch('/api/scan-receipt', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ image: base64, mediaType: file.type, apiKey })
-      });
-      const data = await res.json();
-      if (data.error) throw new Error(data.error);
-      statusEl.style.display = 'none';
-      if (!data.transactions?.length) {
-        statusEl.style.display = 'block'; statusEl.textContent = 'Geen transacties herkend in de afbeelding.'; return;
-      }
-      scanPending = data.transactions;
-      document.getElementById('scanFoundCount').textContent = scanPending.length;
-      document.getElementById('scanPreviewList').innerHTML = scanPending.map(t =>
-        `<div class="tx-row">
-          <div class="tx-icon" style="background:${CAT_COLORS[t.categorie] || '#8A8A8A'}22">${CAT_ICONS[t.categorie] || '⋯'}</div>
-          <div class="tx-body"><div class="tx-name">${esc(t.naam)}</div><div class="tx-meta">${esc(t.categorie)} · ${fmtDate(t.datum)}</div></div>
-          <div class="tx-amt ${t.type === 'inkomst' ? 'green' : 'red'}">${t.type === 'inkomst' ? '+' : '−'}${fmtMoney(t.bedrag)}</div>
-        </div>`
-      ).join('');
-      document.getElementById('scanPreviewCard').style.display = 'block';
-    } catch (err) {
-      statusEl.textContent = '✗ Fout: ' + err.message;
-    }
-  };
-  reader.readAsDataURL(file);
-}
 
 /* ════ BULK PARSE ════ */
 const ALL_CATS = ['Huur/wonen','Boodschappen','Uit eten','Transport','Abonnementen','Salaris','Zorg','Kleding','Vrije tijd','Overig'];
@@ -1072,11 +973,6 @@ document.getElementById('settingsBtn').addEventListener('click', () => {
 });
 document.getElementById('settingsClose').addEventListener('click', () => document.getElementById('settingsBg').classList.remove('show'));
 document.getElementById('settingsBg').addEventListener('click', e => { if (e.target === document.getElementById('settingsBg')) document.getElementById('settingsBg').classList.remove('show'); });
-document.getElementById('settingsSaveBtn').addEventListener('click', () => {
-  const k = document.getElementById('settingsApiKey').value.trim();
-  if (k) { localStorage.setItem(API_KEY_KEY, k); document.getElementById('apiKeyInput').value = k; toast('API sleutel opgeslagen ✓'); }
-  document.getElementById('settingsBg').classList.remove('show');
-});
 document.getElementById('settingsClearBtn').addEventListener('click', () => {
   if (confirm('Alle transacties en doelen wissen? Dit kan niet ongedaan worden.')) {
     localStorage.removeItem(STORAGE_KEY); toast('Alle data gewist'); document.getElementById('settingsBg').classList.remove('show'); switchTab('dashboard');
@@ -1177,40 +1073,8 @@ document.querySelectorAll('.filter-chip').forEach(chip => chip.addEventListener(
 // Transactions search
 document.getElementById('txSearch').addEventListener('input', e => { txSearch = e.target.value.trim(); renderTransactions(); });
 
-// Scan drop zone
-const scanDrop = document.getElementById('scanDrop');
-const scanFileInp = document.getElementById('scanFile');
-scanDrop.addEventListener('click', () => scanFileInp.click());
-scanFileInp.addEventListener('change', () => { if (scanFileInp.files[0]) runScan(scanFileInp.files[0]); });
-scanDrop.addEventListener('dragover', e => { e.preventDefault(); scanDrop.classList.add('drag-over'); });
-scanDrop.addEventListener('dragleave', () => scanDrop.classList.remove('drag-over'));
-scanDrop.addEventListener('drop', e => {
-  e.preventDefault(); scanDrop.classList.remove('drag-over');
-  const f = e.dataTransfer.files[0];
-  if (f?.type.startsWith('image/')) runScan(f);
-});
-
-// API key field auto-save on blur
-document.getElementById('apiKeyInput').addEventListener('blur', () => {
-  const k = document.getElementById('apiKeyInput').value.trim();
-  if (k) localStorage.setItem(API_KEY_KEY, k);
-});
-
-// Scan preview buttons
-document.getElementById('scanCancelBtn').addEventListener('click', () => {
-  scanPending = []; document.getElementById('scanPreviewCard').style.display = 'none'; scanFileInp.value = '';
-});
-document.getElementById('scanImportBtn').addEventListener('click', () => {
-  if (!scanPending.length) return;
-  scanPending.forEach(t => addTransaction(t));
-  toast(`${scanPending.length} transacties geïmporteerd ✓`);
-  scanPending = []; document.getElementById('scanPreviewCard').style.display = 'none'; scanFileInp.value = '';
-  document.getElementById('scanStatus').style.display = 'none';
-});
 
 /* ════ INIT ════ */
-const savedKey = localStorage.getItem(API_KEY_KEY);
-if (savedKey) document.getElementById('apiKeyInput').value = savedKey;
 renderDashboard();
 
 })();
