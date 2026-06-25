@@ -26,7 +26,7 @@
   display: flex; justify-content: flex-end; align-items: center;
   gap: 8px;
   padding: max(10px, env(safe-area-inset-top)) 14px 8px;
-  background: #0a0a0b;
+  background: #F5F5F5;
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
 }
@@ -101,7 +101,7 @@
   position: fixed; bottom: 0; left: 0; right: 0; z-index: 40;
   display: flex; justify-content: space-around; align-items: stretch;
   padding: 6px 0 calc(6px + env(safe-area-inset-bottom));
-  background: #0a0a0b;
+  background: #F5F5F5;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
   font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
 }

@@ -5,7 +5,7 @@
 <script src="/api/config"></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#050506">
+<meta name="theme-color" content="#FFFFFF">
 <title>Dashboard</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -15,16 +15,16 @@
 <style>
 /* ===== Shared design tokens (same as the rest of the dashboard) ===== */
 :root {
-  --text-primary: #FAFAFA;
-  --text-secondary: #B8B6B0;
-  --text-tertiary: #76746E;
+  --text-primary: #0A0A0B;
+  --text-secondary: #5C5A54;
+  --text-tertiary: #9E9C96;
   --font: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
 }
 * { box-sizing: border-box; }
 html, body {
   margin: 0; padding: 0;
-  background: #050506;
+  background: #F5F5F5;
   color: var(--text-secondary);
   font-family: var(--font);
   -webkit-font-smoothing: antialiased;
@@ -45,7 +45,7 @@ body::before {
 }
 body::after {
   content: ''; position: fixed; inset: 0;
-  background-image: radial-gradient(rgba(255,255,255,0.014) 1px, transparent 1px);
+  background-image: radial-gradient(rgba(0,0,0,0.04) 1px, transparent 1px);
   background-size: 3px 3px; pointer-events: none; z-index: -1;
 }
 @keyframes drift { 0%{transform:translate3d(0,0,0)} 100%{transform:translate3d(-22px,14px,0)} }
@@ -53,7 +53,7 @@ body::after {
 .page { max-width: 1100px; margin: 0 auto; }
 .dash-title {
   margin: 0 0 18px; font-size: 28px; font-weight: 700; letter-spacing: -0.025em;
-  background: linear-gradient(180deg, #FFFFFF 0%, #C7C4BC 120%);
+  background: linear-gradient(180deg, #0A0A0B 0%, #3A3835 120%);
   -webkit-background-clip: text; background-clip: text;
   -webkit-text-fill-color: transparent; color: transparent;
 }
@@ -74,8 +74,8 @@ body::after {
   padding: 20px;
   border-radius: 18px;
   text-decoration: none;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.06);
+  background: rgba(0,0,0,0.04);
+  border: 1px solid rgba(0,0,0,0.06);
   backdrop-filter: blur(24px) saturate(1.2);
   -webkit-backdrop-filter: blur(24px) saturate(1.2);
   box-shadow: 0 12px 40px rgba(0,0,0,0.45);
@@ -143,12 +143,12 @@ body::after {
 .gear-btn {
   width: 42px; height: 42px; flex-shrink: 0;
   display: inline-flex; align-items: center; justify-content: center;
-  border-radius: 12px; border: 1px solid rgba(255,255,255,0.10);
-  background: rgba(255,255,255,0.04); color: var(--text-secondary);
+  border-radius: 12px; border: 1px solid rgba(0,0,0,0.10);
+  background: rgba(0,0,0,0.04); color: var(--text-secondary);
   cursor: pointer; transition: background 0.15s, color 0.15s, transform 0.1s;
   -webkit-tap-highlight-color: transparent;
 }
-.gear-btn:hover { background: rgba(255,255,255,0.08); color: var(--text-primary); }
+.gear-btn:hover { background: rgba(0,0,0,0.08); color: var(--text-primary); }
 .gear-btn:active { transform: scale(0.94) rotate(35deg); }
 .gear-btn svg { width: 22px; height: 22px; }
 
@@ -156,13 +156,13 @@ body::after {
 .modal-bg {
   position: fixed; inset: 0; z-index: 120; display: none;
   align-items: center; justify-content: center; padding: 20px;
-  background: rgba(0,0,0,0.6); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  background: rgba(0,0,0,0.4); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
 }
 .modal-bg.show { display: flex; }
 .modal {
   width: 100%; max-width: 460px; max-height: 88vh; overflow-y: auto;
-  background: #0e0e10; border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 18px; padding: 22px; box-shadow: 0 24px 70px rgba(0,0,0,0.6);
+  background: #FFFFFF; border: 1px solid rgba(0,0,0,0.08);
+  border-radius: 18px; padding: 22px; box-shadow: 0 24px 70px rgba(0,0,0,0.4);
 }
 .modal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
 .modal-title { font-size: 18px; font-weight: 700; color: var(--text-primary); letter-spacing: -0.01em; }
@@ -173,17 +173,17 @@ body::after {
 .field-row { display: flex; gap: 8px; align-items: center; }
 .set-input {
   flex: 1; min-width: 0; padding: 11px 13px;
-  border: 1px solid rgba(255,255,255,0.08); border-radius: 11px;
-  background: rgba(0,0,0,0.3); color: var(--text-primary);
+  border: 1px solid rgba(0,0,0,0.08); border-radius: 11px;
+  background: rgba(0,0,0,0.06); color: var(--text-primary);
   font-family: inherit; font-size: 14px; outline: none; transition: border-color 0.2s;
 }
-.set-input:focus { border-color: rgba(255,255,255,0.28); }
-.seg { display: inline-flex; border: 1px solid rgba(255,255,255,0.10); border-radius: 11px; overflow: hidden; flex-shrink: 0; }
+.set-input:focus { border-color: rgba(0,0,0,0.18); }
+.seg { display: inline-flex; border: 1px solid rgba(0,0,0,0.10); border-radius: 11px; overflow: hidden; flex-shrink: 0; }
 .seg button { border: 0; background: transparent; color: var(--text-tertiary); font-family: inherit; font-size: 13px; font-weight: 600; padding: 11px 14px; cursor: pointer; transition: background 0.15s, color 0.15s; }
-.seg button.on { background: rgba(255,255,255,0.12); color: var(--text-primary); }
+.seg button.on { background: rgba(0,0,0,0.10); color: var(--text-primary); }
 .set-save {
   width: 100%; margin-top: 6px; padding: 13px; border: 0; border-radius: 12px;
-  background: linear-gradient(180deg,#FFFFFF,#E8E5DD); color: #0A0A0B;
+  background: linear-gradient(180deg,#0A0A0B,#3A3835); color: #FFFFFF;
   font-family: inherit; font-size: 14px; font-weight: 700; cursor: pointer;
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 8px 22px rgba(0,0,0,0.25);
   transition: filter 0.15s, transform 0.1s;
@@ -191,8 +191,8 @@ body::after {
 .set-save:hover { filter: brightness(1.05); }
 .set-save:active { transform: translateY(1px); }
 .set-status { text-align: center; font-size: 12px; color: var(--success); min-height: 16px; margin-top: 8px; }
-.section-divider { height: 1px; background: rgba(255,255,255,0.07); margin: 20px 0 14px; }
-.whoop-box { margin-top: 8px; padding: 16px; border-radius: 14px; background: rgba(255,255,255,0.035); border: 1px solid rgba(255,255,255,0.06); }
+.section-divider { height: 1px; background: rgba(0,0,0,0.07); margin: 20px 0 14px; }
+.whoop-box { margin-top: 8px; padding: 16px; border-radius: 14px; background: rgba(0,0,0,0.04); border: 1px solid rgba(0,0,0,0.06); }
 .whoop-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
 .whoop-status { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: var(--text-primary); }
 .whoop-status .dot { width: 8px; height: 8px; border-radius: 50%; background: #76746E; }
@@ -202,8 +202,8 @@ body::after {
 .whoop-stat { text-align: center; }
 .whoop-stat .v { font-size: 20px; font-weight: 700; color: var(--text-primary); font-variant-numeric: tabular-nums; line-height: 1; }
 .whoop-stat .l { font-size: 9.5px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-tertiary); margin-top: 5px; }
-.whoop-btn { width: 100%; margin-top: 14px; padding: 11px; border: 1px solid rgba(255,255,255,0.12); border-radius: 11px; background: transparent; color: var(--text-secondary); font-family: inherit; font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; cursor: pointer; transition: background 0.15s, color 0.15s; }
-.whoop-btn:hover { background: rgba(255,255,255,0.05); color: var(--text-primary); }
+.whoop-btn { width: 100%; margin-top: 14px; padding: 11px; border: 1px solid rgba(0,0,0,0.10); border-radius: 11px; background: transparent; color: var(--text-secondary); font-family: inherit; font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; cursor: pointer; transition: background 0.15s, color 0.15s; }
+.whoop-btn:hover { background: rgba(0,0,0,0.05); color: var(--text-primary); }
 </style>
 </head>
 <body>
