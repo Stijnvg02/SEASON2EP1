@@ -83,7 +83,7 @@
   display: inline-flex; align-items: center; justify-content: center;
   width: 44px; height: 42px;
   border: 1px solid rgba(255, 255, 255, 0.10);
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(255,255,255,0.82);
   border-radius: 12px;
   text-decoration: none;
   -webkit-tap-highlight-color: transparent;

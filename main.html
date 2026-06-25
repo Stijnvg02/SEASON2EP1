@@ -180,10 +180,10 @@ body::after {
   padding: 22px;
   margin-bottom: 22px;
   border-radius: 16px;
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(255,255,255,0.82);
   backdrop-filter: blur(24px) saturate(1.2);
   -webkit-backdrop-filter: blur(24px) saturate(1.2);
-  box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.08), 0 0 0 1.5px rgba(96,165,250,0.35), 0 0 24px rgba(96,165,250,0.18);
 }
 .day-ring {
   position: relative;
@@ -261,13 +261,13 @@ body::after {
 
 .gm-card {
   position: relative;
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(255,255,255,0.82);
   border-radius: 16px;
   padding: 20px;
   margin-bottom: 14px;
   backdrop-filter: blur(24px) saturate(1.2);
   -webkit-backdrop-filter: blur(24px) saturate(1.2);
-  box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.08), 0 0 0 1.5px rgba(96,165,250,0.35), 0 0 24px rgba(96,165,250,0.18);
   transition: background 0.4s;
   overflow: hidden;
 }
@@ -554,14 +554,14 @@ body::after {
 .gm-add {
   padding: 11px 20px;
   border: 0; border-radius: 12px;
-  background: linear-gradient(180deg, #FFFFFF 0%, #E8E5DD 100%);
+  background: linear-gradient(180deg, #60A5FA 0%, #3B82F6 100%);
   color: #FFFFFF;
   font-family: inherit; font-size: 13px; font-weight: 700;
   cursor: pointer;
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.9),
-    0 2px 8px rgba(0,0,0,0.35),
-    0 8px 22px rgba(0,0,0,0.25);
+    inset 0 1px 0 rgba(255,255,255,0.25),
+    0 4px 14px rgba(59,130,246,0.45),
+    0 0 20px rgba(59,130,246,0.30);
   transition: transform 0.1s, filter 0.15s;
 }
 .gm-add:hover { filter: brightness(1.06); transform: translateY(-1px); }
