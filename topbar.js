@@ -227,6 +227,14 @@ body.topbar-modal-open {
     <span class="bottombar-tab-icon">💪</span>
     <span>Fitness</span>
   </a>
+  <a href="po-water.html" class="bottombar-tab" data-page="water">
+    <span class="bottombar-tab-icon">💧</span>
+    <span>Water</span>
+  </a>
+  <a href="caffeine.html" class="bottombar-tab" data-page="caffeine">
+    <span class="bottombar-tab-icon">☕</span>
+    <span>Caffeine</span>
+  </a>
 </nav>
 `;
 
@@ -248,6 +256,8 @@ body.topbar-modal-open {
     const p = (window.location.pathname || '').toLowerCase();
     if (p.endsWith('health.html')) return 'health';
     if (p.endsWith('gym.html')) return 'fitness';
+    if (p.endsWith('po-water.html')) return 'water';
+    if (p.endsWith('caffeine.html')) return 'caffeine';
     return 'main'; // index.html, /, or anything else falls back to main
   }
 
