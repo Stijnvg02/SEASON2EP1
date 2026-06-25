@@ -26,7 +26,7 @@
   display: flex; justify-content: flex-end; align-items: center;
   gap: 8px;
   padding: max(10px, env(safe-area-inset-top)) 14px 8px;
-  background: #0a0a0b;
+  background: #F5F5F5;
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
 }
@@ -36,12 +36,12 @@
 .topbar-water-pill {
   display: inline-flex; align-items: center; gap: 8px;
   padding: 9px 14px;
-  background: rgba(125, 211, 252, 0.08);
-  border: 1px solid rgba(125, 211, 252, 0.16);
+  background: #FFFFFF;
+  border: 1px solid rgba(0,0,0,0.10);
   border-right: none;
   border-radius: 12px 0 0 12px;
   text-decoration: none;
-  color: #FAFAFA;
+  color: #1A1A1A;
   -webkit-tap-highlight-color: transparent;
 }
 .topbar-water-pill .topbar-pill-dot {
@@ -60,36 +60,34 @@
 .topbar-pill-count {
   font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
   font-size: 13px; font-weight: 700;
-  color: #FAFAFA;
+  color: #1A1A1A;
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
 .topbar-water-add {
   width: 44px;
-  border: 1px solid rgba(125, 211, 252, 0.16);
-  background: linear-gradient(180deg, rgba(125, 211, 252, 0.28), rgba(110, 231, 183, 0.28));
+  border: 1px solid rgba(0,0,0,0.10);
+  background: linear-gradient(135deg, #F45B8B, #FF6B6B);
   color: #FFFFFF;
   font-family: inherit; font-size: 20px; font-weight: 700; line-height: 1;
   cursor: pointer;
   border-radius: 0 12px 12px 0;
   -webkit-tap-highlight-color: transparent;
-  transition: background 0.15s, transform 0.10s;
+  transition: filter 0.15s, transform 0.10s;
 }
 .topbar-water-add:active { transform: scale(0.94); }
-.topbar-water-add.flash {
-  background: linear-gradient(180deg, rgba(125, 211, 252, 0.7), rgba(110, 231, 183, 0.7));
-}
+.topbar-water-add.flash { filter: brightness(1.1); }
 .topbar-finance-btn {
   display: inline-flex; align-items: center; justify-content: center;
   width: 44px; height: 42px;
-  border: 1px solid rgba(255, 255, 255, 0.10);
-  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(0,0,0,0.10);
+  background: #FFFFFF;
   border-radius: 12px;
   text-decoration: none;
   -webkit-tap-highlight-color: transparent;
   transition: background 0.15s;
 }
-.topbar-finance-btn:hover { background: rgba(255, 255, 255, 0.08); }
+.topbar-finance-btn:hover { background: #F0F0F0; }
 .topbar-finance-icon {
   font-size: 20px; line-height: 1;
   filter: grayscale(100%) brightness(1.4);
@@ -101,7 +99,7 @@
   position: fixed; bottom: 0; left: 0; right: 0; z-index: 40;
   display: flex; justify-content: space-around; align-items: stretch;
   padding: 6px 0 calc(6px + env(safe-area-inset-bottom));
-  background: #0a0a0b;
+  background: #F5F5F5;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
   font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
 }
@@ -124,7 +122,7 @@
   transition: opacity 0.15s, filter 0.15s, transform 0.10s;
 }
 .bottombar-tab.active {
-  color: #FAFAFA;
+  color: #1A1A1A;
 }
 .bottombar-tab.active .bottombar-tab-icon {
   filter: grayscale(100%) brightness(1.6);

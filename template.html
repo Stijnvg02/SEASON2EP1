@@ -20,7 +20,7 @@
 <script src="lock.js"></script>                                  <!-- passcode lock screen -->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#050506">
+<meta name="theme-color" content="#F5F5F5">
 <title>New Section · Dashboard</title>
 
 <!-- Shared dashboard scripts. Keep these in this order. -->
@@ -29,6 +29,7 @@
 <script src="topbar.js" defer></script>   <!-- top water bar + bottom tab nav -->
 
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 /* ============================================================= */
 /*  DESIGN SYSTEM — these are the dashboard's shared tokens.      */
 /*  Don't change these if you want your section to match the      */
@@ -36,21 +37,21 @@
 /*  instead of hard-coding colors.                                */
 /* ============================================================= */
 :root {
-  --text-primary: #FAFAFA;   /* headings, key numbers   */
-  --text-secondary: #B8B6B0; /* body text               */
-  --text-tertiary: #76746E;  /* labels, captions, hints */
-  --success: #6BE3A4;        /* green  — done / good    */
+  --text-primary: #1A1A1A;   /* headings, key numbers   */
+  --text-secondary: #8A8A8A; /* body text               */
+  --text-tertiary: #AAAAAA;  /* labels, captions, hints */
+  --success: #3EC98A;        /* green  — done / good    */
   --warning: #F2C063;        /* amber  — caution        */
   --danger:  #FF6B6B;        /* red    — bad / delete   */
-  --font: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
 }
 
 * { box-sizing: border-box; }
 html, body {
   margin: 0; padding: 0;
-  background: #050506;
-  color: var(--text-secondary);
+  background: #F5F5F5;
+  color: #8A8A8A;
   font-family: var(--font);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -66,9 +67,7 @@ body {
 body::before {
   content: '';
   position: fixed; inset: 0;
-  background:
-    radial-gradient(circle at 82% 14%, rgba(224, 118, 88, 0.16), transparent 45%),
-    radial-gradient(circle at 18% 90%, rgba(180, 180, 200, 0.06), transparent 50%);
+  background: none;
   filter: blur(40px);
   pointer-events: none;
   z-index: -2;
@@ -78,7 +77,7 @@ body::before {
 body::after {
   content: '';
   position: fixed; inset: 0;
-  background-image: radial-gradient(rgba(255,255,255,0.014) 1px, transparent 1px);
+  /* noise removed */
   background-size: 3px 3px;
   pointer-events: none;
   z-index: -1;
@@ -106,7 +105,7 @@ body::after {
 .section-title {
   font-size: 10.5px; font-weight: 700;
   letter-spacing: 0.18em; text-transform: uppercase;
-  color: var(--text-tertiary);
+  color: #AAAAAA;
   display: flex; align-items: center; gap: 12px;
   margin-bottom: 12px;
 }
@@ -122,13 +121,13 @@ body::after {
 /* THE GLASS CARD — the main building block. Wrap any section in this. */
 .gm-card {
   position: relative;
-  background: rgba(255, 255, 255, 0.04);
+  background: #FFFFFF;
   border-radius: 16px;
   padding: 20px;
   margin-bottom: 14px;
-  backdrop-filter: blur(24px) saturate(1.2);
-  -webkit-backdrop-filter: blur(24px) saturate(1.2);
-  box-shadow: 0 12px 40px rgba(0,0,0,0.45);
+  /* backdrop removed */
+  -webkit-/* backdrop removed */
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
   overflow: hidden;
 }
 
@@ -141,28 +140,28 @@ body::after {
 .gm-eyebrow {
   font-size: 10.5px; font-weight: 700;
   letter-spacing: 0.18em; text-transform: uppercase;
-  color: var(--text-tertiary); margin-bottom: 6px;
+  color: #AAAAAA; margin-bottom: 6px;
 }
 .gm-progress-row { display: flex; align-items: baseline; gap: 6px; }
 .gm-progress-num {
   font-size: 42px; font-weight: 700;
   font-variant-numeric: tabular-nums;
-  letter-spacing: -0.045em; color: var(--text-primary); line-height: 1;
+  letter-spacing: -0.045em; color: #1A1A1A; line-height: 1;
 }
-.gm-progress-total { font-family: var(--font-mono); font-size: 18px; color: var(--text-tertiary); }
+.gm-progress-total { font-family: var(--font-mono); font-size: 18px; color: #AAAAAA; }
 .gm-progress-label {
   font-size: 11px; font-weight: 600;
   letter-spacing: 0.10em; text-transform: uppercase;
-  color: var(--text-tertiary); margin-left: 4px;
+  color: #AAAAAA; margin-left: 4px;
 }
 
 /* A little rounded "pill" — handy for streaks, tags, statuses. */
 .gm-streak {
   display: inline-flex; align-items: center; gap: 6px;
   padding: 8px 12px; border-radius: 999px;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.06);
-  color: var(--text-tertiary);
+  background: #FFFFFF;
+  border: 1px solid rgba(0,0,0,0.08);
+  color: #AAAAAA;
   font-size: 11px; font-weight: 600;
   letter-spacing: 0.10em; text-transform: uppercase;
 }
@@ -174,37 +173,37 @@ body::after {
   gap: 12px;
 }
 .stat {
-  background: rgba(255,255,255,0.035);
-  border: 1px solid rgba(255,255,255,0.06);
+  background: #FFFFFF;
+  border: 1px solid rgba(0,0,0,0.08);
   border-radius: 12px; padding: 14px;
 }
 .stat-num {
   font-size: 26px; font-weight: 700;
   font-variant-numeric: tabular-nums;
-  letter-spacing: -0.03em; color: var(--text-primary); line-height: 1;
+  letter-spacing: -0.03em; color: #1A1A1A; line-height: 1;
 }
 .stat-label {
   margin-top: 6px;
   font-size: 10.5px; font-weight: 600;
   letter-spacing: 0.08em; text-transform: uppercase;
-  color: var(--text-tertiary);
+  color: #AAAAAA;
 }
 
 /* List rows with a checkbox + editable text + delete button. */
 .goal-list { list-style: none; margin: 0; padding: 0; }
 .empty-state {
   text-align: center; font-size: 12px; font-style: italic;
-  color: var(--text-tertiary); padding: 14px 0;
+  color: #AAAAAA; padding: 14px 0;
 }
 .gm-row {
   display: flex; align-items: center; gap: 12px;
   padding: 12px 14px; margin-bottom: 6px;
-  background: rgba(255,255,255,0.035);
-  border: 1px solid rgba(255,255,255,0.06);
+  background: #FFFFFF;
+  border: 1px solid rgba(0,0,0,0.08);
   border-radius: 12px;
   transition: background 0.2s, opacity 0.3s;
 }
-.gm-row:hover { background: rgba(255,255,255,0.06); }
+.gm-row:hover { background: rgba(0,0,0,0.03); }
 .gm-row.gm-row-done { opacity: 0.45; background: rgba(107,227,164,0.04); }
 .gm-row.gm-row-done .gm-text {
   text-decoration: line-through; text-decoration-color: rgba(255,255,255,0.4);
@@ -213,7 +212,7 @@ body::after {
   appearance: none; -webkit-appearance: none;
   width: 22px; height: 22px; flex-shrink: 0; margin: 0;
   border: 1.5px solid rgba(255,255,255,0.18);
-  background: rgba(0,0,0,0.28); border-radius: 7px;
+  background: #F0F0F0; border-radius: 7px;
   position: relative; cursor: pointer;
   transition: background 0.2s, border-color 0.2s, box-shadow 0.25s;
 }
@@ -228,14 +227,14 @@ body::after {
   transform: rotate(45deg);
 }
 .gm-text {
-  flex: 1; font-size: 14px; color: var(--text-primary);
+  flex: 1; font-size: 14px; color: #1A1A1A;
   outline: none; border-radius: 4px; padding: 2px 4px; margin: -2px -4px;
 }
 .gm-text[contenteditable="true"] {
-  outline: 1px solid rgba(255,255,255,0.18); background: rgba(0,0,0,0.28);
+  outline: 1px solid rgba(255,255,255,0.18); background: #F0F0F0;
 }
 .goal-delete {
-  border: 0; background: transparent; color: var(--text-tertiary);
+  border: 0; background: transparent; color: #AAAAAA;
   font-size: 18px; cursor: pointer; padding: 0 4px;
   opacity: 0.5; transition: opacity 0.2s, color 0.2s;
 }
@@ -251,25 +250,22 @@ body::after {
 .gm-input {
   flex: 1; min-width: 0;
   padding: 11px 14px;
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 12px; background: rgba(0,0,0,0.28);
-  color: var(--text-primary);
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: 12px; background: #F0F0F0;
+  color: #1A1A1A;
   font-family: inherit; font-size: 14px; outline: none;
   transition: border-color 0.2s, background 0.2s;
 }
-.gm-input::placeholder { color: var(--text-tertiary); }
-.gm-input:focus { border-color: rgba(255,255,255,0.28); background: rgba(0,0,0,0.36); }
+.gm-input::placeholder { color: #AAAAAA; }
+.gm-input:focus { border-color: rgba(0,0,0,0.22); background: #E8E8E8; }
 
 /* Primary (light) button. */
 .gm-add {
   padding: 11px 20px; border: 0; border-radius: 12px;
-  background: linear-gradient(180deg, #FFFFFF 0%, #E8E5DD 100%);
-  color: #0A0A0B; font-family: inherit; font-size: 13px; font-weight: 700;
+  background: linear-gradient(135deg, #F45B8B, #FF6B6B);
+  color: #1A1A1A; font-family: inherit; font-size: 13px; font-weight: 700;
   cursor: pointer;
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.9),
-    0 2px 8px rgba(0,0,0,0.35),
-    0 8px 22px rgba(0,0,0,0.25);
+  box-shadow: 0 4px 14px rgba(244,91,139,0.35);
   transition: transform 0.1s, filter 0.15s;
 }
 .gm-add:hover { filter: brightness(1.06); transform: translateY(-1px); }
@@ -278,13 +274,13 @@ body::after {
 /* Secondary (ghost) button. */
 .gm-ghost {
   padding: 11px 18px;
-  border: 1px solid rgba(255,255,255,0.10);
-  border-radius: 12px; background: rgba(255,255,255,0.04);
-  color: var(--text-primary);
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: 12px; background: #FFFFFF;
+  color: #1A1A1A;
   font-family: inherit; font-size: 13px; font-weight: 600; cursor: pointer;
   transition: background 0.15s, border-color 0.15s;
 }
-.gm-ghost:hover { background: rgba(255,255,255,0.07); border-color: rgba(255,255,255,0.18); }
+.gm-ghost:hover { background: rgba(0,0,0,0.03); border-color: rgba(0,0,0,0.15); }
 
 @media (max-width: 480px) {
   body { padding: max(20px, env(safe-area-inset-top)) 14px 50px; }
