@@ -814,9 +814,21 @@ html, body {
     return Math.round(Math.min((tempC - 25) * 120, 600));
   }
 
+  function getBodyWeightKg() {
+    try {
+      const entries = JSON.parse(localStorage.getItem('po_coach_weights') || '[]');
+      if (entries.length > 0) {
+        const last = entries[entries.length - 1];
+        const gymState = JSON.parse(localStorage.getItem('po_coach_v1') || '{}');
+        return gymState.units === 'lb' ? last.weight / 2.20462 : last.weight;
+      }
+    } catch (e) {}
+    return state.profile.weightKg || 75;
+  }
+
   function computeTargetMl() {
     const p = state.profile;
-    const wKg = state.weightUnit === 'lb' ? p.weightKg / 2.20462 : p.weightKg;
+    const wKg = getBodyWeightKg();
     const base = wKg * 30;
     const exercise = (p.activityHrsPerWeek || 0) / 7 * 350;
     const caffeine = Math.max(0, (state.caffeineMgPerDay || 0) - 200) * 1.5;
@@ -964,10 +976,11 @@ html, body {
 
   function renderWhy(calc, targetUnits) {
     const wrap = $('whyBody');
+    const wKg = getBodyWeightKg();
     const u = state.weightUnit;
-    const wDisp = u === 'lb' ? (state.profile.weightKg).toFixed(0) : state.profile.weightKg.toFixed(0);
+    const wDisp = u === 'lb' ? (wKg * 2.20462).toFixed(1) : wKg.toFixed(1);
     let html = '';
-    html += '<div class="why-row"><span class="why-label">Base (' + wDisp + ' ' + u + ' × 35 ml)</span><span class="why-val">' + fmtMl(calc.base) + '</span></div>';
+    html += '<div class="why-row"><span class="why-label">Base (' + wDisp + ' ' + u + ' × 30 ml)</span><span class="why-val">' + fmtMl(calc.base) + '</span></div>';
     if (calc.exercise > 0)
       html += '<div class="why-row"><span class="why-label">+ Exercise (' + state.profile.activityHrsPerWeek + ' h/wk)</span><span class="why-val">+ ' + fmtMl(calc.exercise) + '</span></div>';
     if (calc.caffeine > 0)

@@ -333,7 +333,15 @@ body.topbar-modal-open {
     const todayKey = calendarDateKey();
     const done = (state.logs || {})[todayKey] || 0;
     const p = state.profile || { weightKg: 75 };
-    const wKg = state.weightUnit === 'lb' ? (p.weightKg || 0) / 2.20462 : (p.weightKg || 0);
+    let wKg = state.weightUnit === 'lb' ? (p.weightKg || 75) / 2.20462 : (p.weightKg || 75);
+    try {
+      const entries = JSON.parse(localStorage.getItem('po_coach_weights') || '[]');
+      if (entries.length > 0) {
+        const last = entries[entries.length - 1];
+        const gymState = JSON.parse(localStorage.getItem('po_coach_v1') || '{}');
+        wKg = gymState.units === 'lb' ? last.weight / 2.20462 : last.weight;
+      }
+    } catch (e) {}
     const base = wKg * 30;
     const exercise = (p.activityHrsPerWeek || 0) / 7 * 350;
     const caffeine = Math.max(0, (state.caffeineMgPerDay || 0) - 200) * 1.5;
