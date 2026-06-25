@@ -221,6 +221,15 @@ body::after { content: ""; display: none; }
 .day-ring-status { font-size: 14px; font-weight: 700; color: #1A1A1A; }
 .day-ring-remaining { font-family: var(--font-mono); font-size: 12px; color: #8A8A8A; }
 .day-ring-hours { font-family: var(--font-mono); font-size: 11px; color: #AAAAAA; }
+.dr-time-input {
+  font-family: var(--font-mono); font-size: 11px; color: #8A8A8A;
+  background: transparent; border: none; outline: none;
+  padding: 2px 4px; border-radius: 6px; cursor: pointer;
+  width: 70px; text-align: center;
+  -webkit-appearance: none; appearance: none;
+}
+.dr-time-input:hover { background: rgba(0,0,0,0.04); }
+.dr-time-input:focus { background: rgba(244,91,139,0.08); color: #F45B8B; }
 @media (max-width: 480px) {
   .day-ring { width: 144px; height: 144px; }
   .day-ring-percent { font-size: 32px; }
@@ -700,7 +709,11 @@ body::after { content: ""; display: none; }
     <div class="day-ring-text">
       <div class="day-ring-status"    id="dayRingStatus">Loading…</div>
       <div class="day-ring-remaining" id="dayRingRemaining">—</div>
-      <div class="day-ring-hours">8:00 AM – 12:00 AM</div>
+      <div class="day-ring-hours" id="dayRingHours" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:center;">
+        <input type="time" id="drWake"  class="dr-time-input" title="Wake time" />
+        <span style="color:#AAAAAA;font-size:12px;">–</span>
+        <input type="time" id="drSleep" class="dr-time-input" title="Bedtime" />
+      </div>
     </div>
   </div>
 
@@ -765,8 +778,17 @@ body::after { content: ""; display: none; }
   // Paste your Anthropic key here to enable ✨ Polish. Empty = falls back to plain add.
   const ANTHROPIC_API_KEY = '';
 
-  const WAKE_HOUR  = 8;
-  const SLEEP_HOUR = 24;
+  function loadDayTimes() {
+    const saved = JSON.parse(localStorage.getItem('po_day_times') || 'null');
+    return {
+      wake:  saved ? saved.wake  : 7,
+      sleep: saved ? saved.sleep : 24
+    };
+  }
+  function saveDayTimes(wake, sleep) {
+    localStorage.setItem('po_day_times', JSON.stringify({ wake, sleep }));
+  }
+  let { wake: WAKE_HOUR, sleep: SLEEP_HOUR } = loadDayTimes();
 
   // ---------- storage helpers ----------
   function storeGet(key) {
@@ -1485,6 +1507,29 @@ body::after { content: ""; display: none; }
   updateDayRing();
   setInterval(updateDayRing, 60 * 1000);
   startTicker();
+
+  // Wire up wake/sleep time pickers
+  function pad2(n) { return String(n).padStart(2, '0'); }
+  function hourToTime(h) {
+    const clamped = ((h % 24) + 24) % 24;
+    return pad2(Math.floor(clamped)) + ':00';
+  }
+  const drWake  = document.getElementById('drWake');
+  const drSleep = document.getElementById('drSleep');
+  if (drWake && drSleep) {
+    drWake.value  = hourToTime(WAKE_HOUR);
+    drSleep.value = hourToTime(SLEEP_HOUR === 24 ? 0 : SLEEP_HOUR);
+    function onTimeChange() {
+      const [wH, wM] = drWake.value.split(':').map(Number);
+      const [sH, sM] = drSleep.value.split(':').map(Number);
+      WAKE_HOUR  = wH + wM / 60;
+      SLEEP_HOUR = (sH === 0 && sM === 0) ? 24 : sH + sM / 60;
+      saveDayTimes(WAKE_HOUR, SLEEP_HOUR);
+      updateDayRing();
+    }
+    drWake.addEventListener('change',  onTimeChange);
+    drSleep.addEventListener('change', onTimeChange);
+  }
 
   // Re-render when storage changes from another tab (or our bridged parent).
   window.addEventListener('storage', () => {
