@@ -5,7 +5,7 @@
 <script src="/api/config"></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-<meta name="theme-color" content="#0a0a0b">
+<meta name="theme-color" content="#FDE8DC">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>Finances</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -24,9 +24,9 @@
     0 1px 0 0 rgba(255, 255, 255, 0.06) inset,
     0 12px 40px rgba(0, 0, 0, 0.45),
     0 1px 2px rgba(0, 0, 0, 0.25);
-  --text-primary: #FAFAFA;
-  --text-secondary: #B8B6B0;
-  --text-tertiary: #76746E;
+  --text-primary: #1A1A1A;
+  --text-secondary: #6B6B6B;
+  --text-tertiary: #9B9B9B;
   --text-quaternary: #4D4B47;
   --border: transparent;
   --border-soft: transparent;
@@ -38,6 +38,7 @@
   --radius-md: 12px;
   --radius-lg: 16px;
   --font: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --accent: #E8745A;
   --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
   color-scheme: dark;
 }
@@ -89,8 +90,8 @@ body::after {
   gap: 6px;
   padding: 8px 14px 8px 10px;
   margin: 0 0 14px;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.82);
+  border: 1px solid rgba(255,255,255,0.65);
   border-radius: 999px;
   color: var(--text-secondary);
   font-family: var(--font);
@@ -102,7 +103,7 @@ body::after {
   transition: background 0.15s ease, color 0.15s ease;
 }
 .fin-back-btn:hover, .fin-back-btn:active {
-  background: rgba(255,255,255,0.07);
+  background: rgba(0,0,0,0.08);
   color: var(--text-primary);
 }
 .fin-back-btn svg { display: block; }
@@ -204,7 +205,7 @@ html, body { scrollbar-width: none; -ms-overflow-style: none; }
   content: '';
   flex: 1;
   height: 1px;
-  background: linear-gradient(90deg, rgba(255,255,255,0.08), transparent);
+  background: linear-gradient(90deg, rgba(0,0,0,0.08), transparent);
 }
 
 /* Card */
@@ -324,7 +325,7 @@ html, body { scrollbar-width: none; -ms-overflow-style: none; }
   cursor: pointer;
   white-space: nowrap;
 }
-.quick-add-btn:hover { background: rgba(255,255,255,0.12); color: var(--text-primary); }
+.quick-add-btn:hover { background: rgba(0,0,0,0.07); color: var(--text-primary); }
 .quick-add-btn:active { transform: scale(0.96); }
 
 /* Custom list rows */
@@ -340,7 +341,7 @@ html, body { scrollbar-width: none; -ms-overflow-style: none; }
   font-size: 13px;
   color: var(--text-primary);
 }
-.custom-item:hover { background: rgba(255,255,255,0.05); }
+.custom-item:hover { background: rgba(255,255,255,0.88); }
 .custom-item .item-dot {
   width: 5px; height: 5px;
   border-radius: 50%;
@@ -651,7 +652,7 @@ html, body { scrollbar-width: none; -ms-overflow-style: none; }
   font-size: 12.5px;
   transition: background 0.15s;
 }
-.nw-activity-row:hover { background: rgba(255,255,255,0.05); }
+.nw-activity-row:hover { background: rgba(255,255,255,0.88); }
 .nw-activity-bar {
   width: 4px; height: 24px; border-radius: 2px;
   flex-shrink: 0;
@@ -733,7 +734,7 @@ html, body { scrollbar-width: none; -ms-overflow-style: none; }
 .ord-input::placeholder { color: var(--text-tertiary); }
 .ord-input-cost { text-align: right; font-variant-numeric: tabular-nums; font-weight: 600; }
 .ord-input-ccy, .ord-input-from {
-  background: rgba(255,255,255,0.04);
+  background: rgba(255,255,255,0.82);
   border-radius: 8px;
   cursor: pointer; font-weight: 600;
   appearance: none; -webkit-appearance: none;
@@ -808,7 +809,7 @@ html, body { scrollbar-width: none; -ms-overflow-style: none; }
   white-space: nowrap;
 }
 .ord-card-x {
-  background: transparent; border: 1px solid rgba(255,255,255,0.08);
+  background: transparent; border: 1px solid rgba(255,255,255,0.65);
   color: var(--text-tertiary);
   cursor: pointer; font-size: 14px;
   padding: 4px 9px; border-radius: 6px;
@@ -825,7 +826,7 @@ html, body { scrollbar-width: none; -ms-overflow-style: none; }
 .ord-meta-pill {
   display: inline-flex; align-items: center; gap: 5px;
   padding: 3px 9px; border-radius: 999px;
-  background: rgba(255,255,255,0.04);
+  background: rgba(255,255,255,0.82);
   font-weight: 700;
   letter-spacing: 0.04em;
 }
@@ -955,7 +956,7 @@ html, body { scrollbar-width: none; -ms-overflow-style: none; }
 .wish-input-amt  { flex: 1; min-width: 80px; max-width: 110px; text-align: right; font-variant-numeric: tabular-nums; }
 .wish-input-ccy {
   flex: 0 1 80px;
-  background: rgba(255,255,255,0.04);
+  background: rgba(255,255,255,0.82);
   border-radius: 9px;
   color: var(--text-primary);
   font-family: inherit; font-size: 12px;
@@ -1055,7 +1056,7 @@ html, body { scrollbar-width: none; -ms-overflow-style: none; }
 .wish-row-pct.bad  { color: #FF8A8A; }
 .wish-row-pct.flat { color: var(--text-tertiary); }
 .wish-row-x {
-  background: transparent; border: 1px solid rgba(255,255,255,0.10);
+  background: transparent; border: 1px solid rgba(255,255,255,0.65);
   color: var(--text-tertiary);
   cursor: pointer; font-size: 14px;
   padding: 4px 8px; border-radius: 6px;
@@ -1064,7 +1065,7 @@ html, body { scrollbar-width: none; -ms-overflow-style: none; }
 .wish-row-x:hover { color: #FF8A8A; }
 .wish-row-bar {
   height: 5px; border-radius: 3px;
-  background: rgba(255,255,255,0.04);
+  background: rgba(255,255,255,0.82);
   margin-top: 10px;
   overflow: hidden;
 }
@@ -1195,7 +1196,7 @@ html, body { scrollbar-width: none; -ms-overflow-style: none; }
   transition: transform 0.12s, background 0.18s, box-shadow 0.18s;
 }
 .ord-deduct-btn:hover {
-  background: linear-gradient(180deg, rgba(125,211,252,0.28), rgba(125,211,252,0.12));
+  background: linear-gradient(180deg, rgba(232,116,90,0.15), rgba(232,116,90,0.10));
   box-shadow: 0 4px 14px rgba(125,211,252,0.22);
   transform: translateY(-1px);
 }
@@ -1219,7 +1220,7 @@ html, body { scrollbar-width: none; -ms-overflow-style: none; }
 }
 .ord-deduct-undo {
   background: transparent;
-  border: 1px solid rgba(255,255,255,0.10);
+  border: 1px solid rgba(255,255,255,0.65);
   color: var(--text-tertiary);
   font-family: inherit;
   font-size: 10.5px;
@@ -1249,8 +1250,8 @@ html, body { scrollbar-width: none; -ms-overflow-style: none; }
   margin-bottom: 8px;
 }
 .ord-deduct-opt {
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.06);
+  background: rgba(255,255,255,0.82);
+  border: 1px solid rgba(255,255,255,0.55);
   color: var(--text-primary);
   font-family: inherit;
   font-size: 12px;
@@ -1278,7 +1279,7 @@ html, body { scrollbar-width: none; -ms-overflow-style: none; }
   cursor: not-allowed;
 }
 .ord-deduct-opt.insufficient:hover {
-  background: rgba(255,255,255,0.04);
+  background: rgba(255,255,255,0.82);
   border-color: rgba(255,255,255,0.06);
 }
 .ord-deduct-cancel {
@@ -1525,8 +1526,8 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   align-items: center;
   gap: 6px;
   padding: 4px 8px;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.82);
+  border: 1px solid rgba(255,255,255,0.65);
   border-radius: 999px;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;

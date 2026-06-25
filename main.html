@@ -5,27 +5,28 @@
 <script src="/api/config"></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#050506">
+<meta name="theme-color" content="#FDE8DC">
 <title>Stijn</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="sync.js" defer></script>
 <script src="topbar.js" defer></script>
 <style>
 :root {
-  --text-primary: #FAFAFA;
-  --text-secondary: #B8B6B0;
-  --text-tertiary: #76746E;
+  --text-primary: #1A1A1A;
+  --text-secondary: #6B6B6B;
+  --text-tertiary: #9B9B9B;
   --success: #6BE3A4;
   --warning: #F2C063;
   --danger: #FF6B6B;
   --font: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --accent: #E8745A;
   --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
 }
 
 * { box-sizing: border-box; }
 html, body {
   margin: 0; padding: 0;
-  background: #050506;
+  background: linear-gradient(135deg, #FDE8DC 0%, #F5D5F0 55%, #DDD5F5 100%) fixed;
   color: var(--text-secondary);
   font-family: var(--font);
   -webkit-font-smoothing: antialiased;
@@ -73,7 +74,7 @@ body::after {
   font-size: 28px;
   font-weight: 700;
   letter-spacing: -0.025em;
-  background: linear-gradient(180deg, #FFFFFF 0%, #C7C4BC 120%);
+  background: linear-gradient(180deg, #1A1A1A 0%, #4A3F3A 120%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -162,7 +163,7 @@ body::after {
   color: var(--text-secondary);
   padding: 3px 8px;
   border-radius: 999px;
-  background: rgba(255,255,255,0.04);
+  background: rgba(255,255,255,0.82);
 }
 @media (max-width: 480px) {
   .goal-ticker { padding: 9px 12px; }
@@ -182,7 +183,7 @@ body::after {
   background: rgba(255, 255, 255, 0.04);
   backdrop-filter: blur(24px) saturate(1.2);
   -webkit-backdrop-filter: blur(24px) saturate(1.2);
-  box-shadow: 0 12px 40px rgba(0,0,0,0.45);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.08);
 }
 .day-ring {
   position: relative;
@@ -255,7 +256,7 @@ body::after {
 }
 .section-title::after {
   content: ''; flex: 1; height: 1px;
-  background: linear-gradient(90deg, rgba(255,255,255,0.08), transparent);
+  background: linear-gradient(90deg, rgba(0,0,0,0.08), transparent);
 }
 
 .gm-card {
@@ -266,7 +267,7 @@ body::after {
   margin-bottom: 14px;
   backdrop-filter: blur(24px) saturate(1.2);
   -webkit-backdrop-filter: blur(24px) saturate(1.2);
-  box-shadow: 0 12px 40px rgba(0,0,0,0.45);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.08);
   transition: background 0.4s;
   overflow: hidden;
 }
@@ -325,8 +326,8 @@ body::after {
   display: inline-flex; align-items: center; gap: 6px;
   padding: 8px 12px;
   border-radius: 999px;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.06);
+  background: rgba(255,255,255,0.82);
+  border: 1px solid rgba(255,255,255,0.55);
   color: var(--text-tertiary);
   font-size: 11px; font-weight: 600;
   letter-spacing: 0.10em; text-transform: uppercase;
@@ -376,8 +377,8 @@ body::after {
   display: flex; align-items: center; gap: 12px;
   padding: 12px 14px;
   margin-bottom: 6px;
-  background: rgba(255,255,255,0.035);
-  border: 1px solid rgba(255,255,255,0.06);
+  background: rgba(255,255,255,0.82);
+  border: 1px solid rgba(255,255,255,0.55);
   border-radius: 12px;
   transition: background 0.2s, opacity 0.3s;
   position: relative;
@@ -399,9 +400,9 @@ body::after {
 .gm-row.is-drag-over { border-top: 2px solid #6BE3A4; }
 .gm-row.is-queue-flashing { animation: gm-queue-flash 0.48s ease-out; }
 @keyframes gm-queue-flash {
-  0%   { background: rgba(255,255,255,0.035); transform: scale(1); }
+  0%   { background: rgba(255,255,255,0.82); transform: scale(1); }
   40%  { background: rgba(242,192,99,0.32); transform: scale(1.015); }
-  100% { background: rgba(255,255,255,0.035); transform: scale(1); }
+  100% { background: rgba(255,255,255,0.82); transform: scale(1); }
 }
 
 .gm-handle {
@@ -422,7 +423,7 @@ body::after {
   width: 22px; height: 22px; flex-shrink: 0;
   margin: 0;
   border: 1.5px solid rgba(255,255,255,0.18);
-  background: rgba(0,0,0,0.28);
+  background: rgba(255,255,255,0.75);
   border-radius: 7px;
   position: relative;
   cursor: pointer;
@@ -460,7 +461,7 @@ body::after {
 }
 .gm-text[contenteditable="true"] {
   outline: 1px solid rgba(255,255,255,0.18);
-  background: rgba(0,0,0,0.28);
+  background: rgba(255,255,255,0.75);
 }
 
 .gm-queue-btn {
@@ -497,7 +498,7 @@ body::after {
   width: 100%;
   margin: 6px 0 0;
   padding: 9px;
-  border: 1px dashed rgba(255,255,255,0.12);
+  border: 1px dashed rgba(0,0,0,0.12);
   border-radius: 10px;
   background: transparent;
   color: var(--text-tertiary);
@@ -527,7 +528,7 @@ body::after {
   color: var(--text-primary);
   border-color: rgba(255,255,255,0.30);
   border-style: solid;
-  background: rgba(255,255,255,0.04);
+  background: rgba(255,255,255,0.82);
 }
 
 .goal-input-wrap.gm-input-wrap {
@@ -539,22 +540,22 @@ body::after {
 .gm-input {
   flex: 1; min-width: 0;
   padding: 11px 14px;
-  border: 1px solid rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.65);
   border-radius: 12px;
-  background: rgba(0,0,0,0.28);
+  background: rgba(255,255,255,0.75);
   color: var(--text-primary);
   font-family: inherit; font-size: 14px;
   outline: none;
   transition: border-color 0.2s, background 0.2s;
 }
 .gm-input::placeholder { color: var(--text-tertiary); }
-.gm-input:focus { border-color: rgba(255,255,255,0.28); background: rgba(0,0,0,0.36); }
+.gm-input:focus { border-color: rgba(255,255,255,0.28); background: rgba(255,255,255,0.90); }
 
 .gm-add {
   padding: 11px 20px;
   border: 0; border-radius: 12px;
   background: linear-gradient(180deg, #FFFFFF 0%, #E8E5DD 100%);
-  color: #0A0A0B;
+  color: #FFFFFF;
   font-family: inherit; font-size: 13px; font-weight: 700;
   cursor: pointer;
   box-shadow:
@@ -568,16 +569,16 @@ body::after {
 
 .gm-polish {
   padding: 11px 18px;
-  border: 1px solid rgba(255,255,255,0.10);
+  border: 1px solid rgba(255,255,255,0.65);
   border-radius: 12px;
-  background: rgba(255,255,255,0.04);
+  background: rgba(255,255,255,0.82);
   color: var(--text-primary);
   font-family: inherit; font-size: 13px; font-weight: 600;
   cursor: pointer;
   transition: background 0.15s, border-color 0.15s;
 }
 .gm-polish:hover {
-  background: rgba(255,255,255,0.07);
+  background: rgba(0,0,0,0.08);
   border-color: rgba(255,255,255,0.18);
 }
 
