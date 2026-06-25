@@ -343,7 +343,14 @@ body.topbar-modal-open {
     let adjust = 0;
     if (p.sex === 'm') adjust += 200;
     if ((p.age || 0) >= 50) adjust += 100;
-    const totalMl = base + exercise + caffeine + subs + adjust;
+    let heat = 0;
+    try {
+      const wx = JSON.parse(localStorage.getItem('water_weather'));
+      if (wx && (Date.now() - wx.ts) < 30 * 60 * 1000 && wx.temp > 25) {
+        heat = Math.round(Math.min((wx.temp - 25) * 150, 1000));
+      }
+    } catch (e) {}
+    const totalMl = base + exercise + caffeine + subs + adjust + heat;
     let unitVol;
     if (state.unit === 'glass') unitVol = state.glassMl || 250;
     else if (state.unit === 'oz') unitVol = 30;
