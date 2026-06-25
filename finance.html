@@ -1843,7 +1843,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     <div class="wish-hero-top">
       <div>
         <div class="wish-hero-eyebrow">WISHLIST TOTAL</div>
-        <div class="wish-hero-num" id="wishTotal">CHF 0</div>
+        <div class="wish-hero-num" id="wishTotal">EUR 0</div>
       </div>
       <div class="wish-hero-pct-wrap">
         <div class="wish-hero-pct-label">% OF NET WORTH</div>
@@ -1990,7 +1990,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   loadExchangeRates();
 
   function fmtMoney(amountCHF) {
-    const symbol = currencyEl ? currencyEl.textContent.trim() : 'CHF';
+    const symbol = currencyEl ? currencyEl.textContent.trim() : 'EUR';
     const rate = exchangeRates[symbol] || 1;
     const num = (Number(amountCHF) || 0) * rate;
     return symbol + ' ' + num.toLocaleString('en-US', { minimumFractionDigits: num % 1 === 0 ? 0 : 2, maximumFractionDigits: 2 });
@@ -2032,7 +2032,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
   function beginNwAmountEdit(amtEl, items, idx, catKey) {
     if (amtEl.querySelector('input')) return;
-    const symbol = currencyEl ? currencyEl.textContent.trim() : 'CHF';
+    const symbol = currencyEl ? currencyEl.textContent.trim() : 'EUR';
     const rate = exchangeRates[symbol] || 1;
     const curCHF = Number(items[idx].amount) || 0;
     const curDisplay = curCHF * rate;
@@ -2427,7 +2427,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
       // Interpret the input in the CURRENTLY SELECTED display currency, then
       // convert to CHF for storage. So if USD is selected and user types 40000,
       // we store 40000 / USD-per-CHF rate — 31,400 CHF; displays as $40,000.
-      const symbol = currencyEl ? currencyEl.textContent.trim() : 'CHF';
+      const symbol = currencyEl ? currencyEl.textContent.trim() : 'EUR';
       const rate = exchangeRates[symbol] || 1;
       const amountCHF = a / rate;
       const items = storeGet('nw:' + cat.key) || [];
@@ -2444,8 +2444,9 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
   const CURRENCIES = ['EUR', 'CHF', 'USD', 'GBP'];
   if (currencyEl) {
-    const savedCur = storeGet(CURRENCY_KEY);
-    currencyEl.textContent = savedCur || 'EUR';
+    const savedCur = storeGet(CURRENCY_KEY) || 'EUR';
+    if (!storeGet(CURRENCY_KEY)) storeSet(CURRENCY_KEY, 'EUR');
+    currencyEl.textContent = savedCur;
     currencyEl.addEventListener('click', () => {
       const cur = currencyEl.textContent.trim();
       const next = CURRENCIES[(CURRENCIES.indexOf(cur) + 1) % CURRENCIES.length];
