@@ -130,7 +130,7 @@
   border-color: rgba(244,91,139,0.20);
 }
 .bottombar-tab.active .bottombar-tab-icon {
-  filter: saturate(1.4) brightness(1.05) drop-shadow(0 0 6px rgba(244,91,139,0.45));
+  filter: saturate(1.3) brightness(1.0);
   opacity: 1;
 }
 .bottombar-tab:active .bottombar-tab-icon { transform: scale(0.92); }
