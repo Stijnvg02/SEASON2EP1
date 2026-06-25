@@ -107,13 +107,16 @@
   flex: 1;
   display: flex; flex-direction: column; align-items: center; justify-content: center;
   gap: 3px;
-  padding: 6px 0 4px;
+  padding: 6px 8px 4px;
+  margin: 2px 4px;
+  border-radius: 14px;
+  border: 1px solid transparent;
   text-decoration: none;
   color: #8A8A8A;
   font-size: 10px; font-weight: 600;
   letter-spacing: 0.04em;
   -webkit-tap-highlight-color: transparent;
-  transition: color 0.15s;
+  transition: color 0.15s, background 0.15s, border-color 0.15s;
 }
 .bottombar-tab-icon {
   font-size: 24px; line-height: 1;
@@ -123,6 +126,8 @@
 }
 .bottombar-tab.active {
   color: #F45B8B;
+  background: rgba(244,91,139,0.08);
+  border-color: rgba(244,91,139,0.20);
 }
 .bottombar-tab.active .bottombar-tab-icon {
   filter: saturate(1.4) brightness(1.05) drop-shadow(0 0 6px rgba(244,91,139,0.45));
