@@ -2186,6 +2186,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
         const updated = all.filter(e => e.ts !== ts);
         storeSet(ACTIVITY_KEY, updated);
         renderActivity();
+        renderNetWorthChart();
       });
     });
   }
@@ -2296,6 +2297,19 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   }
 
   // Net-worth history chart
+  // History is rebuilt from the activity log so deleting an activity
+  // immediately removes it from the chart too.
+  function buildHistoryFromActivities() {
+    const acts = (storeGet(ACTIVITY_KEY) || []).slice().sort((a, b) => a.ts - b.ts);
+    if (!acts.length) return [];
+    let running = 0;
+    return acts.map(a => {
+      running += Number(a.delta) || 0;
+      return { t: a.ts, v: running };
+    });
+  }
+  // Keep logging snapshots for backwards-compat with synced data, but
+  // the chart itself no longer reads from here.
   const NW_HISTORY_KEY = 'nw:history';
   const NW_HISTORY_MAX = 500;
   function logNetWorthSnapshot(grandCHF) {
@@ -2331,7 +2345,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     const areaPath = document.getElementById('nwChartArea');
     const deltaEl = document.getElementById('nwChartDelta');
     if (!wrap || !svg || !linePath || !areaPath) return;
-    const hist = storeGet(NW_HISTORY_KEY) || [];
+    const hist = buildHistoryFromActivities();
     if (hist.length < 1) {
       wrap.classList.remove('has-data');
       linePath.setAttribute('d', '');
