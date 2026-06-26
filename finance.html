@@ -2027,6 +2027,10 @@ input[type="date"]::-webkit-calendar-picker-indicator {
         nameInp.style.cssText = 'font-size:11px;font-weight:700;letter-spacing:0.08em;border:1.5px solid rgba(0,0,0,0.15);border-radius:6px;padding:2px 8px;outline:none;font-family:inherit;text-transform:uppercase;width:140px;background:#FFFFFF;color:#1A1A1A';
         wrap.appendChild(emojiInp); wrap.appendChild(nameInp);
         el.replaceWith(wrap);
+        emojiInp.addEventListener('input', () => {
+          const found = [...emojiInp.value].find(c => /\p{Extended_Pictographic}/u.test(c));
+          emojiInp.value = found || '';
+        });
         nameInp.focus(); nameInp.select();
         const commit = () => {
           const e2 = emojiInp.value.trim() || NW_CAT_DEFAULTS[key].emoji;
