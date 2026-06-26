@@ -115,7 +115,7 @@ body { padding-bottom: calc(72px + env(safe-area-inset-bottom)); }
 .kpi-value.blue { color: var(--blue); }
 
 /* CHART WRAP */
-.chart-wrap { position: relative; }
+.chart-wrap { position: relative; filter: drop-shadow(0 3px 10px rgba(0,0,0,0.08)); }
 canvas { max-width: 100%; }
 
 /* TRANSACTION ROWS */
@@ -576,6 +576,51 @@ const MONTHS = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Aug','Sep','Okt','Nov
 const FIXED_CATS = ['Huur/wonen', 'Abonnementen'];
 const G = { grid: 'rgba(0,0,0,0.05)', tick: '#9ca3af', font: { size: 10, family: 'Inter,sans-serif' } };
 
+/* ════ GRADIENT HELPERS ════ */
+function hexToRgba(hex, alpha) {
+  const r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
+  return `rgba(${r},${g},${b},${alpha})`;
+}
+// Vertical bar gradient: full color at top → light at bottom
+function barGrad(color) {
+  return (ctx) => {
+    const chart = ctx.chart;
+    const { ctx: c, chartArea } = chart;
+    if (!chartArea) return hexToRgba(color, 0.9);
+    const g = c.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
+    g.addColorStop(0, hexToRgba(color, 1));
+    g.addColorStop(1, hexToRgba(color, 0.28));
+    return g;
+  };
+}
+// Area fill gradient: colour → transparent
+function areaGrad(color, alpha1 = 0.35) {
+  return (ctx) => {
+    const chart = ctx.chart;
+    const { ctx: c, chartArea } = chart;
+    if (!chartArea) return hexToRgba(color, alpha1);
+    const g = c.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
+    g.addColorStop(0, hexToRgba(color, alpha1));
+    g.addColorStop(1, hexToRgba(color, 0));
+    return g;
+  };
+}
+
+/* ════ GLOW PLUGIN ════ */
+Chart.register({
+  id: 'glow',
+  beforeDatasetsDraw(chart) {
+    if (!chart.options.glow) return;
+    chart.ctx.save();
+    chart.ctx.shadowBlur = 14;
+    chart.ctx.shadowColor = chart.options.glowColor || 'rgba(0,0,0,0.20)';
+  },
+  afterDatasetsDraw(chart) {
+    if (!chart.options.glow) return;
+    chart.ctx.restore();
+  }
+});
+
 /* ════ DATA LAYER ════ */
 function loadData() {
   try {
@@ -715,7 +760,7 @@ function renderDashboard() {
   if (cats.length) {
     charts['dashDonut'] = new Chart(document.getElementById('dashDonut'), {
       type: 'doughnut',
-      data: { labels: cats, datasets: [{ data: vals, backgroundColor: cols, borderWidth: 0 }] },
+      data: { labels: cats, datasets: [{ data: vals, backgroundColor: cols, borderWidth: 3, borderColor: '#FFFFFF', hoverOffset: 6 }] },
       options: {
         cutout: '62%', responsive: true, maintainAspectRatio: true,
         plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${ctx.label}: ${fmtMoney(ctx.raw)}` }}}
@@ -738,11 +783,12 @@ function renderDashboard() {
       data: {
         labels: months.map(m => m.label),
         datasets: [
-          { label: 'Inkomsten', data: months.map(m => m.inkomsten), backgroundColor: '#3EC98A', borderRadius: 4 },
-          { label: 'Uitgaven',  data: months.map(m => m.uitgaven),  backgroundColor: '#FF6B6B', borderRadius: 4 }
+          { label: 'Inkomsten', data: months.map(m => m.inkomsten), backgroundColor: barGrad('#3EC98A'), borderRadius: 6, borderSkipped: false },
+          { label: 'Uitgaven',  data: months.map(m => m.uitgaven),  backgroundColor: barGrad('#FF6B6B'), borderRadius: 6, borderSkipped: false }
         ]
       },
       options: {
+        glow: true, glowColor: 'rgba(62,201,138,0.22)',
         responsive: true, maintainAspectRatio: false,
         plugins: { legend: { labels: { font: { size: 11 }, boxWidth: 12 } }, tooltip: { callbacks: { label: ctx => ` ${ctx.dataset.label}: ${fmtMoney(ctx.raw)}` }}},
         scales: {
@@ -773,12 +819,13 @@ function renderCharts() {
       data: {
         labels: months.map(m => m.label),
         datasets: [
-          { label: 'Inkomsten', data: months.map(m => m.inkomsten), borderColor: '#3EC98A', backgroundColor: 'rgba(62,201,138,0.08)', fill: false, tension: 0.4, pointRadius: 4 },
-          { label: 'Uitgaven',  data: months.map(m => m.uitgaven),  borderColor: '#FF6B6B', borderDash: [4,4], backgroundColor: 'transparent', fill: false, tension: 0.4, pointRadius: 4 },
-          { label: 'Overschot', data: months.map(m => m.inkomsten - m.uitgaven), borderColor: '#3B82F6', backgroundColor: 'rgba(59,130,246,0.10)', fill: true, tension: 0.4, pointRadius: 3 }
+          { label: 'Inkomsten', data: months.map(m => m.inkomsten), borderColor: '#3EC98A', borderWidth: 2.5, backgroundColor: areaGrad('#3EC98A', 0.22), fill: true, tension: 0.4, pointRadius: 4, pointBackgroundColor: '#3EC98A' },
+          { label: 'Uitgaven',  data: months.map(m => m.uitgaven),  borderColor: '#FF6B6B', borderWidth: 2.5, borderDash: [4,4], backgroundColor: areaGrad('#FF6B6B', 0.12), fill: true, tension: 0.4, pointRadius: 4, pointBackgroundColor: '#FF6B6B' },
+          { label: 'Overschot', data: months.map(m => m.inkomsten - m.uitgaven), borderColor: '#3B82F6', borderWidth: 2.5, backgroundColor: areaGrad('#3B82F6', 0.18), fill: true, tension: 0.4, pointRadius: 3, pointBackgroundColor: '#3B82F6' }
         ]
       },
       options: {
+        glow: true, glowColor: 'rgba(59,130,246,0.20)',
         responsive: true, maintainAspectRatio: false,
         plugins: { legend: { labels: { font: { size: 10 }, boxWidth: 12 } }, tooltip: { callbacks: { label: ctx => ` ${ctx.dataset.label}: ${fmtMoney(ctx.raw)}` }}},
         scales: {
@@ -797,12 +844,13 @@ function renderCharts() {
       data: {
         labels: months.map(m => m.label),
         datasets: [
-          { label: 'Vaste lasten', data: months.map(m => m.items.filter(t => t.type === 'uitgave' && FIXED_CATS.includes(t.categorie)).reduce((s,t) => s+t.bedrag, 0)), backgroundColor: '#3B82F6', borderRadius: 4, stack: 'a' },
-          { label: 'Variabel',     data: months.map(m => m.items.filter(t => t.type === 'uitgave' && !FIXED_CATS.includes(t.categorie)).reduce((s,t) => s+t.bedrag, 0)), backgroundColor: '#F59E0B', borderRadius: 4, stack: 'a' },
-          { label: 'Gespaard',     data: months.map(m => Math.max(0, m.inkomsten - m.uitgaven)), backgroundColor: '#3EC98A', borderRadius: 4, stack: 'b' }
+          { label: 'Vaste lasten', data: months.map(m => m.items.filter(t => t.type === 'uitgave' && FIXED_CATS.includes(t.categorie)).reduce((s,t) => s+t.bedrag, 0)), backgroundColor: barGrad('#3B82F6'), borderRadius: 6, borderSkipped: false, stack: 'a' },
+          { label: 'Variabel',     data: months.map(m => m.items.filter(t => t.type === 'uitgave' && !FIXED_CATS.includes(t.categorie)).reduce((s,t) => s+t.bedrag, 0)), backgroundColor: barGrad('#F59E0B'), borderRadius: 6, borderSkipped: false, stack: 'a' },
+          { label: 'Gespaard',     data: months.map(m => Math.max(0, m.inkomsten - m.uitgaven)), backgroundColor: barGrad('#3EC98A'), borderRadius: 6, borderSkipped: false, stack: 'b' }
         ]
       },
       options: {
+        glow: true, glowColor: 'rgba(59,130,246,0.18)',
         responsive: true, maintainAspectRatio: false,
         plugins: { legend: { labels: { font: { size: 10 }, boxWidth: 12 } }, tooltip: { callbacks: { label: ctx => ` ${ctx.dataset.label}: ${fmtMoney(ctx.raw)}` }}},
         scales: {
@@ -821,9 +869,10 @@ function renderCharts() {
       type: 'line',
       data: {
         labels: months.map(m => m.label),
-        datasets: [{ label: 'Cumulatief saldo', data: months.map(m => { cum += (m.inkomsten - m.uitgaven); return cum; }), borderColor: '#3EC98A', backgroundColor: 'rgba(62,201,138,0.12)', fill: true, tension: 0.4, pointRadius: 4 }]
+        datasets: [{ label: 'Cumulatief saldo', data: months.map(m => { cum += (m.inkomsten - m.uitgaven); return cum; }), borderColor: '#3EC98A', borderWidth: 2.5, backgroundColor: areaGrad('#3EC98A', 0.40), fill: true, tension: 0.4, pointRadius: 5, pointBackgroundColor: '#3EC98A', pointBorderColor: '#fff', pointBorderWidth: 2 }]
       },
       options: {
+        glow: true, glowColor: 'rgba(62,201,138,0.28)',
         responsive: true, maintainAspectRatio: false,
         plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${fmtMoney(ctx.raw)}` }}},
         scales: {
@@ -843,9 +892,10 @@ function renderCharts() {
       type: 'bar',
       data: {
         labels: sorted.map(([k]) => k),
-        datasets: [{ data: sorted.map(([,v]) => v), backgroundColor: sorted.map(([k]) => CAT_COLORS[k] || '#8A8A8A'), borderRadius: 4 }]
+        datasets: [{ data: sorted.map(([,v]) => v), backgroundColor: sorted.map(([k]) => barGrad(CAT_COLORS[k] || '#8A8A8A')), borderRadius: 6, borderSkipped: false }]
       },
       options: {
+        glow: true, glowColor: 'rgba(0,0,0,0.14)',
         indexAxis: 'y', responsive: true, maintainAspectRatio: false,
         plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${fmtMoney(ctx.raw)}` }}},
         scales: {
@@ -864,11 +914,12 @@ function renderCharts() {
       type: 'scatter',
       data: {
         datasets: [
-          { label: '< €100', data: uitgaven.filter(t => t.bedrag < 100).map(t => ({ x: new Date(t.datum).getMonth() + 1, y: t.bedrag })), backgroundColor: 'rgba(59,130,246,0.7)', pointRadius: 5 },
-          { label: '≥ €100', data: uitgaven.filter(t => t.bedrag >= 100).map(t => ({ x: new Date(t.datum).getMonth() + 1, y: t.bedrag })), backgroundColor: 'rgba(245,158,11,0.85)', pointRadius: 7, pointStyle: 'triangle' }
+          { label: '< €100', data: uitgaven.filter(t => t.bedrag < 100).map(t => ({ x: new Date(t.datum).getMonth() + 1, y: t.bedrag })), backgroundColor: hexToRgba('#3B82F6', 0.75), pointRadius: 6, pointBorderColor: hexToRgba('#3B82F6', 0.3), pointBorderWidth: 3 },
+          { label: '≥ €100', data: uitgaven.filter(t => t.bedrag >= 100).map(t => ({ x: new Date(t.datum).getMonth() + 1, y: t.bedrag })), backgroundColor: hexToRgba('#F59E0B', 0.85), pointRadius: 8, pointStyle: 'triangle', pointBorderColor: hexToRgba('#F59E0B', 0.3), pointBorderWidth: 3 }
         ]
       },
       options: {
+        glow: true, glowColor: 'rgba(59,130,246,0.22)',
         responsive: true, maintainAspectRatio: false,
         plugins: { legend: { labels: { font: { size: 10 }, boxWidth: 12 } }, tooltip: { callbacks: { label: ctx => ` Maand ${ctx.raw.x}: ${fmtMoney(ctx.raw.y)}` }}},
         scales: {
@@ -916,11 +967,12 @@ function renderGoals() {
     data: {
       labels: goals.map(g => g.naam),
       datasets: [
-        { label: 'Bereikt',    data: goals.map(g => Math.min(g.huidig, g.doel)), backgroundColor: goals.map(g => { const p = g.doel > 0 ? g.huidig/g.doel : 0; return p >= 1 ? '#3EC98A' : p >= 0.5 ? '#3B82F6' : '#F59E0B'; }), borderRadius: 4, stack: 's' },
-        { label: 'Resterend', data: goals.map(g => Math.max(0, g.doel - g.huidig)), backgroundColor: '#F0F0F0', borderRadius: 4, stack: 's' }
+        { label: 'Bereikt',    data: goals.map(g => Math.min(g.huidig, g.doel)), backgroundColor: goals.map(g => { const p = g.doel > 0 ? g.huidig/g.doel : 0; return barGrad(p >= 1 ? '#3EC98A' : p >= 0.5 ? '#3B82F6' : '#F59E0B'); }), borderRadius: 6, borderSkipped: false, stack: 's' },
+        { label: 'Resterend', data: goals.map(g => Math.max(0, g.doel - g.huidig)), backgroundColor: '#F0F0F0', borderRadius: 6, borderSkipped: false, stack: 's' }
       ]
     },
     options: {
+      glow: true, glowColor: 'rgba(59,130,246,0.18)',
       indexAxis: 'y', responsive: true, maintainAspectRatio: false,
       plugins: { legend: { labels: { font: { size: 10 }, boxWidth: 12 } }, tooltip: { callbacks: { label: ctx => ` ${fmtMoney(ctx.raw)}` }}},
       scales: {
