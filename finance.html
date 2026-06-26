@@ -376,19 +376,14 @@ html, body { scrollbar-width: none; -ms-overflow-style: none; }
 .nw-list { font-size: 13px; }
 .nw-row {
   display: flex; justify-content: space-between; align-items: center;
-  padding: 6px 10px; gap: 8px; min-width: 0;
-  background: linear-gradient(135deg, rgba(83,74,183,0.28), rgba(216,90,48,0.18));
-  border: 1px solid rgba(83,74,183,0.30);
-  border-radius: 8px;
-  margin-bottom: 4px;
+  padding: 5px 0; gap: 8px; min-width: 0;
 }
 .nw-name {
-  color: #FFFFFF; flex: 1 1 auto; min-width: 0;
+  color: #1A1A1A; flex: 1 1 auto; min-width: 0;
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-  font-size: 13px;
 }
 .nw-amt {
-  font-weight: 600; color: #FFFFFF; flex-shrink: 0;
+  font-weight: 600; color: #1A1A1A; flex-shrink: 0;
   font-variant-numeric: tabular-nums; font-family: var(--font-mono);
   font-size: 12px; white-space: nowrap;
 }
@@ -396,8 +391,7 @@ html, body { scrollbar-width: none; -ms-overflow-style: none; }
   cursor: pointer; border-radius: 4px;
   padding: 2px 4px; margin: -2px -4px;
 }
-.nw-name-edit:hover, .nw-amt-edit:hover { background: rgba(255,255,255,0.15); }
-.nw-del { color: rgba(255,255,255,0.60) !important; }
+.nw-name-edit:hover, .nw-amt-edit:hover { background: #F0F0F0; }
 .nw-del {
   background: none; border: none;
   color: #AAAAAA; cursor: pointer;
@@ -425,7 +419,12 @@ html, body { scrollbar-width: none; -ms-overflow-style: none; }
 }
 .nw-subcard .quick-add input {
   min-width: 0; width: 100%; max-width: none !important;
+  background: linear-gradient(135deg, rgba(83,74,183,0.30), rgba(216,90,48,0.20)) !important;
+  border: 1px solid rgba(83,74,183,0.35) !important;
+  color: #FFFFFF !important;
+  font-weight: 600;
 }
+.nw-subcard .quick-add input::placeholder { color: rgba(255,255,255,0.60) !important; }
 .nw-subcard .quick-add input[type=number]::-webkit-outer-spin-button,
 .nw-subcard .quick-add input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 .nw-subcard .quick-add input[type=number] { -moz-appearance: textfield; }
