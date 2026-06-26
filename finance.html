@@ -2632,9 +2632,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
       const row = document.createElement('div');
       row.className = 'sub-row' + (isUrgent ? ' is-urgent' : '');
       row.style.cssText = 'display:grid;grid-template-columns:1fr auto auto;align-items:center;padding:12px 14px;background: #FAFAFA;border-radius:var(--radius-md);margin-bottom:8px;gap:12px;';
-      const renewLine = it.renewal
-        ? '<div class="sub-renew-line" style="font-size:10px;color:#F2C063;margin-top:3px">↻ Renews ' + formatRenewal(it.renewal) + '</div>'
-        : '';
+      const renewLine = '';
       // Linked NW account + auto-deduct toggle pills
       let metaLine = '';
       const pills = [];
@@ -2695,6 +2693,14 @@ input[type="date"]::-webkit-calendar-picker-indicator {
       perDiv.textContent = '/ month';
       cost.appendChild(perDiv);
       if (origHint) { const h = document.createElement('div'); h.innerHTML = origHint; cost.appendChild(h.firstChild); }
+      if (it.renewal) {
+        const next = (typeof nextRenewalDate === 'function') ? nextRenewalDate(it.renewal, it.period) : null;
+        const dateStr = next ? next.toLocaleDateString('nl-NL', { day: 'numeric', month: 'short', year: 'numeric' }) : it.renewal.slice(0,10);
+        const renEl = document.createElement('div');
+        renEl.style.cssText = 'font-size:10px;color:var(--text-tertiary);margin-top:2px';
+        renEl.textContent = '↻ ' + dateStr;
+        cost.appendChild(renEl);
+      }
       const actions = document.createElement('div');
       actions.style.cssText = 'display:flex;flex-direction:column;gap:4px;align-items:center';
       const del = document.createElement('button');
