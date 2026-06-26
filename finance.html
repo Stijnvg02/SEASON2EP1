@@ -385,17 +385,6 @@ html, body { scrollbar-width: none; -ms-overflow-style: none; }
   display: flex; justify-content: space-between; align-items: center;
   padding: 5px 0; gap: 8px; min-width: 0;
 }
-.nw-color-dot {
-  width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
-  cursor: pointer; border: 1.5px solid rgba(0,0,0,0.10);
-  transition: transform .15s;
-}
-.nw-color-dot:hover { transform: scale(1.25); }
-.nw-color-input {
-  width: 28px; height: 28px; padding: 0; border: none;
-  border-radius: 50%; cursor: pointer; background: none;
-  flex-shrink: 0; overflow: hidden;
-}
 .nw-name {
   color: #1A1A1A; flex: 1 1 auto; min-width: 0;
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
@@ -1721,7 +1710,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
         <div class="label" style="display:flex;justify-content:space-between;align-items:center"><span>🏦 Bank accounts</span><span id="bankTotal" style="font-size:13px;color:var(--text-primary);font-weight:600">0</span></div>
         <div id="bankList" class="nw-list"></div>
         <div class="quick-add">
-          <input type="color" id="bankColor" class="nw-color-input" value="#7DD3FC" title="Kies kleur">
           <input type="text" placeholder="Account name" id="bankName" />
           <input type="number" placeholder="Amount" id="bankAmount" step="0.01" />
           <button class="quick-add-btn" id="bankAddBtn">+</button>
@@ -1732,7 +1720,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
         <div class="label" style="display:flex;justify-content:space-between;align-items:center"><span>📈 Stocks / Investments</span><span id="stocksTotal" style="font-size:13px;color:var(--text-primary);font-weight:600">0</span></div>
         <div id="stocksList" class="nw-list"></div>
         <div class="quick-add">
-          <input type="color" id="stocksColor" class="nw-color-input" value="#6EE7B7" title="Kies kleur">
           <input type="text" placeholder="Stock / fund" id="stocksName" />
           <input type="number" placeholder="Value" id="stocksAmount" step="0.01" />
           <button class="quick-add-btn" id="stocksAddBtn">+</button>
@@ -1743,7 +1730,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
         <div class="label" style="display:flex;justify-content:space-between;align-items:center"><span>🪙 Crypto</span><span id="cryptoTotal" style="font-size:13px;color:var(--text-primary);font-weight:600">0</span></div>
         <div id="cryptoList" class="nw-list"></div>
         <div class="quick-add">
-          <input type="color" id="cryptoColor" class="nw-color-input" value="#FBBF24" title="Kies kleur">
           <input type="text" placeholder="Coin / wallet" id="cryptoName" />
           <input type="number" placeholder="Value" id="cryptoAmount" step="0.01" />
           <button class="quick-add-btn" id="cryptoAddBtn">+</button>
@@ -1754,7 +1740,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
         <div class="label" style="display:flex;justify-content:space-between;align-items:center"><span>💼 Other assets</span><span id="otherTotal" style="font-size:13px;color:var(--text-primary);font-weight:600">0</span></div>
         <div id="otherList" class="nw-list"></div>
         <div class="quick-add">
-          <input type="color" id="otherColor" class="nw-color-input" value="#B794F4" title="Kies kleur">
           <input type="text" placeholder="Asset name" id="otherName" />
           <input type="number" placeholder="Value" id="otherAmount" step="0.01" />
           <button class="quick-add-btn" id="otherAddBtn">+</button>
@@ -1976,10 +1961,10 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   // ============================================================
   const CURRENCY_KEY = 'nw_currency';
   const NW_CATS = [
-    { key: 'bank',   listId: 'bankList',   totalId: 'bankTotal',   nameId: 'bankName',   amtId: 'bankAmount',   addId: 'bankAddBtn',   colorId: 'bankColor',   defaultColor: '#7DD3FC' },
-    { key: 'stocks', listId: 'stocksList', totalId: 'stocksTotal', nameId: 'stocksName', amtId: 'stocksAmount', addId: 'stocksAddBtn', colorId: 'stocksColor', defaultColor: '#6EE7B7' },
-    { key: 'crypto', listId: 'cryptoList', totalId: 'cryptoTotal', nameId: 'cryptoName', amtId: 'cryptoAmount', addId: 'cryptoAddBtn', colorId: 'cryptoColor', defaultColor: '#FBBF24' },
-    { key: 'other',  listId: 'otherList',  totalId: 'otherTotal',  nameId: 'otherName',  amtId: 'otherAmount',  addId: 'otherAddBtn',  colorId: 'otherColor',  defaultColor: '#B794F4' }
+    { key: 'bank',   listId: 'bankList',   totalId: 'bankTotal',   nameId: 'bankName',   amtId: 'bankAmount',   addId: 'bankAddBtn' },
+    { key: 'stocks', listId: 'stocksList', totalId: 'stocksTotal', nameId: 'stocksName', amtId: 'stocksAmount', addId: 'stocksAddBtn' },
+    { key: 'crypto', listId: 'cryptoList', totalId: 'cryptoTotal', nameId: 'cryptoName', amtId: 'cryptoAmount', addId: 'cryptoAddBtn' },
+    { key: 'other',  listId: 'otherList',  totalId: 'otherTotal',  nameId: 'otherName',  amtId: 'otherAmount',  addId: 'otherAddBtn' }
   ];
   const currencyEl = document.getElementById('netWorthCurrency');
   const netWorthTotal = document.getElementById('netWorthTotal');
@@ -2021,27 +2006,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
       total += Number(it.amount) || 0;
       const row = document.createElement('div');
       row.className = 'nw-row';
-
-      // Color dot — click opens a hidden color input
-      const dotColor = it.color || cat.defaultColor || '#AAAAAA';
-      const colorPicker = document.createElement('input');
-      colorPicker.type = 'color';
-      colorPicker.value = dotColor;
-      colorPicker.style.cssText = 'position:absolute;width:0;height:0;opacity:0;pointer-events:none';
-      colorPicker.addEventListener('input', () => {
-        items[idx].color = colorPicker.value;
-        storeSet('nw:' + cat.key, items);
-        dot.style.background = colorPicker.value;
-        renderAllocationDonut && renderAllNetWorth();
-      });
-      const dot = document.createElement('span');
-      dot.className = 'nw-color-dot';
-      dot.style.background = dotColor;
-      dot.title = 'Kleur wijzigen';
-      dot.addEventListener('click', () => colorPicker.click());
-      row.appendChild(colorPicker);
-      row.appendChild(dot);
-
       const name = document.createElement('span');
       name.className = 'nw-name nw-name-edit';
       name.textContent = it.name;
@@ -2298,7 +2262,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     // "Bank" / "Stocks" slice each.
     const slices = [];
     NW_CATS.forEach(cat => {
-      const meta = NW_SLICE_META[cat.key] || { color: '#AAAAAA' };
+      const meta = NW_SLICE_META[cat.key] || { color: '#FFFFFF' };
       const items = storeGet('nw:' + cat.key) || [];
       items.forEach((it, i) => {
         const v = Number(it.amount) || 0;
@@ -2306,7 +2270,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
           slices.push({
             key: cat.key + '::' + i,
             name: String(it.name || '(unnamed)'),
-            color: it.color || meta.color,
+            color: meta.color,
             value: v
           });
         }
@@ -2498,18 +2462,19 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     const addBtn = document.getElementById(cat.addId);
     const nameInput = document.getElementById(cat.nameId);
     const amtInput = document.getElementById(cat.amtId);
-    const colorInput = document.getElementById(cat.colorId);
     if (!addBtn) return;
     function doAdd() {
       const n = nameInput.value.trim();
       const a = parseFloat(amtInput.value);
       if (!n || isNaN(a)) return;
+      // Interpret the input in the CURRENTLY SELECTED display currency, then
+      // convert to CHF for storage. So if USD is selected and user types 40000,
+      // we store 40000 / USD-per-CHF rate — 31,400 CHF; displays as $40,000.
       const symbol = currencyEl ? currencyEl.textContent.trim() : 'EUR';
       const rate = exchangeRates[symbol] || 1;
       const amountCHF = a / rate;
-      const color = colorInput ? colorInput.value : (cat.defaultColor || '#AAAAAA');
       const items = storeGet('nw:' + cat.key) || [];
-      items.push({ name: n, amount: amountCHF, color });
+      items.push({ name: n, amount: amountCHF });
       storeSet('nw:' + cat.key, items);
       logActivity(cat.key, n, amountCHF, 'add');
       nameInput.value = ''; amtInput.value = '';
