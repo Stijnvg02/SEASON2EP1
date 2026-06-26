@@ -541,6 +541,29 @@ html, body { scrollbar-width: none; -ms-overflow-style: none; }
   display: flex;
   flex-direction: column;
 }
+.nw-donut-tip {
+  position: fixed;
+  pointer-events: none;
+  z-index: 200;
+  background: #1A1A1A;
+  color: #FFFFFF;
+  border-radius: 10px;
+  padding: 8px 12px;
+  font-size: 12px;
+  font-family: var(--font);
+  line-height: 1.5;
+  white-space: nowrap;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity .15s, transform .15s;
+}
+.nw-donut-tip.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+.nw-donut-tip-name { font-weight: 700; }
+.nw-donut-tip-amt  { color: rgba(255,255,255,0.75); font-size: 11px; }
 .nw-donut-stage {
   position: relative;
   width: 140px;
@@ -1689,6 +1712,10 @@ input[type="date"]::-webkit-calendar-picker-indicator {
             <div class="nw-donut-sub">total</div>
           </div>
         </div>
+        <div class="nw-donut-tip" id="nwDonutTip">
+          <div class="nw-donut-tip-name" id="nwDonutTipName"></div>
+          <div class="nw-donut-tip-amt" id="nwDonutTipAmt"></div>
+        </div>
         <div class="nw-donut-empty" id="nwDonutEmpty">Add an account to see your breakdown</div>
         <div class="nw-donut-legend" id="nwDonutLegend"></div>
       </div>
@@ -2309,11 +2336,47 @@ input[type="date"]::-webkit-calendar-picker-indicator {
       const a1 = angle + pad;
       const a2 = angle + sliceAngle - pad;
       if (a2 > a1) {
-        html += '<path d="' + donutArcPath(70, 70, 60, 44, a1, a2) + '" fill="' + s.color + '"></path>';
+        const pct = ((s.value / sliceTotal) * 100).toFixed(1);
+        html += '<path d="' + donutArcPath(70, 70, 60, 44, a1, a2) + '" fill="' + s.color + '"'
+          + ' data-name="' + escapeHtml(s.name) + '"'
+          + ' data-amt="' + escapeHtml(fmtMoney(s.value)) + '"'
+          + ' data-pct="' + pct + '"'
+          + ' style="cursor:pointer;transition:opacity .15s"></path>';
       }
       angle += sliceAngle;
     });
     svg.innerHTML = html;
+
+    // Tooltip logic
+    const tip     = document.getElementById('nwDonutTip');
+    const tipName = document.getElementById('nwDonutTipName');
+    const tipAmt  = document.getElementById('nwDonutTipAmt');
+    svg.querySelectorAll('path').forEach(path => {
+      path.addEventListener('mouseenter', (e) => {
+        tipName.textContent = path.dataset.name;
+        tipAmt.textContent  = path.dataset.amt + '  ·  ' + path.dataset.pct + '%';
+        tip.classList.add('show');
+        svg.querySelectorAll('path').forEach(p => p.style.opacity = p === path ? '1' : '0.45');
+      });
+      path.addEventListener('mousemove', (e) => {
+        tip.style.left = (e.clientX + 14) + 'px';
+        tip.style.top  = (e.clientY - 36) + 'px';
+      });
+      path.addEventListener('mouseleave', () => {
+        tip.classList.remove('show');
+        svg.querySelectorAll('path').forEach(p => p.style.opacity = '1');
+      });
+      // Touch support
+      path.addEventListener('touchstart', (e) => {
+        const t = e.touches[0];
+        tipName.textContent = path.dataset.name;
+        tipAmt.textContent  = path.dataset.amt + '  ·  ' + path.dataset.pct + '%';
+        tip.style.left = (t.clientX + 14) + 'px';
+        tip.style.top  = (t.clientY - 36) + 'px';
+        tip.classList.add('show');
+      }, { passive: true });
+      path.addEventListener('touchend', () => tip.classList.remove('show'), { passive: true });
+    });
 
     legend.innerHTML = slices.map(s => {
       const pct = ((s.value / sliceTotal) * 100).toFixed(1);
