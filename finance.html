@@ -420,6 +420,9 @@ html, body { scrollbar-width: none; -ms-overflow-style: none; }
 .nw-subcard .quick-add input {
   min-width: 0; width: 100%; max-width: none !important;
 }
+.nw-subcard .quick-add input[type=number]::-webkit-outer-spin-button,
+.nw-subcard .quick-add input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.nw-subcard .quick-add input[type=number] { -moz-appearance: textfield; }
 #netWorthTotal + * + .card-grid,
 .section .card .card-grid {
   display: grid;
@@ -1734,8 +1737,8 @@ input[type="date"]::-webkit-calendar-picker-indicator {
         <div class="label" style="display:flex;justify-content:space-between;align-items:center"><span>🏦 Bank accounts</span><span id="bankTotal" style="font-size:13px;color:var(--text-primary);font-weight:600">0</span></div>
         <div id="bankList" class="nw-list"></div>
         <div class="quick-add">
-          <input type="text" placeholder="Account name" id="bankName" />
-          <input type="number" placeholder="Amount" id="bankAmount" step="0.01" />
+          <input type="text" placeholder="Account name" id="bankName" autocomplete="off" />
+          <input type="number" placeholder="Amount" id="bankAmount" step="0.01" autocomplete="off" />
           <button class="quick-add-btn" id="bankAddBtn">+</button>
         </div>
       </div>
@@ -1744,8 +1747,8 @@ input[type="date"]::-webkit-calendar-picker-indicator {
         <div class="label" style="display:flex;justify-content:space-between;align-items:center"><span>📈 Stocks / Investments</span><span id="stocksTotal" style="font-size:13px;color:var(--text-primary);font-weight:600">0</span></div>
         <div id="stocksList" class="nw-list"></div>
         <div class="quick-add">
-          <input type="text" placeholder="Stock / fund" id="stocksName" />
-          <input type="number" placeholder="Value" id="stocksAmount" step="0.01" />
+          <input type="text" placeholder="Stock / fund" id="stocksName" autocomplete="off" />
+          <input type="number" placeholder="Value" id="stocksAmount" step="0.01" autocomplete="off" />
           <button class="quick-add-btn" id="stocksAddBtn">+</button>
         </div>
       </div>
@@ -1754,8 +1757,8 @@ input[type="date"]::-webkit-calendar-picker-indicator {
         <div class="label" style="display:flex;justify-content:space-between;align-items:center"><span>🪙 Crypto</span><span id="cryptoTotal" style="font-size:13px;color:var(--text-primary);font-weight:600">0</span></div>
         <div id="cryptoList" class="nw-list"></div>
         <div class="quick-add">
-          <input type="text" placeholder="Coin / wallet" id="cryptoName" />
-          <input type="number" placeholder="Value" id="cryptoAmount" step="0.01" />
+          <input type="text" placeholder="Coin / wallet" id="cryptoName" autocomplete="off" />
+          <input type="number" placeholder="Value" id="cryptoAmount" step="0.01" autocomplete="off" />
           <button class="quick-add-btn" id="cryptoAddBtn">+</button>
         </div>
       </div>
@@ -1764,8 +1767,8 @@ input[type="date"]::-webkit-calendar-picker-indicator {
         <div class="label" style="display:flex;justify-content:space-between;align-items:center"><span>💼 Other assets</span><span id="otherTotal" style="font-size:13px;color:var(--text-primary);font-weight:600">0</span></div>
         <div id="otherList" class="nw-list"></div>
         <div class="quick-add">
-          <input type="text" placeholder="Asset name" id="otherName" />
-          <input type="number" placeholder="Value" id="otherAmount" step="0.01" />
+          <input type="text" placeholder="Asset name" id="otherName" autocomplete="off" />
+          <input type="number" placeholder="Value" id="otherAmount" step="0.01" autocomplete="off" />
           <button class="quick-add-btn" id="otherAddBtn">+</button>
         </div>
       </div>
