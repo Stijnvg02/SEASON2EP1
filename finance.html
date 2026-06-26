@@ -689,6 +689,10 @@ html, body { scrollbar-width: none; -ms-overflow-style: none; }
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   font-size: 13px;
 }
+.nw-activity-sub {
+  font-size: 10px; color: #BBBBBB;
+  margin-top: 2px;
+}
 .nw-activity-meta {
   font-size: 10.5px; color: #AAAAAA;
   font-family: var(--font-mono);
@@ -2125,9 +2129,11 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   // ============================================================
   const ACTIVITY_KEY = 'nw:activity';
   const ACTIVITY_MAX = 50;
-  function logActivity(catKey, name, deltaCHF, kind) {
+  function logActivity(catKey, name, deltaCHF, kind, extra) {
     const arr = storeGet(ACTIVITY_KEY) || [];
-    arr.push({ ts: Date.now(), cat: catKey, name: String(name || ''), delta: Number(deltaCHF) || 0, kind: kind || 'add' });
+    const entry = { ts: Date.now(), cat: catKey, name: String(name || ''), delta: Number(deltaCHF) || 0, kind: kind || 'add' };
+    if (extra) Object.assign(entry, extra);
+    arr.push(entry);
     if (arr.length > ACTIVITY_MAX) arr.splice(0, arr.length - ACTIVITY_MAX);
     storeSet(ACTIVITY_KEY, arr);
   }
@@ -2166,11 +2172,15 @@ input[type="date"]::-webkit-calendar-picker-indicator {
       const cls = e.delta >= 0 ? 'up' : 'down';
       const amt = fmtMoney(Math.abs(e.delta));
       const kind = e.kind === 'edit' ? 'EDIT' : (e.kind === 'delete' ? 'DELETE' : 'ADD');
+      const subLine = (e.subName && e.fromAccount)
+        ? '<div class="nw-activity-sub">' + escapeHtml(e.subName) + ' · afgetrokken van ' + escapeHtml(e.fromAccount) + '</div>'
+        : '';
       return '<div class="nw-activity-row" style="color:' + meta.color + '">'
         + '<span class="nw-activity-bar" style="background:' + meta.color + '"></span>'
         + '<div class="nw-activity-info">'
         +   '<div class="nw-activity-name">' + escapeHtml(e.name || '(unnamed)') + '</div>'
         +   '<div class="nw-activity-meta">' + meta.name + ' · ' + kind + '</div>'
+        +   subLine
         + '</div>'
         + '<span class="nw-activity-amt ' + cls + '">' + sign + amt + '</span>'
         + '<span class="nw-activity-date">' + fmtActivityDate(e.ts) + '</span>'
@@ -2617,7 +2627,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
       let metaLine = '';
       const pills = [];
       if (it.fromCat && it.fromAccount) {
-        pills.push('<span class="sub-from-pill">from · ' + escapeHtml(it.fromAccount) + '</span>');
+        pills.push('<span class="sub-from-pill" style="cursor:pointer" data-from-idx="' + idx + '">from · ' + escapeHtml(it.fromAccount) + '</span>');
       }
       pills.push(
         '<button class="sub-row-toggle' + (it.autoDeduct ? ' is-on' : '') + '" data-sub-toggle="' + idx + '" type="button" title="Auto-deduct from the linked account on each renewal">'
@@ -2710,6 +2720,53 @@ input[type="date"]::-webkit-calendar-picker-indicator {
         renderSubs();
       });
     });
+    // Wire from-pill click → account picker dropdown
+    subsList.querySelectorAll('[data-from-idx]').forEach(pill => {
+      pill.addEventListener('click', (e) => {
+        e.stopPropagation();
+        // Remove any existing dropdown
+        document.querySelectorAll('.sub-from-menu').forEach(m => m.remove());
+        const i = parseInt(pill.dataset.fromIdx, 10);
+        const arr = storeGet('subs') || [];
+        if (!arr[i]) return;
+        const accounts = (typeof listAllNwAccounts === 'function') ? listAllNwAccounts() : [];
+        const ICONS2 = { bank: '🏦', stocks: '📈', crypto: '🪙', other: '💼' };
+        const menu = document.createElement('div');
+        menu.className = 'sub-from-menu';
+        menu.style.cssText = 'position:fixed;z-index:999;background:#FFFFFF;border-radius:14px;box-shadow:0 8px 24px rgba(0,0,0,0.12);padding:6px;min-width:200px';
+        const opts = [{ label: 'Geen rekening', value: '' }].concat(accounts.map(a => ({ label: ICONS2[a.catKey] + ' ' + a.itemName, value: a.catKey + '::' + a.itemName })));
+        opts.forEach(opt => {
+          const el = document.createElement('div');
+          el.style.cssText = 'display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:10px;cursor:pointer;font-size:13px;color:' + (opt.value ? 'var(--text-primary)' : 'var(--text-tertiary)');
+          el.textContent = opt.label;
+          if (arr[i].fromCat && arr[i].fromAccount && opt.value === arr[i].fromCat + '::' + arr[i].fromAccount) {
+            el.style.fontWeight = '700';
+          }
+          el.addEventListener('mouseenter', () => el.style.background = '#F5F5F5');
+          el.addEventListener('mouseleave', () => el.style.background = '');
+          el.addEventListener('click', () => {
+            if (opt.value) {
+              const ix = opt.value.indexOf('::');
+              arr[i].fromCat = opt.value.slice(0, ix);
+              arr[i].fromAccount = opt.value.slice(ix + 2);
+            } else {
+              arr[i].fromCat = null; arr[i].fromAccount = null; arr[i].autoDeduct = false;
+            }
+            storeSet('subs', arr);
+            menu.remove();
+            renderSubs();
+          });
+          menu.appendChild(el);
+        });
+        const r = pill.getBoundingClientRect();
+        menu.style.left = r.left + 'px';
+        menu.style.top = (r.bottom + 6) + 'px';
+        document.body.appendChild(menu);
+        const close = (ev) => { if (!menu.contains(ev.target)) { menu.remove(); document.removeEventListener('click', close); } };
+        setTimeout(() => document.addEventListener('click', close), 0);
+      });
+    });
+
     subsTotal.innerHTML = fmtMoney(monthly) + ' <span style="font-size:13px;color:var(--text-tertiary);font-weight:500">/ mo</span>';
     subsYearly.textContent = '~' + fmtMoney(monthly * 12) + ' per year';
     subsCount.textContent = items.length + (items.length === 1 ? ' subscription' : ' subscriptions');
@@ -2769,7 +2826,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
           const cost = Number(it.amount) || 0;
           nwItems[idx].amount = (Number(nwItems[idx].amount) || 0) - cost;
           storeSet('nw:' + it.fromCat, nwItems);
-          logActivity(it.fromCat, nwItems[idx].name, -cost, 'edit');
+          logActivity(it.fromCat, nwItems[idx].name, -cost, 'edit', { subName: it.name, fromAccount: it.fromAccount });
           it.lastDeductedAt = renewalMs;
           changed = true;
         }
