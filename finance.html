@@ -1785,31 +1785,11 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     </div>
     <div id="subsList"></div>
     <div class="empty-state" id="subsEmpty">No subscriptions yet</div>
-    <div class="quick-add" style="flex-wrap:wrap;gap:6px">
-      <input type="text" placeholder="Service (e.g. Netflix)" id="subName" style="flex:1.5;min-width:120px" />
-      <input type="number" placeholder="Amount" id="subAmount" step="0.01" style="flex:1;max-width:100px" />
-      <select id="subCurrency" class="fin-select">
-        <option value="EUR">EUR</option>
-        <option value="CHF">CHF</option>
-        <option value="USD">USD</option>
-        <option value="GBP">GBP</option>
-      </select>
-      <select id="subPeriod" class="fin-select">
-        <option value="monthly">Monthly</option>
-        <option value="yearly">Yearly</option>
-        <option value="weekly">Weekly</option>
-      </select>
-      <label class="date-field" title="Next renewal date" style="min-width:150px"><span class="date-emoji" aria-hidden="true">📅</span><input type="date" id="subRenewal" /></label>
-      <select id="subFromCat" title="Which net worth account to deduct from" class="fin-select">
-        <option value="">No accounts yet</option>
-      </select>
-      <label class="sub-auto-toggle" title="Auto-deduct from the linked account on each renewal">
-        <input type="checkbox" id="subAutoDeduct" />
-        <span class="sub-auto-track"><span class="sub-auto-thumb"></span></span>
-        <span class="sub-auto-label">Auto-deduct</span>
-      </label>
-      <button class="quick-add-btn" id="subAddBtn" onclick="window.__addSub && window.__addSub()">+ Add</button>
+    <div id="subAddWrap">
+      <button id="subAddTrigger" style="width:100%;padding:14px;background:#FAFAFA;border:1.5px dashed rgba(0,0,0,0.12);border-radius:12px;font-size:22px;color:var(--text-tertiary);cursor:pointer;font-family:inherit;transition:background .15s" onmouseenter="this.style.background='#F0F0F0'" onmouseleave="this.style.background='#FAFAFA'">+</button>
     </div>
+    <!-- Hidden fields kept for doSubAdd() compatibility -->
+    <input type="hidden" id="subName" /><input type="hidden" id="subAmount" /><input type="hidden" id="subCurrency" value="EUR" /><input type="hidden" id="subPeriod" value="monthly" /><input type="hidden" id="subRenewal" /><select id="subFromCat" style="display:none"><option value="">No accounts yet</option></select><input type="hidden" id="subAutoDeduct" />
   </div>
 </div>
 
@@ -2855,10 +2835,78 @@ input[type="date"]::-webkit-calendar-picker-indicator {
       renderSubs();
     } catch (e) { console.error('subAdd failed', e); }
   }
-  // Add button uses event delegation (see safety-net at the bottom).
-  // Enter key on the inputs still triggers add directly.
   if (subName)   subName.addEventListener('keydown', (e) => { if (e.key === 'Enter') doSubAdd(); });
   if (subAmount) subAmount.addEventListener('keydown', (e) => { if (e.key === 'Enter') doSubAdd(); });
+
+  function openSubAddCard() {
+    const wrap = document.getElementById('subAddWrap');
+    if (!wrap || wrap.querySelector('.sub-add-card')) return;
+    const trigger = document.getElementById('subAddTrigger');
+    if (trigger) trigger.style.display = 'none';
+
+    const accounts = (typeof listAllNwAccounts === 'function') ? listAllNwAccounts() : [];
+    const ICONS = { bank: '🏦', stocks: '📈', crypto: '🪙', other: '💼' };
+    const fromOpts = '<option value="">Geen rekening</option>' + accounts.map(a =>
+      '<option value="' + a.catKey + '::' + a.itemName + '">' + ICONS[a.catKey] + ' ' + escapeHtml(a.itemName) + '</option>'
+    ).join('');
+
+    const card = document.createElement('div');
+    card.className = 'sub-add-card';
+    card.style.cssText = 'background:#FAFAFA;border-radius:12px;padding:14px 16px;display:grid;grid-template-columns:1fr auto auto;align-items:center;gap:12px;';
+    card.innerHTML =
+      '<div style="display:flex;flex-direction:column;gap:8px">' +
+        '<input class="sac-name" type="text" placeholder="Naam (bv. Netflix)" style="font-size:14px;font-weight:600;border:none;border-bottom:1.5px solid rgba(0,0,0,0.12);background:transparent;padding:4px 0;outline:none;font-family:inherit;color:var(--text-primary);width:100%" />' +
+        '<div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center">' +
+          '<select class="sac-per fin-select" style="font-size:11px;padding:3px 6px">' +
+            '<option value="monthly">Monthly</option><option value="yearly">Yearly</option><option value="weekly">Weekly</option>' +
+          '</select>' +
+          '<label class="date-field" style="min-width:130px;font-size:11px"><span class="date-emoji">📅</span><input class="sac-ren" type="date" /></label>' +
+          '<select class="sac-from fin-select" style="font-size:11px;padding:3px 6px">' + fromOpts + '</select>' +
+          '<label class="sub-auto-toggle" style="transform:scale(0.9);transform-origin:left"><input class="sac-auto" type="checkbox" /><span class="sub-auto-track"><span class="sub-auto-thumb"></span></span><span class="sub-auto-label">Auto-deduct</span></label>' +
+        '</div>' +
+      '</div>' +
+      '<div style="text-align:right;line-height:1.1">' +
+        '<div style="display:flex;align-items:center;gap:4px;justify-content:flex-end">' +
+          '<input class="sac-amt" type="number" step="0.01" placeholder="0.00" style="font-size:20px;font-weight:700;width:90px;border:none;border-bottom:1.5px solid rgba(0,0,0,0.12);background:transparent;text-align:right;outline:none;font-family:inherit;font-variant-numeric:tabular-nums;color:var(--text-primary)" />' +
+          '<select class="sac-ccy fin-select" style="font-size:11px;padding:3px 6px"><option>EUR</option><option>CHF</option><option>USD</option><option>GBP</option></select>' +
+        '</div>' +
+        '<div style="font-size:10px;color:var(--text-tertiary);margin-top:2px">/ month</div>' +
+      '</div>' +
+      '<div style="display:flex;flex-direction:column;gap:4px;align-items:center">' +
+        '<button class="sac-save quick-add-btn" style="font-size:12px;padding:5px 12px">Save</button>' +
+        '<button class="sac-cancel" style="background:transparent;border:1px solid rgba(0,0,0,0.08);color:var(--text-tertiary);cursor:pointer;font-size:11px;padding:4px 8px;border-radius:6px;font-family:inherit">✕</button>' +
+      '</div>';
+    wrap.appendChild(card);
+    card.querySelector('.sac-name').focus();
+
+    const save = () => {
+      const n = card.querySelector('.sac-name').value.trim();
+      const a = parseFloat(card.querySelector('.sac-amt').value);
+      const ccy = card.querySelector('.sac-ccy').value;
+      const per = card.querySelector('.sac-per').value;
+      const ren = card.querySelector('.sac-ren').value || null;
+      const fromVal = card.querySelector('.sac-from').value;
+      const auto = card.querySelector('.sac-auto').checked;
+      if (!n || isNaN(a) || a <= 0) { card.querySelector('.sac-name').focus(); return; }
+      let fromCat = null, fromAccount = null;
+      if (fromVal) { const ix = fromVal.indexOf('::'); if (ix > 0) { fromCat = fromVal.slice(0, ix); fromAccount = fromVal.slice(ix + 2); } }
+      if (auto && (!fromCat || !fromAccount)) { alert('Kies een rekening voor auto-deduct.'); return; }
+      const rate = exchangeRates[ccy] || 1;
+      const items = storeGet('subs') || [];
+      items.push({ name: n, amount: a / rate, period: per, renewal: ren, entered_amount: a, entered_currency: ccy, fromCat, fromAccount, autoDeduct: auto, lastDeductedAt: null });
+      storeSet('subs', items);
+      renderSubs();
+    };
+    const cancel = () => { card.remove(); if (trigger) trigger.style.display = ''; };
+    card.querySelector('.sac-save').addEventListener('click', save);
+    card.querySelector('.sac-cancel').addEventListener('click', cancel);
+    card.querySelectorAll('input').forEach(i => i.addEventListener('keydown', e => { if (e.key === 'Enter') save(); else if (e.key === 'Escape') cancel(); }));
+  }
+
+  const subTrigger = document.getElementById('subAddTrigger');
+  if (subTrigger) subTrigger.addEventListener('click', openSubAddCard);
+  window.__addSub = doSubAdd;
+
   renderSubs();
 
   // ============================================================
