@@ -2854,31 +2854,35 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     card.className = 'sub-add-card sub-row';
     card.style.cssText = 'display:grid;grid-template-columns:1fr auto auto;align-items:center;padding:12px 14px;background:#FAFAFA;border-radius:var(--radius-md);margin-bottom:8px;gap:12px;';
 
-    // LEFT — name + period pill row (mirrors existing row structure)
+    const pillStyle = 'display:inline-flex;align-items:center;padding:4px 10px;background:#FFFFFF;border:1px solid rgba(0,0,0,0.08);border-radius:999px;font-family:var(--font-mono);font-size:9.5px;letter-spacing:0.08em;text-transform:uppercase;color:#AAAAAA;font-weight:700;cursor:pointer;outline:none;-webkit-appearance:none;appearance:none';
+
+    // LEFT
     const left = document.createElement('div');
     left.style.cssText = 'min-width:0';
     left.innerHTML =
-      '<input class="sac-name" type="text" placeholder="Naam (bv. Netflix)" style="font-size:14px;font-weight:600;border:none;border-bottom:1.5px solid rgba(0,0,0,0.12);background:transparent;padding:2px 0;outline:none;font-family:inherit;color:var(--text-primary);width:100%;margin-bottom:6px" />' +
+      '<input class="sac-name" type="text" placeholder="Naam (bv. Netflix)" style="font-size:14px;font-weight:600;border:none;border-bottom:1.5px solid rgba(0,0,0,0.10);background:transparent;padding:2px 0;outline:none;font-family:inherit;color:var(--text-primary);width:100%;margin-bottom:8px" />' +
+      '<div style="font-size:11px;color:var(--text-tertiary);margin-bottom:6px;text-transform:capitalize" class="sac-period-label">Monthly</div>' +
       '<div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center">' +
-        '<select class="sac-per fin-select" style="font-size:11px;padding:3px 8px;border-radius:999px">' +
+        '<select class="sac-per" style="' + pillStyle + '">' +
           '<option value="monthly">Monthly</option><option value="yearly">Yearly</option><option value="weekly">Weekly</option>' +
         '</select>' +
-        '<label class="date-field" style="min-width:120px"><span class="date-emoji">📅</span><input class="sac-ren" type="date" /></label>' +
-        '<select class="sac-from fin-select" style="font-size:11px;padding:3px 8px;border-radius:999px">' + fromOpts + '</select>' +
+        '<select class="sac-ren-fake" style="' + pillStyle + ';display:none"></select>' +
+        '<input class="sac-ren" type="date" style="' + pillStyle + ';font-size:10px" />' +
+        '<select class="sac-from" style="' + pillStyle + '">' + fromOpts + '</select>' +
         '<label class="sub-auto-toggle"><input class="sac-auto" type="checkbox" /><span class="sub-auto-track"><span class="sub-auto-thumb"></span></span><span class="sub-auto-label">Auto-deduct</span></label>' +
       '</div>';
 
-    // RIGHT — amount + currency (mirrors cost div)
+    // RIGHT — amount mirrors existing cost div
     const cost = document.createElement('div');
     cost.style.cssText = 'text-align:right;line-height:1.1';
     cost.innerHTML =
       '<div style="display:flex;align-items:baseline;gap:4px;justify-content:flex-end">' +
         '<input class="sac-amt" type="number" step="0.01" placeholder="0.00" style="font-size:20px;font-weight:700;width:80px;border:none;border-bottom:1.5px solid rgba(0,0,0,0.12);background:transparent;text-align:right;outline:none;font-family:inherit;font-variant-numeric:tabular-nums;color:var(--text-primary)" />' +
-        '<select class="sac-ccy fin-select" style="font-size:11px;padding:3px 6px"><option>EUR</option><option>CHF</option><option>USD</option><option>GBP</option></select>' +
+        '<select class="sac-ccy" style="' + pillStyle + ';font-size:10px"><option>EUR</option><option>CHF</option><option>USD</option><option>GBP</option></select>' +
       '</div>' +
       '<div style="font-size:10px;color:var(--text-tertiary);margin-top:2px">/ month</div>';
 
-    // ACTIONS — save + cancel
+    // ACTIONS
     const actions = document.createElement('div');
     actions.style.cssText = 'display:flex;flex-direction:column;gap:4px;align-items:center';
     actions.innerHTML =
@@ -2886,6 +2890,12 @@ input[type="date"]::-webkit-calendar-picker-indicator {
       '<button class="sac-cancel" style="background:transparent;border:1px solid rgba(0,0,0,0.08);color:var(--text-tertiary);cursor:pointer;font-size:12px;padding:3px 7px;border-radius:5px;font-family:inherit;line-height:1">×</button>';
 
     card.appendChild(left); card.appendChild(cost); card.appendChild(actions);
+
+    // Keep period label in sync
+    card.querySelector('.sac-per').addEventListener('change', function() {
+      left.querySelector('.sac-period-label').textContent = this.options[this.selectedIndex].text;
+    });
+
     wrap.insertBefore(card, wrap.querySelector('#subAddTrigger') || null);
     card.querySelector('.sac-name').focus();
 
