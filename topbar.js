@@ -38,9 +38,19 @@
   padding: 9px 14px;
   background: linear-gradient(135deg, #3B82F6, #60A5FA);
   border: none;
-  border-radius: 12px;
+  border-radius: 12px 0 0 12px;
   text-decoration: none;
   color: #FFFFFF;
+  box-shadow: 0 4px 14px rgba(59,130,246,0.35);
+  -webkit-tap-highlight-color: transparent;
+}
+.topbar-water-emoji {
+  display: flex; align-items: center; justify-content: center;
+  width: 44px;
+  background: linear-gradient(135deg, #2563EB, #3B82F6);
+  border-radius: 0 12px 12px 0;
+  font-size: 18px; line-height: 1;
+  text-decoration: none;
   box-shadow: 0 4px 14px rgba(59,130,246,0.35);
   -webkit-tap-highlight-color: transparent;
 }
@@ -185,9 +195,9 @@ body.topbar-modal-open {
   <div class="topbar-water-wrap">
     <a href="po-water.html" class="topbar-water-pill" id="topbarWater" aria-label="Water progress">
       <span class="topbar-pill-dot"></span>
-      <span style="font-size:15px;line-height:1;">🫗</span>
       <span class="topbar-pill-count" id="topbarWaterCount">0 / 0L</span>
     </a>
+    <a href="po-water.html" class="topbar-water-emoji" aria-label="Go to water">💧</a>
   </div>
   <a href="finance.html" class="topbar-finance-btn" id="topbarFinance" aria-label="Finance">
     <span class="topbar-finance-icon">📊</span>
