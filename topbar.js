@@ -38,7 +38,7 @@
   padding: 9px 14px;
   background: linear-gradient(135deg, #3B82F6, #60A5FA);
   border: none;
-  border-radius: 12px 0 0 12px;
+  border-radius: 12px;
   text-decoration: none;
   color: #FFFFFF;
   box-shadow: 0 4px 14px rgba(59,130,246,0.35);
@@ -60,20 +60,6 @@
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
-.topbar-water-add {
-  width: 44px;
-  border: none;
-  background: linear-gradient(135deg, #2563EB, #3B82F6);
-  color: #FFFFFF;
-  font-family: inherit; font-size: 20px; font-weight: 700; line-height: 1;
-  cursor: pointer;
-  border-radius: 0 12px 12px 0;
-  -webkit-tap-highlight-color: transparent;
-  transition: filter 0.15s, transform 0.10s;
-  box-shadow: 0 4px 14px rgba(59,130,246,0.35);
-}
-.topbar-water-add:active { transform: scale(0.94); }
-.topbar-water-add.flash { filter: brightness(1.1); }
 .topbar-finance-btn {
   display: inline-flex; align-items: center; justify-content: center;
   width: 44px; height: 42px;
@@ -141,7 +127,6 @@ body.has-bottombar {
   .topbar { padding-left: 10px; padding-right: 10px; gap: 6px; }
   .topbar-water-pill { padding: 8px 11px; gap: 6px; }
   .topbar-pill-count { font-size: 12px; }
-  .topbar-water-add { width: 40px; font-size: 18px; }
   .topbar-finance-btn { width: 40px; height: 38px; }
   .topbar-finance-icon { font-size: 18px; }
   .bottombar-tab-icon { font-size: 22px; }
@@ -198,11 +183,11 @@ body.topbar-modal-open {
   const topbarHtml = `
 <header class="topbar" id="topbar" role="navigation" aria-label="Quick actions">
   <div class="topbar-water-wrap">
-    <a href="health.html#water" class="topbar-water-pill" id="topbarWater" aria-label="Water progress">
+    <a href="po-water.html" class="topbar-water-pill" id="topbarWater" aria-label="Water progress">
       <span class="topbar-pill-dot"></span>
-      <span class="topbar-pill-count" id="topbarWaterCount">0/0</span>
+      <span style="font-size:15px;line-height:1;">🫗</span>
+      <span class="topbar-pill-count" id="topbarWaterCount">0 / 0L</span>
     </a>
-    <button class="topbar-water-add" id="topbarWaterAdd" aria-label="Log one drink" type="button">+</button>
   </div>
   <a href="finance.html" class="topbar-finance-btn" id="topbarFinance" aria-label="Finance">
     <span class="topbar-finance-icon">📊</span>
@@ -416,60 +401,6 @@ body.topbar-modal-open {
     setPillStatus(waterEl, classifyStatus(w.done, w.total));
   }
 
-  // -------- Water +1 (works from any page) --------
-  function defaultWaterState() {
-    return {
-      unit: 'bottle', bottleMl: 500, glassMl: 250, weightUnit: 'kg',
-      profile: { weightKg: 75, age: 25, sex: 'm', activityHrsPerWeek: 5 },
-      caffeineMgPerDay: 200, substances: [], logs: {}
-    };
-  }
-
-  async function pushWaterMergedToSupabase(localWater) {
-    // Only do this when we're NOT on the health page — health page
-    // has its own sync that already detects the localStorage change.
-    if (window.location.pathname.endsWith('/health.html') ||
-        window.location.pathname.endsWith('health.html')) return;
-
-    if (!window.supabase || !TOPBAR_SUPABASE_URL || !TOPBAR_SUPABASE_KEY) return;
-    if (TOPBAR_SUPABASE_URL.indexOf('PASTE-') === 0) return;
-
-    try {
-      const supa = window.supabase.createClient(TOPBAR_SUPABASE_URL, TOPBAR_SUPABASE_KEY);
-      const { data } = await supa
-        .from('app_state').select('data').eq('key', 'health').maybeSingle();
-      const current = (data && data.data) || {};
-      const merged = Object.assign({}, current, { po_water_v1: localWater });
-      await supa.from('app_state').upsert(
-        { key: 'health', data: merged, updated_at: new Date().toISOString() },
-        { onConflict: 'key' }
-      );
-    } catch (e) { /* offline — local change will sync next time user visits health */ }
-  }
-
-  function addWater() {
-    let state = null;
-    try { state = JSON.parse(localStorage.getItem('po_water_v1')); } catch (e) {}
-    if (!state || typeof state !== 'object') state = defaultWaterState();
-    state.logs = state.logs || {};
-    const k = calendarDateKey();
-    const addMl = state.unit === 'glass' ? (state.glassMl || 250)
-                : state.unit === 'oz'    ? 30
-                : state.unit === 'ml'    ? 1
-                : (state.bottleMl || 500);
-    state.logs[k] = (state.logs[k] || 0) + addMl;
-    try { localStorage.setItem('po_water_v1', JSON.stringify(state)); } catch (e) {}
-    render();
-
-    const btn = document.getElementById('topbarWaterAdd');
-    if (btn) {
-      btn.classList.add('flash');
-      setTimeout(() => btn.classList.remove('flash'), 220);
-    }
-
-    pushWaterMergedToSupabase(state);
-  }
-
   // -------- Mobile lockdown helpers --------
   // Belt-and-suspenders zoom prevention — iOS Safari sometimes ignores
   // user-scalable=no, so we also kill the gesture events directly.
@@ -521,7 +452,6 @@ body.topbar-modal-open {
   function boot() {
     injectStyleAndHTML();
     const btn = document.getElementById('topbarWaterAdd');
-    if (btn) btn.addEventListener('click', (e) => { e.preventDefault(); addWater(); });
     render();
     lockGestures();
     startModalLock();
