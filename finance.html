@@ -360,17 +360,19 @@ html, body { scrollbar-width: none; -ms-overflow-style: none; }
 .se-input {
   padding: 9px 11px !important;
   border: none !important;
-  border-radius: 10px !important;
+  border-bottom: 1.5px solid rgba(255,255,255,0.35) !important;
+  border-radius: 0 !important;
   font-size: 13px !important;
   font-family: var(--font) !important;
-  background: rgba(255,255,255,0.92) !important;
-  color: #1A1A1A !important;
+  background: transparent !important;
+  color: #FFFFFF !important;
   width: 100%;
   outline: none;
   box-sizing: border-box;
-  transition: background .15s;
+  transition: border-color .15s;
 }
-.se-input:focus { background: #FFFFFF !important; }
+.se-input:focus { border-bottom-color: rgba(255,255,255,0.80) !important; }
+.se-input option { background: #3B82F6; color: #FFFFFF; }
 .se-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
 .se-save {
   background: rgba(255,255,255,0.22) !important;
@@ -400,7 +402,8 @@ html, body { scrollbar-width: none; -ms-overflow-style: none; }
 .se-cancel-btn:hover { background: rgba(255,255,255,0.10); }
 .se-form-wrap .sub-auto-label { color: rgba(255,255,255,0.85); }
 .se-form-wrap .sub-auto-toggle input:checked ~ .sub-auto-label { color: #FFFFFF; }
-.se-form-wrap .date-field { background: rgba(255,255,255,0.92); border-radius: 10px; color: #1A1A1A; }
+.se-form-wrap .date-field { background: transparent; border: none; border-bottom: 1.5px solid rgba(255,255,255,0.35); border-radius: 0; color: #FFFFFF; }
+.se-form-wrap .date-field input[type="date"] { color: #FFFFFF; background: transparent; }
 
 /* Custom list rows */
 .custom-item {
