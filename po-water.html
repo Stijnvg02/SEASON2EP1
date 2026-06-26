@@ -246,7 +246,40 @@ html, body {
   color: var(--text-3); margin-top: 12px;
   font-style: italic;
 }
-.water-helper.good { color: var(--good); font-style: normal; }
+.water-helper.good  { color: var(--good);  font-style: normal; }
+.water-helper.warn  { color: var(--warn);  font-style: normal; }
+.water-helper.bad   { color: var(--bad);   font-style: normal; }
+
+/* Timing card */
+.water-timing-card {
+  margin-top: 14px;
+  border-radius: 12px;
+  padding: 12px 14px;
+  background: rgba(0,0,0,0.03);
+  border: 1px solid rgba(0,0,0,0.07);
+  display: flex; flex-direction: column; gap: 8px;
+}
+.water-timing-row {
+  display: flex; align-items: center; gap: 10px;
+}
+.water-timing-dot {
+  width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0;
+}
+.water-timing-label {
+  font-size: 12px; font-weight: 700; color: var(--text-1); flex: 1;
+}
+.water-timing-sub {
+  font-size: 11px; color: var(--text-3); margin-left: 19px;
+  line-height: 1.4;
+}
+.water-timing-next {
+  font-size: 12px; font-weight: 600;
+  padding: 7px 12px; border-radius: 8px;
+  background: rgba(59,130,246,0.07);
+  border: 1px solid rgba(59,130,246,0.14);
+  color: #3B82F6;
+  text-align: center;
+}
 
 /* ----- Why this target? collapsible ----- */
 .why-toggle {
@@ -549,6 +582,15 @@ html, body {
       <button class="water-minus-btn" id="waterMinusBtn" type="button" aria-label="Undo last" disabled>↩ Undo last</button>
     </div>
     <div class="water-helper" id="waterHelper">Start the day — first one in.</div>
+
+    <div class="water-timing-card" id="waterTimingCard">
+      <div class="water-timing-row">
+        <span class="water-timing-dot" id="waterTimingDot"></span>
+        <span class="water-timing-label" id="waterTimingLabel">Checking pace…</span>
+      </div>
+      <div class="water-timing-sub" id="waterTimingSub"></div>
+      <div class="water-timing-next" id="waterTimingNext"></div>
+    </div>
 
     <div id="weatherBadge" style="display:none; margin-top:10px; padding:9px 12px; background:#F0F8FF; border:1px solid rgba(59,130,246,0.18); border-radius:10px; font-size:12.5px; color:#3B82F6; font-weight:600; display:flex; align-items:center; gap:8px;">
       <span id="weatherBadgeText">🌡️ Fetching weather…</span>
@@ -948,24 +990,37 @@ html, body {
 
     // Progress bar with three zones: low (0-65%), healthy (65-100%), over (100-150%)
     const pctRaw = (count / targetUnits) * 100;
+    const ratio = count / Math.max(1, targetUnits);
     const fillPct = Math.min(150, pctRaw) / 1.5;   // bar represents 0-150%
     const fill = $('waterBarFill');
     fill.style.width = fillPct + '%';
-    fill.classList.toggle('over', pctRaw > 100);
+    // Bar color matches topbar dot color scheme
+    let barColor;
+    if      (ratio >= 1.5)  barColor = 'linear-gradient(90deg,#ef4444,#f87171)';
+    else if (ratio >= 1.25) barColor = 'linear-gradient(90deg,#f97316,#fb923c)';
+    else if (ratio >= 1.0)  barColor = 'linear-gradient(90deg,#facc15,#fde047)';
+    else if (ratio >= 0.75) barColor = 'linear-gradient(90deg,#22c55e,#4ade80)';
+    else if (ratio >= 0.5)  barColor = 'linear-gradient(90deg,#4ade80,#86efac)';
+    else if (ratio >= 0.25) barColor = 'linear-gradient(90deg,#a3e635,#d9f99d)';
+    else                    barColor = 'linear-gradient(90deg,#fbbf24,#fde68a)';
+    fill.style.background = barColor;
     $('waterBarMin').textContent = '0';
     $('waterBarMax').textContent = (Math.ceil(targetUnits * 1.5)) + '+';
-    // Healthy zone bands at 65% and 100%
     $('waterBarZoneStart').style.left = (65 / 1.5) + '%';
     $('waterBarZoneEnd').style.left   = (100 / 1.5) + '%';
 
     // Helper text
     const helper = $('waterHelper');
     const remaining = fmtMl(Math.max(0, calc.total - ml));
-    if (ml === 0) { helper.textContent = 'Start the day — first one in.'; helper.classList.remove('good'); }
-    else if (pctRaw < 50) { helper.textContent = 'Behind pace — drink one in the next hour.'; helper.classList.remove('good'); }
-    else if (pctRaw < 100) { helper.textContent = remaining + ' to go. Pacing well.'; helper.classList.remove('good'); }
-    else if (pctRaw < 130) { helper.textContent = '✓ Target hit — top up if you train this evening.'; helper.classList.add('good'); }
-    else { helper.textContent = 'Strong — way past target.'; helper.classList.add('good'); }
+    helper.className = 'water-helper';
+    if (ml === 0) { helper.textContent = 'Start de dag — eerste glas is het belangrijkst.'; }
+    else if (pctRaw < 50) { helper.textContent = 'Achter op schema — drink snel een glas.'; helper.classList.add('warn'); }
+    else if (pctRaw < 100) { helper.textContent = remaining + ' te gaan. Goed tempo.'; helper.classList.add('good'); }
+    else if (pctRaw < 130) { helper.textContent = '✓ Doel bereikt — mooi gedaan.'; helper.classList.add('good'); }
+    else if (pctRaw < 150) { helper.textContent = '⚠️ Voorzichtig — je overschrijdt het doel.'; helper.classList.add('warn'); }
+    else { helper.textContent = '🚫 Veel te veel — stop nu en wacht minstens een uur.'; helper.classList.add('bad'); }
+
+    renderTiming(ml, calc.total);
 
     // Disable minus when at zero
     $('waterMinusBtn').disabled = ml === 0 || !state.lastAddedMl;
@@ -973,6 +1028,94 @@ html, body {
     renderWhy(calc, targetUnits);
     renderHistory();
     renderSparkline(targetUnits);
+  }
+
+  function renderTiming(mlDrunk, targetMl) {
+    const now = new Date();
+    const hour = now.getHours() + now.getMinutes() / 60;
+    const WAKE = 7, SLEEP = 23;
+
+    // Expected % of daily target at current time (piecewise: 30% by 12h, 65% by 18h, 90% by 21h)
+    function expectedRatio(h) {
+      if (h <= WAKE)  return 0;
+      if (h >= SLEEP) return 1;
+      const pts = [[WAKE,0],[12,0.30],[18,0.65],[21,0.90],[SLEEP,1]];
+      for (let i = 1; i < pts.length; i++) {
+        if (h <= pts[i][0]) {
+          const t = (h - pts[i-1][0]) / (pts[i][0] - pts[i-1][0]);
+          return pts[i-1][1] + t * (pts[i][1] - pts[i-1][1]);
+        }
+      }
+      return 1;
+    }
+
+    const exp = expectedRatio(hour);
+    const actual = targetMl > 0 ? mlDrunk / targetMl : 0;
+    const diff = actual - exp; // positive = ahead, negative = behind
+
+    const dotEl  = $('waterTimingDot');
+    const lblEl  = $('waterTimingLabel');
+    const subEl  = $('waterTimingSub');
+    const nxtEl  = $('waterTimingNext');
+
+    // Dot color — same scale as topbar
+    let dotColor, status, sub, next;
+    const expPct  = Math.round(exp * 100);
+    const actPct  = Math.round(actual * 100);
+    const behindMl = Math.round(Math.max(0, (exp - actual) * targetMl));
+    const aheadMl  = Math.round(Math.max(0, (actual - exp) * targetMl));
+
+    if (hour < WAKE) {
+      dotColor = '#94a3b8';
+      status   = 'Dag nog niet begonnen';
+      sub      = 'Drinkadvies start om 07:00.';
+      next     = '💧 Drink je eerste glas bij het opstaan';
+    } else if (mlDrunk === 0) {
+      dotColor = '#fbbf24';
+      status   = 'Nog niets gedronken';
+      sub      = 'Glas water na het opstaan vermindert cortisol en start je stofwisseling.';
+      next     = '💧 Drink nu je eerste glas';
+    } else if (diff < -0.20) {
+      dotColor = '#ef4444';
+      status   = 'Duidelijk achter — ' + fmtMl(behindMl) + ' te weinig voor dit uur';
+      sub      = 'Op dit tijdstip (' + Math.floor(hour) + 'u) zou je ' + expPct + '% van je doel moeten hebben. Je zit op ' + actPct + '%. Inhalen met kleine slokjes, niet te snel (max 1L/uur).';
+      next     = '⚡ Drink nu — en dan elke 20 min een glas tot je bijgewerkt bent';
+    } else if (diff < -0.08) {
+      dotColor = '#f97316';
+      status   = 'Iets achter — ' + fmtMl(behindMl) + ' te weinig';
+      sub      = 'Verwacht ' + expPct + '% op dit tijdstip, je zit op ' + actPct + '%. Geen stress — één extra glas brengt je terug op koers.';
+      next     = '🕐 Drink binnen 15 minuten een glas';
+    } else if (diff <= 0.08) {
+      dotColor = '#22c55e';
+      status   = 'Op schema';
+      sub      = 'Je zit op ' + actPct + '%, verwacht was ' + expPct + '% — perfect tempo. Onderzoek adviseert elke 30-45 min een kleine hoeveelheid.';
+      next     = '⏱️ Volgende glas over ± 30 min';
+    } else if (diff <= 0.20) {
+      dotColor = '#4ade80';
+      status   = 'Iets voor op schema';
+      sub      = 'Je zit al op ' + actPct + '%, verwacht was ' + expPct + '%. Goed bezig — geen haast voor je volgende glas.';
+      next     = '⏱️ Volgende glas over ± 45-60 min';
+    } else if (actual < 1.25) {
+      dotColor = '#facc15';
+      status   = 'Ver voor op schema — ' + fmtMl(aheadMl) + ' boven verwachting';
+      sub      = 'Je drinkt sneller dan nodig. Verdeel de rest van je inname rustig over de dag.';
+      next     = '⏸️ Wacht minstens 60 min voor je volgende glas';
+    } else if (actual < 1.5) {
+      dotColor = '#f97316';
+      status   = '⚠️ Doel overschreden — ' + fmtMl(mlDrunk - targetMl) + ' meer dan je target';
+      sub      = 'Te snel te veel drinken kan je natriumbalans verstoren (hyponatriëmie). Max aanbevolen: 1L per uur.';
+      next     = '🛑 Stop nu — wacht minstens 60-90 min';
+    } else {
+      dotColor = '#ef4444';
+      status   = '🚫 Veel te veel gedronken';
+      sub      = 'Ver boven je target. Als je duizelig, misselijk of hoofdpijn hebt: raadpleeg een arts. Stop met drinken.';
+      next     = '🚨 Stop met drinken — dit is te veel';
+    }
+
+    dotEl.style.background = dotColor;
+    lblEl.textContent = status;
+    subEl.textContent = sub;
+    nxtEl.textContent = next;
   }
 
   function renderWhy(calc, targetUnits) {
