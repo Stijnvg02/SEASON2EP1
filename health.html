@@ -1891,8 +1891,8 @@ document.addEventListener('DOMContentLoaded', function () {
   if (typeof initCloudSync !== 'function') return;
   initCloudSync({
     appKey: 'health',
-    syncedKeys: ['stack:items', 'stack:low', 'po_water_v1'],
-    syncedPrefixes: ['stack:taken:'],
+    syncedKeys: ['stack:items', 'stack:low', 'po_water_v1', 'skin:items', 'skin:low'],
+    syncedPrefixes: ['stack:taken:', 'skin:taken:'],
     onApplied: function () {
       window.dispatchEvent(new Event('storage'));
     }

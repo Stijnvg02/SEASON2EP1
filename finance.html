@@ -3721,10 +3721,13 @@ document.addEventListener('DOMContentLoaded', function () {
   if (typeof initCloudSync !== 'function') return;
   initCloudSync({
     appKey: 'finance',
-    syncedKeys: ['subs', 'wishlist', 'incoming_orders', 'nw_currency', 'nw:activity', 'nw:history'],
+    syncedKeys: ['subs', 'wishlist', 'incoming_orders', 'nw_currency', 'nw:activity', 'nw:history', 'nw:cat:labels'],
     syncedPrefixes: ['nw:'],
     onApplied: function () {
-      window.dispatchEvent(new Event('storage'));
+      if (typeof renderAllNetWorth === 'function') renderAllNetWorth();
+      if (typeof renderSubs === 'function') renderSubs();
+      if (typeof renderWishlist === 'function') renderWishlist();
+      if (typeof applyNwCatLabels === 'function') applyNwCatLabels();
     }
   });
 });

@@ -110,7 +110,7 @@
     }
     function schedulePush() {
       clearTimeout(pushTimer);
-      pushTimer = setTimeout(pushNow, 250);
+      pushTimer = setTimeout(pushNow, 100);
     }
     function flushOnUnload() {
       const state = collect();

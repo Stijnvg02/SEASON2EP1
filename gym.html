@@ -3703,5 +3703,18 @@ img, video, canvas, svg { max-width: 100%; }
 })();
 </script>
 
+<script src="sync.js" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  if (typeof initCloudSync !== 'function') return;
+  initCloudSync({
+    appKey: 'gym',
+    syncedKeys: ['po_coach_v1', 'po_coach_workout_done', 'po_coach_weights', 'po_coach_photos'],
+    onApplied: function () {
+      if (typeof renderAll === 'function') renderAll();
+    }
+  });
+});
+</script>
 </body>
 </html>
