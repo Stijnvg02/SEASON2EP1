@@ -685,12 +685,13 @@ html, body { scrollbar-width: none; -ms-overflow-style: none; }
   display: grid; grid-template-columns: 4px 1fr auto auto;
   gap: 10px; align-items: center;
   padding: 8px 12px;
-  background: #FAFAFA;
   border-radius: 8px;
   font-size: 12.5px;
-  transition: background 0.15s;
+  transition: filter 0.15s;
 }
-.nw-activity-row:hover { background: rgba(0,0,0,0.03); }
+.nw-activity-row.up   { background: linear-gradient(135deg, rgba(83,74,183,0.22), rgba(62,201,138,0.22)); border: 1px solid rgba(83,74,183,0.20); }
+.nw-activity-row.down { background: linear-gradient(135deg, rgba(83,74,183,0.22), rgba(255,107,107,0.22)); border: 1px solid rgba(83,74,183,0.20); }
+.nw-activity-row:hover { filter: brightness(0.96); }
 .nw-activity-bar {
   width: 4px; height: 24px; border-radius: 2px;
   flex-shrink: 0;
@@ -2191,7 +2192,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
       const subLine = (e.subName && e.fromAccount)
         ? '<div class="nw-activity-sub">' + escapeHtml(e.subName) + ' · afgetrokken van ' + escapeHtml(e.fromAccount) + '</div>'
         : '';
-      return '<div class="nw-activity-row" style="color:' + meta.color + '">'
+      return '<div class="nw-activity-row ' + cls + '" style="color:' + meta.color + '">'
         + '<span class="nw-activity-bar" style="background:' + meta.color + '"></span>'
         + '<div class="nw-activity-info">'
         +   '<div class="nw-activity-name">' + escapeHtml(e.name || '(unnamed)') + '</div>'
