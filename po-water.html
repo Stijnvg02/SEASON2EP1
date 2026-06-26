@@ -759,6 +759,7 @@ html, body {
   }
   function saveState() {
     try { localStorage.setItem(LS_KEY, JSON.stringify(state)); } catch (e) {}
+    window.dispatchEvent(new StorageEvent('storage', { key: LS_KEY }));
   }
   let state = loadState();
   $('appTitle').textContent = CONFIG.appTitle || 'Water Coach';
@@ -774,7 +775,6 @@ html, body {
     state.logs[k] = (state.logs[k] || 0) + ml;
     state.lastAddedMl = ml;
     saveState();
-    window.dispatchEvent(new StorageEvent('storage', { key: 'po_water_v1' }));
   }
   function undoLastMl() {
     const k = todayKey();
@@ -783,7 +783,6 @@ html, body {
     if (state.logs[k] === 0) delete state.logs[k];
     state.lastAddedMl = 0;
     saveState();
-    window.dispatchEvent(new StorageEvent('storage', { key: 'po_water_v1' }));
   }
   // migrate old count-based logs to ml (counts were always < 30)
   if (!state.logsMl) {
