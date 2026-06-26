@@ -47,15 +47,11 @@
 .topbar-water-pill .topbar-pill-dot {
   width: 8px; height: 8px; border-radius: 50%;
   background: rgba(255,255,255,0.7); flex-shrink: 0;
+  animation: topbar-dot-pulse 1.8s ease-in-out infinite;
 }
-.topbar-water-pill.warn .topbar-pill-dot { background: #fbbf24; }
-.topbar-water-pill.miss .topbar-pill-dot {
-  background: #ff8a8a;
-  animation: topbar-miss-pulse 1.6s ease-in-out infinite;
-}
-@keyframes topbar-miss-pulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.5); }
-  50%      { box-shadow: 0 0 0 5px rgba(239, 68, 68, 0); }
+@keyframes topbar-dot-pulse {
+  0%, 100% { transform: scale(1);   box-shadow: 0 0 0 0   var(--dot-color, rgba(255,255,255,0.4)); }
+  50%      { transform: scale(1.15); box-shadow: 0 0 0 4px transparent; }
 }
 .topbar-pill-count {
   font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
@@ -394,26 +390,28 @@ body.topbar-modal-open {
 
     const w = getWaterProgress();
     const countEl = document.getElementById('topbarWaterCount');
+    const dotEl = waterEl.querySelector('.topbar-pill-dot');
     if (countEl) {
       if (!w.total) {
-        countEl.textContent = '0/0';
+        countEl.textContent = '0 / 0L';
       } else {
-        function fmtMl(ml) {
-          if (ml >= 1000) return (Math.round(ml / 100) / 10).toFixed(1).replace('.0', '') + 'L';
-          return Math.round(ml) + 'ml';
+        function fmtL(ml) {
+          const l = Math.round(ml / 100) / 10;
+          return l.toFixed(1).replace(/\.0$/, '') + 'L';
         }
-        let label;
-        if (w.unit === 'L') {
-          const dL = Math.round(w.doneMl / 100) / 10;
-          const tL = Math.round(w.totalMl / 100) / 10;
-          label = dL.toFixed(1).replace('.0', '') + ' / ' + tL.toFixed(1).replace('.0', '') + 'L';
-        } else if (w.unit === 'ml') {
-          label = Math.round(w.doneMl) + ' / ' + Math.round(w.totalMl) + 'ml';
-        } else {
-          label = fmtMl(w.doneMl) + ' / ' + fmtMl(w.totalMl);
-        }
-        countEl.textContent = label;
+        countEl.textContent = fmtL(w.doneMl) + ' / ' + fmtL(w.totalMl);
       }
+    }
+    if (dotEl && w.total) {
+      const ratio = Math.min(w.done / w.total, 1);
+      let dotColor;
+      if (ratio >= 1)        dotColor = '#22c55e';
+      else if (ratio >= 0.75) dotColor = '#4ade80';
+      else if (ratio >= 0.5)  dotColor = '#a3e635';
+      else if (ratio >= 0.25) dotColor = '#facc15';
+      else                    dotColor = '#fbbf24';
+      dotEl.style.background = dotColor;
+      dotEl.style.setProperty('--dot-color', dotColor + '80');
     }
     setPillStatus(waterEl, classifyStatus(w.done, w.total));
   }
