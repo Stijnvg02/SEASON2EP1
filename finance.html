@@ -326,84 +326,6 @@ html, body { scrollbar-width: none; -ms-overflow-style: none; }
 }
 .quick-add-btn:hover { background: #EBEBEB; color: #1A1A1A; }
 .quick-add-btn:active { transform: scale(0.96); }
-.se-form-wrap {
-  background: linear-gradient(135deg, #3B82F6, #60A5FA);
-  border: none;
-  border-radius: 14px;
-  padding: 18px 20px 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  box-shadow: 0 6px 22px rgba(59,130,246,0.35);
-}
-.se-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  align-items: flex-end;
-}
-.se-field {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  flex: 1;
-  min-width: 100px;
-}
-.se-field-label {
-  font-size: 9.5px;
-  font-weight: 700;
-  letter-spacing: 0.10em;
-  text-transform: uppercase;
-  color: rgba(255,255,255,0.70);
-  padding-left: 2px;
-}
-.se-input {
-  padding: 9px 11px !important;
-  border: none !important;
-  border-bottom: 1.5px solid rgba(255,255,255,0.35) !important;
-  border-radius: 0 !important;
-  font-size: 13px !important;
-  font-family: var(--font) !important;
-  background: transparent !important;
-  color: #FFFFFF !important;
-  width: 100%;
-  outline: none;
-  box-sizing: border-box;
-  transition: border-color .15s;
-}
-.se-input:focus { border-bottom-color: rgba(255,255,255,0.80) !important; }
-.se-input option { background: #3B82F6; color: #FFFFFF; }
-.se-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
-.se-save {
-  background: rgba(255,255,255,0.22) !important;
-  color: #FFFFFF !important;
-  border: 1.5px solid rgba(255,255,255,0.55) !important;
-  border-radius: 10px;
-  padding: 9px 22px !important;
-  font-size: 13px !important;
-  font-weight: 700 !important;
-  cursor: pointer;
-  font-family: var(--font) !important;
-  transition: background .15s;
-  letter-spacing: 0.02em;
-}
-.se-save:hover { background: rgba(255,255,255,0.32) !important; }
-.se-cancel-btn {
-  background: transparent;
-  border: 1.5px solid rgba(255,255,255,0.30);
-  color: rgba(255,255,255,0.75);
-  cursor: pointer;
-  font-size: 13px;
-  padding: 9px 16px;
-  border-radius: 10px;
-  font-family: var(--font);
-  transition: background .15s;
-}
-.se-cancel-btn:hover { background: rgba(255,255,255,0.10); }
-.se-form-wrap .sub-auto-label { color: rgba(255,255,255,0.85); }
-.se-form-wrap .sub-auto-toggle input:checked ~ .sub-auto-label { color: #FFFFFF; }
-.se-form-wrap .date-field { background: transparent; border: none; border-bottom: 1.5px solid rgba(255,255,255,0.35); border-radius: 0; color: #FFFFFF; }
-.se-form-wrap .date-field input[type="date"] { color: #FFFFFF; background: transparent; }
 
 /* Custom list rows */
 .custom-item {
@@ -2741,16 +2663,40 @@ input[type="date"]::-webkit-calendar-picker-indicator {
         : (it.period !== 'monthly'
             ? '<div style="font-size:10px;color:var(--text-tertiary);margin-top:2px">billed ' + fmtMoney(it.amount) + ' / ' + it.period + '</div>'
             : '');
-      cost.innerHTML = '<div style="font-size:20px;font-weight:700;color:var(--text-primary);font-variant-numeric:tabular-nums">' + bigNum + '</div>' +
-        '<div style="font-size:10px;color:var(--text-tertiary);margin-top:1px">/ month</div>' +
-        origHint;
+      const amtDisplay = document.createElement('div');
+      amtDisplay.style.cssText = 'font-size:20px;font-weight:700;color:var(--text-primary);font-variant-numeric:tabular-nums;cursor:pointer;';
+      amtDisplay.title = 'Tik om te bewerken';
+      amtDisplay.textContent = bigNum;
+      amtDisplay.addEventListener('click', () => {
+        const enteredAmt = it.entered_amount != null ? it.entered_amount : it.amount;
+        const enteredCcy = it.entered_currency || 'CHF';
+        const inp = document.createElement('input');
+        inp.type = 'number'; inp.step = '0.01';
+        inp.value = Number(enteredAmt).toFixed(2);
+        inp.style.cssText = 'font-size:18px;font-weight:700;width:100px;border:none;border-bottom:2px solid var(--accent);background:transparent;color:var(--text-primary);text-align:right;outline:none;font-family:inherit;font-variant-numeric:tabular-nums';
+        cost.replaceChild(inp, amtDisplay);
+        inp.focus(); inp.select();
+        const commit = () => {
+          const v = parseFloat(inp.value);
+          if (!isNaN(v)) {
+            const rate = exchangeRates[enteredCcy] || 1;
+            items[idx] = { ...it, amount: v / rate, entered_amount: v, entered_currency: enteredCcy };
+            storeSet('subs', items);
+          }
+          renderSubs();
+        };
+        inp.addEventListener('blur', commit);
+        inp.addEventListener('keydown', e => { if (e.key === 'Enter') inp.blur(); else if (e.key === 'Escape') renderSubs(); });
+      });
+      cost.innerHTML = '';
+      cost.appendChild(amtDisplay);
+      const perDiv = document.createElement('div');
+      perDiv.style.cssText = 'font-size:10px;color:var(--text-tertiary);margin-top:1px';
+      perDiv.textContent = '/ month';
+      cost.appendChild(perDiv);
+      if (origHint) { const h = document.createElement('div'); h.innerHTML = origHint; cost.appendChild(h.firstChild); }
       const actions = document.createElement('div');
       actions.style.cssText = 'display:flex;flex-direction:column;gap:4px;align-items:center';
-      const editBtn = document.createElement('button');
-      editBtn.title = 'Edit';
-      editBtn.style.cssText = 'background:transparent;border: 1px solid rgba(0,0,0,0.08);color:var(--text-tertiary);cursor:pointer;font-size:12px;padding:3px 7px;border-radius:5px;font-family:inherit;line-height:1';
-      editBtn.textContent = '✏';
-      editBtn.addEventListener('click', () => editSubInline(idx));
       const del = document.createElement('button');
       del.title = 'Delete';
       del.style.cssText = 'background:transparent;border: 1px solid rgba(0,0,0,0.08);color:var(--text-tertiary);cursor:pointer;font-size:12px;padding:3px 7px;border-radius:5px;font-family:inherit;line-height:1';
@@ -2759,7 +2705,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
         if (!confirm('Delete "' + it.name + '"?')) return;
         items.splice(idx, 1); storeSet('subs', items); renderSubs();
       });
-      actions.appendChild(editBtn);
       actions.appendChild(del);
       row.appendChild(left); row.appendChild(cost); row.appendChild(actions);
       subsList.appendChild(row);
@@ -2857,82 +2802,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     return changed;
   }
 
-  function editSubInline(idx) {
-    const items = storeGet('subs') || [];
-    const it = items[idx];
-    if (!it) return;
-    const rows = subsList.querySelectorAll('.sub-row');
-    const row = rows[idx];
-    if (!row) return;
-    const enteredCcy = it.entered_currency || 'EUR';
-    const enteredAmt = it.entered_amount != null ? it.entered_amount : it.amount;
-    const periodOpts = ['monthly','yearly','weekly'].map(p =>
-      '<option value="' + p + '"' + (p === it.period ? ' selected' : '') + '>' + p.charAt(0).toUpperCase() + p.slice(1) + '</option>'
-    ).join('');
-    const ccyOpts = ['CHF','USD','EUR','GBP'].map(c =>
-      '<option value="' + c + '"' + (c === enteredCcy ? ' selected' : '') + '>' + c + '</option>'
-    ).join('');
-    // Build From-account options from the live NW accounts
-    const accounts = (typeof listAllNwAccounts === 'function') ? listAllNwAccounts() : [];
-    const ICONS = { bank: '🏦', stocks: '📈', crypto: '🪙', other: '💼' };
-    const currentFrom = (it.fromCat && it.fromAccount) ? (it.fromCat + '::' + it.fromAccount) : '';
-    const fromOpts = '<option value="">No account linked</option>' + accounts.map(a => {
-      const v = a.catKey + '::' + a.itemName;
-      return '<option value="' + v + '"' + (v === currentFrom ? ' selected' : '') + '>' + ICONS[a.catKey] + ' ' + escapeHtml(a.itemName) + '</option>';
-    }).join('');
-    row.innerHTML = '';
-    row.style.gridTemplateColumns = '1fr';
-    row.style.padding = '8px';
-    const form = document.createElement('div');
-    form.className = 'se-form-wrap';
-    form.innerHTML =
-      '<div class="se-row">' +
-        '<div class="se-field" style="flex:2;min-width:140px"><div class="se-field-label">Naam</div><input type="text" class="se-name se-input" value="' + escapeHtml(it.name) + '" /></div>' +
-        '<div class="se-field" style="max-width:100px"><div class="se-field-label">Bedrag</div><input type="number" step="0.01" class="se-amt se-input" value="' + Number(enteredAmt).toFixed(2) + '" /></div>' +
-        '<div class="se-field" style="max-width:85px"><div class="se-field-label">Valuta</div><select class="se-ccy se-input">' + ccyOpts + '</select></div>' +
-        '<div class="se-field" style="max-width:110px"><div class="se-field-label">Periode</div><select class="se-per se-input">' + periodOpts + '</select></div>' +
-        '<div class="se-field" style="min-width:140px"><div class="se-field-label">Verlenging</div><label class="date-field" style="margin:0"><span class="date-emoji" aria-hidden="true">📅</span><input type="date" class="se-ren" value="' + (it.renewal && /^\d{4}-\d{2}-\d{2}/.test(it.renewal) ? it.renewal.slice(0,10) : '') + '" /></label></div>' +
-        '<div class="se-field" style="min-width:140px"><div class="se-field-label">Rekening</div><select class="se-from se-input">' + fromOpts + '</select></div>' +
-      '</div>' +
-      '<div class="se-actions">' +
-        '<label class="sub-auto-toggle"><input type="checkbox" class="se-auto"' + (it.autoDeduct ? ' checked' : '') + ' /><span class="sub-auto-track"><span class="sub-auto-thumb"></span></span><span class="sub-auto-label">Auto-deduct</span></label>' +
-        '<button class="se-save">Save</button>' +
-        '<button class="se-cancel se-cancel-btn">Cancel</button>' +
-      '</div>';
-    row.appendChild(form);
-    const save = () => {
-      const newName = row.querySelector('.se-name').value.trim();
-      const newAmtRaw = parseFloat(row.querySelector('.se-amt').value);
-      const newCcy = row.querySelector('.se-ccy').value;
-      const newPer = row.querySelector('.se-per').value;
-      const newRen = row.querySelector('.se-ren').value || null;
-      const newFromVal = row.querySelector('.se-from').value;
-      const newAuto = row.querySelector('.se-auto').checked;
-      let newFromCat = null, newFromAccount = null;
-      if (newFromVal) {
-        const ix = newFromVal.indexOf('::');
-        if (ix > 0) { newFromCat = newFromVal.slice(0, ix); newFromAccount = newFromVal.slice(ix + 2); }
-      }
-      if (newAuto && (!newFromCat || !newFromAccount)) {
-        alert('Pick a "From account" — auto-deduct needs somewhere to take the money from.');
-        return;
-      }
-      if (!newName || isNaN(newAmtRaw)) return;
-      const rate = exchangeRates[newCcy] || 1;
-      items[idx] = { ...it, name: newName, amount: newAmtRaw / rate, period: newPer, renewal: newRen, entered_amount: newAmtRaw, entered_currency: newCcy, fromCat: newFromCat, fromAccount: newFromAccount, autoDeduct: newAuto };
-      storeSet('subs', items); renderSubs();
-    };
-    const cancel = () => renderSubs();
-    row.querySelector('.se-save').addEventListener('click', save);
-    row.querySelector('.se-cancel-btn').addEventListener('click', cancel);
-    row.querySelectorAll('input').forEach(i => {
-      i.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') save();
-        else if (e.key === 'Escape') cancel();
-      });
-    });
-    row.querySelector('.se-name').focus();
-  }
 
   function doSubAdd() {
     try {
