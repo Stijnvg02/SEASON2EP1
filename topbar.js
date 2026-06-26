@@ -369,7 +369,8 @@ body.topbar-modal-open {
     const total = Math.max(1, Math.ceil(totalMl / unitVol));
     // logs stored in ml (>=50) since quick-pick update; convert to units for display
     const doneUnits = done >= 50 ? Math.round((done / unitVol) * 10) / 10 : done;
-    return { done: doneUnits, total };
+    const doneMl = done >= 50 ? done : done * unitVol;
+    return { done: doneUnits, total, doneMl, totalMl, unit: state.unit || 'bottle' };
   }
 
   function classifyStatus(done, total) {
@@ -393,7 +394,27 @@ body.topbar-modal-open {
 
     const w = getWaterProgress();
     const countEl = document.getElementById('topbarWaterCount');
-    if (countEl) countEl.textContent = w.total ? (Number.isInteger(w.done) ? w.done : w.done.toFixed(1)) + '/' + w.total : '0/0';
+    if (countEl) {
+      if (!w.total) {
+        countEl.textContent = '0/0';
+      } else {
+        function fmtMl(ml) {
+          if (ml >= 1000) return (Math.round(ml / 100) / 10).toFixed(1).replace('.0', '') + 'L';
+          return Math.round(ml) + 'ml';
+        }
+        let label;
+        if (w.unit === 'L') {
+          const dL = Math.round(w.doneMl / 100) / 10;
+          const tL = Math.round(w.totalMl / 100) / 10;
+          label = dL.toFixed(1).replace('.0', '') + ' / ' + tL.toFixed(1).replace('.0', '') + 'L';
+        } else if (w.unit === 'ml') {
+          label = Math.round(w.doneMl) + ' / ' + Math.round(w.totalMl) + 'ml';
+        } else {
+          label = fmtMl(w.doneMl) + ' / ' + fmtMl(w.totalMl);
+        }
+        countEl.textContent = label;
+      }
+    }
     setPillStatus(waterEl, classifyStatus(w.done, w.total));
   }
 
