@@ -326,13 +326,76 @@ html, body { scrollbar-width: none; -ms-overflow-style: none; }
 }
 .quick-add-btn:hover { background: #EBEBEB; color: #1A1A1A; }
 .quick-add-btn:active { transform: scale(0.96); }
-.se-save {
-  background: linear-gradient(135deg, #F45B8B, #FF6B6B) !important;
-  color: #FFFFFF !important;
-  border-radius: 10px;
-  box-shadow: 0 4px 14px rgba(244,91,139,0.35);
+.se-form-wrap {
+  background: linear-gradient(135deg, rgba(59,130,246,0.07), rgba(96,165,250,0.05));
+  border: 1px solid rgba(59,130,246,0.18);
+  border-radius: 14px;
+  padding: 14px 14px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
-.se-save:hover { background: linear-gradient(135deg, #F45B8B, #FF6B6B) !important; filter: brightness(1.05); }
+.se-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+.se-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  min-width: 100px;
+}
+.se-field-label {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #AAAAAA;
+  padding-left: 2px;
+}
+.se-input {
+  padding: 9px 11px !important;
+  border: 1px solid rgba(59,130,246,0.20) !important;
+  border-radius: 10px !important;
+  font-size: 13px !important;
+  font-family: var(--font) !important;
+  background: #FFFFFF !important;
+  color: var(--text-primary) !important;
+  width: 100%;
+  outline: none;
+  transition: border-color .15s;
+}
+.se-input:focus { border-color: rgba(59,130,246,0.50) !important; }
+.se-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.se-save {
+  background: linear-gradient(135deg, #3EC98A, #22D3A0) !important;
+  color: #FFFFFF !important;
+  border: none !important;
+  border-radius: 10px;
+  padding: 9px 20px !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(62,201,138,0.35);
+  font-family: var(--font) !important;
+  transition: filter .15s;
+}
+.se-save:hover { filter: brightness(1.06); }
+.se-cancel-btn {
+  background: transparent;
+  border: 1px solid rgba(0,0,0,0.10);
+  color: var(--text-tertiary);
+  cursor: pointer;
+  font-size: 13px;
+  padding: 9px 16px;
+  border-radius: 10px;
+  font-family: var(--font);
+  transition: background .15s;
+}
+.se-cancel-btn:hover { background: rgba(0,0,0,0.04); }
 
 /* Custom list rows */
 .custom-item {
@@ -2811,19 +2874,23 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     }).join('');
     row.innerHTML = '';
     row.style.gridTemplateColumns = '1fr';
-    row.style.padding = '14px';
+    row.style.padding = '8px';
     const form = document.createElement('div');
-    form.style.cssText = 'display:flex;flex-wrap:wrap;gap:6px;align-items:center';
+    form.className = 'se-form-wrap';
     form.innerHTML =
-      '<input type="text" class="se-name" value="' + escapeHtml(it.name) + '" style="flex:1.5;min-width:120px;padding:6px 10px;border: 0.5px solid rgba(0,0,0,0.08);border-radius:var(--radius-md);font-size:12px;font-family:inherit;background:var(--bg-card);color:var(--text-primary)" />' +
-      '<input type="number" step="0.01" class="se-amt" value="' + Number(enteredAmt).toFixed(2) + '" style="width:90px;padding:6px 10px;border: 0.5px solid rgba(0,0,0,0.08);border-radius:var(--radius-md);font-size:12px;font-family:inherit;background:var(--bg-card);color:var(--text-primary)" />' +
-      '<select class="se-ccy" style="padding:6px 10px;border: 0.5px solid rgba(0,0,0,0.08);border-radius:var(--radius-md);font-size:12px;font-family:inherit;background:var(--bg-card);color:var(--text-primary)">' + ccyOpts + '</select>' +
-      '<select class="se-per" style="padding:6px 10px;border: 0.5px solid rgba(0,0,0,0.08);border-radius:var(--radius-md);font-size:12px;font-family:inherit;background:var(--bg-card);color:var(--text-primary)">' + periodOpts + '</select>' +
-      '<label class="date-field" style="min-width:140px"><span class="date-emoji" aria-hidden="true">📅</span><input type="date" class="se-ren" value="' + (it.renewal && /^\d{4}-\d{2}-\d{2}/.test(it.renewal) ? it.renewal.slice(0,10) : '') + '" /></label>' +
-      '<select class="se-from" style="padding:6px 10px;border: 0.5px solid rgba(0,0,0,0.08);border-radius:var(--radius-md);font-size:12px;font-family:inherit;background:var(--bg-card);color:var(--text-primary);min-width:130px">' + fromOpts + '</select>' +
-      '<label class="sub-auto-toggle" style="padding:6px 10px"><input type="checkbox" class="se-auto"' + (it.autoDeduct ? ' checked' : '') + ' /><span class="sub-auto-track"><span class="sub-auto-thumb"></span></span><span class="sub-auto-label">Auto-deduct</span></label>' +
-      '<button class="se-save quick-add-btn">Save</button>' +
-      '<button class="se-cancel" style="background:transparent;border: 1px solid rgba(0,0,0,0.08);color:var(--text-tertiary);cursor:pointer;font-size:12px;padding:6px 10px;border-radius:var(--radius-md);font-family:inherit">Cancel</button>';
+      '<div class="se-row">' +
+        '<div class="se-field" style="flex:2;min-width:140px"><div class="se-field-label">Naam</div><input type="text" class="se-name se-input" value="' + escapeHtml(it.name) + '" /></div>' +
+        '<div class="se-field" style="max-width:100px"><div class="se-field-label">Bedrag</div><input type="number" step="0.01" class="se-amt se-input" value="' + Number(enteredAmt).toFixed(2) + '" /></div>' +
+        '<div class="se-field" style="max-width:85px"><div class="se-field-label">Valuta</div><select class="se-ccy se-input">' + ccyOpts + '</select></div>' +
+        '<div class="se-field" style="max-width:110px"><div class="se-field-label">Periode</div><select class="se-per se-input">' + periodOpts + '</select></div>' +
+        '<div class="se-field" style="min-width:140px"><div class="se-field-label">Verlenging</div><label class="date-field" style="margin:0"><span class="date-emoji" aria-hidden="true">📅</span><input type="date" class="se-ren" value="' + (it.renewal && /^\d{4}-\d{2}-\d{2}/.test(it.renewal) ? it.renewal.slice(0,10) : '') + '" /></label></div>' +
+        '<div class="se-field" style="min-width:140px"><div class="se-field-label">Rekening</div><select class="se-from se-input">' + fromOpts + '</select></div>' +
+      '</div>' +
+      '<div class="se-actions">' +
+        '<label class="sub-auto-toggle"><input type="checkbox" class="se-auto"' + (it.autoDeduct ? ' checked' : '') + ' /><span class="sub-auto-track"><span class="sub-auto-thumb"></span></span><span class="sub-auto-label">Auto-deduct</span></label>' +
+        '<button class="se-save">Save</button>' +
+        '<button class="se-cancel se-cancel-btn">Cancel</button>' +
+      '</div>';
     row.appendChild(form);
     const save = () => {
       const newName = row.querySelector('.se-name').value.trim();
@@ -2849,7 +2916,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     };
     const cancel = () => renderSubs();
     row.querySelector('.se-save').addEventListener('click', save);
-    row.querySelector('.se-cancel').addEventListener('click', cancel);
+    row.querySelector('.se-cancel-btn').addEventListener('click', cancel);
     row.querySelectorAll('input').forEach(i => {
       i.addEventListener('keydown', (e) => {
         if (e.key === 'Enter') save();
