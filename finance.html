@@ -2693,12 +2693,11 @@ input[type="date"]::-webkit-calendar-picker-indicator {
       perDiv.textContent = '/ month';
       cost.appendChild(perDiv);
       if (origHint) { const h = document.createElement('div'); h.innerHTML = origHint; cost.appendChild(h.firstChild); }
-      if (it.renewal) {
-        const next = (typeof nextRenewalDate === 'function') ? nextRenewalDate(it.renewal, it.period) : null;
-        const dateStr = next ? next.toLocaleDateString('nl-NL', { day: 'numeric', month: 'short', year: 'numeric' }) : it.renewal.slice(0,10);
+      const renewalStr = it.renewal || it.renewal_date || null;
+      if (renewalStr) {
         const renEl = document.createElement('div');
         renEl.style.cssText = 'font-size:10px;color:var(--text-tertiary);margin-top:2px';
-        renEl.textContent = '↻ ' + dateStr;
+        renEl.textContent = '↻ ' + formatRenewal(String(renewalStr));
         cost.appendChild(renEl);
       }
       const actions = document.createElement('div');
