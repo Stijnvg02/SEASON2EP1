@@ -398,12 +398,14 @@ body.topbar-modal-open {
       }
     }
     if (dotEl && w.total) {
-      const ratio = Math.min(w.done / w.total, 1);
+      const ratio = w.done / w.total;
       let dotColor;
-      if (ratio >= 1)        dotColor = '#22c55e';
-      else if (ratio >= 0.75) dotColor = '#4ade80';
-      else if (ratio >= 0.5)  dotColor = '#a3e635';
-      else if (ratio >= 0.25) dotColor = '#facc15';
+      if      (ratio >= 1.5)  dotColor = '#ef4444';
+      else if (ratio >= 1.25) dotColor = '#f97316';
+      else if (ratio >= 1.0)  dotColor = '#facc15';
+      else if (ratio >= 0.75) dotColor = '#22c55e';
+      else if (ratio >= 0.5)  dotColor = '#4ade80';
+      else if (ratio >= 0.25) dotColor = '#a3e635';
       else                    dotColor = '#fbbf24';
       dotEl.style.background = dotColor;
       dotEl.style.setProperty('--dot-color', dotColor + '80');
