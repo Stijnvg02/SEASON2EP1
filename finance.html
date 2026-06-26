@@ -1754,7 +1754,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     <div class="card-grid" style="gap:10px">
       <!-- Bank accounts -->
       <div class="card nw-subcard">
-        <div class="label" style="display:flex;justify-content:space-between;align-items:center"><span>🏦 Bank accounts</span><span id="bankTotal" style="font-size:13px;color:var(--text-primary);font-weight:600">0</span></div>
+        <div class="label" style="display:flex;justify-content:space-between;align-items:center"><span id="bankLabel" style="cursor:pointer;border-radius:4px;padding:1px 3px" title="Klik om te bewerken">🏦 Bank accounts</span><span id="bankTotal" style="font-size:13px;color:var(--text-primary);font-weight:600">0</span></div>
         <div id="bankList" class="nw-list"></div>
         <div class="quick-add">
           <input type="text" placeholder="Account name" id="bankName" autocomplete="off" />
@@ -1764,7 +1764,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
       </div>
       <!-- Stocks / Investments -->
       <div class="card nw-subcard">
-        <div class="label" style="display:flex;justify-content:space-between;align-items:center"><span>📈 Stocks / Investments</span><span id="stocksTotal" style="font-size:13px;color:var(--text-primary);font-weight:600">0</span></div>
+        <div class="label" style="display:flex;justify-content:space-between;align-items:center"><span id="stocksLabel" style="cursor:pointer;border-radius:4px;padding:1px 3px" title="Klik om te bewerken">📈 Stocks / Investments</span><span id="stocksTotal" style="font-size:13px;color:var(--text-primary);font-weight:600">0</span></div>
         <div id="stocksList" class="nw-list"></div>
         <div class="quick-add">
           <input type="text" placeholder="Stock / fund" id="stocksName" autocomplete="off" />
@@ -1774,7 +1774,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
       </div>
       <!-- Crypto -->
       <div class="card nw-subcard">
-        <div class="label" style="display:flex;justify-content:space-between;align-items:center"><span>🪙 Crypto</span><span id="cryptoTotal" style="font-size:13px;color:var(--text-primary);font-weight:600">0</span></div>
+        <div class="label" style="display:flex;justify-content:space-between;align-items:center"><span id="cryptoLabel" style="cursor:pointer;border-radius:4px;padding:1px 3px" title="Klik om te bewerken">🪙 Crypto</span><span id="cryptoTotal" style="font-size:13px;color:var(--text-primary);font-weight:600">0</span></div>
         <div id="cryptoList" class="nw-list"></div>
         <div class="quick-add">
           <input type="text" placeholder="Coin / wallet" id="cryptoName" autocomplete="off" />
@@ -1784,7 +1784,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
       </div>
       <!-- Other assets -->
       <div class="card nw-subcard">
-        <div class="label" style="display:flex;justify-content:space-between;align-items:center"><span>💼 Other assets</span><span id="otherTotal" style="font-size:13px;color:var(--text-primary);font-weight:600">0</span></div>
+        <div class="label" style="display:flex;justify-content:space-between;align-items:center"><span id="otherLabel" style="cursor:pointer;border-radius:4px;padding:1px 3px" title="Klik om te bewerken">💼 Other assets</span><span id="otherTotal" style="font-size:13px;color:var(--text-primary);font-weight:600">0</span></div>
         <div id="otherList" class="nw-list"></div>
         <div class="quick-add">
           <input type="text" placeholder="Asset name" id="otherName" autocomplete="off" />
@@ -1987,6 +1987,63 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   // NET WORTH (copied from the main dashboard, verbatim logic)
   // ============================================================
   const CURRENCY_KEY = 'nw_currency';
+  const NW_CAT_LABELS_KEY = 'nw:cat:labels';
+  const NW_CAT_DEFAULTS = {
+    bank:   { emoji: '🏦', name: 'Bank accounts' },
+    stocks: { emoji: '📈', name: 'Stocks / Investments' },
+    crypto: { emoji: '🪙', name: 'Crypto' },
+    other:  { emoji: '💼', name: 'Other assets' }
+  };
+  function getNwCatLabel(key) {
+    const saved = storeGet(NW_CAT_LABELS_KEY) || {};
+    return saved[key] || NW_CAT_DEFAULTS[key];
+  }
+  function setNwCatLabel(key, emoji, name) {
+    const saved = storeGet(NW_CAT_LABELS_KEY) || {};
+    saved[key] = { emoji, name };
+    storeSet(NW_CAT_LABELS_KEY, saved);
+  }
+  function applyNwCatLabels() {
+    ['bank','stocks','crypto','other'].forEach(key => {
+      const el = document.getElementById(key + 'Label');
+      if (!el) return;
+      const { emoji, name } = getNwCatLabel(key);
+      el.textContent = emoji + ' ' + name;
+    });
+  }
+  function initNwCatLabelEdit() {
+    ['bank','stocks','crypto','other'].forEach(key => {
+      const el = document.getElementById(key + 'Label');
+      if (!el) return;
+      el.addEventListener('click', () => {
+        const cur = getNwCatLabel(key);
+        const wrap = document.createElement('div');
+        wrap.style.cssText = 'display:inline-flex;align-items:center;gap:6px';
+        const emojiInp = document.createElement('input');
+        emojiInp.type = 'text'; emojiInp.value = cur.emoji;
+        emojiInp.style.cssText = 'width:36px;font-size:16px;border:1px solid rgba(0,0,0,0.12);border-radius:6px;padding:2px 4px;text-align:center;outline:none;font-family:inherit';
+        const nameInp = document.createElement('input');
+        nameInp.type = 'text'; nameInp.value = cur.name;
+        nameInp.style.cssText = 'font-size:11px;font-weight:700;letter-spacing:0.08em;border:1px solid rgba(0,0,0,0.12);border-radius:6px;padding:2px 6px;outline:none;font-family:inherit;text-transform:uppercase;width:140px';
+        wrap.appendChild(emojiInp); wrap.appendChild(nameInp);
+        el.replaceWith(wrap);
+        nameInp.focus(); nameInp.select();
+        const commit = () => {
+          const e2 = emojiInp.value.trim() || NW_CAT_DEFAULTS[key].emoji;
+          const n2 = nameInp.value.trim() || NW_CAT_DEFAULTS[key].name;
+          setNwCatLabel(key, e2, n2);
+          wrap.replaceWith(el);
+          applyNwCatLabels();
+        };
+        nameInp.addEventListener('blur', commit);
+        emojiInp.addEventListener('blur', commit);
+        [emojiInp, nameInp].forEach(i => i.addEventListener('keydown', e => { if (e.key === 'Enter') i.blur(); if (e.key === 'Escape') { wrap.replaceWith(el); applyNwCatLabels(); } }));
+      });
+    });
+  }
+  applyNwCatLabels();
+  initNwCatLabelEdit();
+
   const NW_CATS = [
     { key: 'bank',   listId: 'bankList',   totalId: 'bankTotal',   nameId: 'bankName',   amtId: 'bankAmount',   addId: 'bankAddBtn' },
     { key: 'stocks', listId: 'stocksList', totalId: 'stocksTotal', nameId: 'stocksName', amtId: 'stocksAmount', addId: 'stocksAddBtn' },
