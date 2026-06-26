@@ -2187,20 +2187,35 @@ input[type="date"]::-webkit-calendar-picker-indicator {
         const updated = all.filter(e => e.ts !== ts);
         storeSet(ACTIVITY_KEY, updated);
 
-        // Reverse the delta on the account item so the balance stays in sync.
-        if (entry && entry.cat && Math.abs(Number(entry.delta) || 0) > 0.005) {
-          const items = storeGet('nw:' + entry.cat) || [];
-          const idx = items.findIndex(it => it.name === entry.name);
-          if (idx !== -1) {
-            items[idx].amount = (Number(items[idx].amount) || 0) - (Number(entry.delta) || 0);
-            if (items[idx].amount <= 0.005) items.splice(idx, 1);
-            storeSet('nw:' + entry.cat, items);
-          }
-          renderAllNetWorth();
-        } else {
-          renderActivity();
-          renderNetWorthChart();
+        // Recalculate every affected account as the exact sum of its
+        // remaining activity deltas — so the balance always matches the log.
+        if (entry && entry.cat) {
+          // Collect all unique cat+name pairs that still have activities
+          // (or had the deleted one) and recalc each.
+          const pairsToUpdate = new Set();
+          // Always recalc the deleted entry's cat+name
+          pairsToUpdate.add(entry.cat + '||' + entry.name);
+
+          pairsToUpdate.forEach(key => {
+            const [catKey, itemName] = key.split('||');
+            const newTotal = updated
+              .filter(a => a.cat === catKey && a.name === itemName)
+              .reduce((sum, a) => sum + (Number(a.delta) || 0), 0);
+
+            const items = storeGet('nw:' + catKey) || [];
+            const idx = items.findIndex(it => it.name === itemName);
+
+            if (newTotal <= 0.005) {
+              // All activity for this item is gone — remove it
+              if (idx !== -1) items.splice(idx, 1);
+            } else {
+              if (idx !== -1) items[idx].amount = newTotal;
+              else items.push({ name: itemName, amount: newTotal });
+            }
+            storeSet('nw:' + catKey, items);
+          });
         }
+        renderAllNetWorth();
       });
     });
   }
