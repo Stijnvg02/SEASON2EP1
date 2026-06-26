@@ -2021,10 +2021,10 @@ input[type="date"]::-webkit-calendar-picker-indicator {
         wrap.style.cssText = 'display:inline-flex;align-items:center;gap:6px';
         const emojiInp = document.createElement('input');
         emojiInp.type = 'text'; emojiInp.value = cur.emoji;
-        emojiInp.style.cssText = 'width:36px;font-size:16px;border:1px solid rgba(0,0,0,0.12);border-radius:6px;padding:2px 4px;text-align:center;outline:none;font-family:inherit';
+        emojiInp.style.cssText = 'width:36px;font-size:16px;border:1.5px solid rgba(0,0,0,0.15);border-radius:6px;padding:2px 4px;text-align:center;outline:none;font-family:inherit;background:#FFFFFF;color:#1A1A1A';
         const nameInp = document.createElement('input');
         nameInp.type = 'text'; nameInp.value = cur.name;
-        nameInp.style.cssText = 'font-size:11px;font-weight:700;letter-spacing:0.08em;border:1px solid rgba(0,0,0,0.12);border-radius:6px;padding:2px 6px;outline:none;font-family:inherit;text-transform:uppercase;width:140px';
+        nameInp.style.cssText = 'font-size:11px;font-weight:700;letter-spacing:0.08em;border:1.5px solid rgba(0,0,0,0.15);border-radius:6px;padding:2px 8px;outline:none;font-family:inherit;text-transform:uppercase;width:140px;background:#FFFFFF;color:#1A1A1A';
         wrap.appendChild(emojiInp); wrap.appendChild(nameInp);
         el.replaceWith(wrap);
         nameInp.focus(); nameInp.select();
