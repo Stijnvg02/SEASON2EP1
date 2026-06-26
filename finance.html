@@ -2868,7 +2868,17 @@ input[type="date"]::-webkit-calendar-picker-indicator {
         '</select>' +
         '<select class="sac-ren-fake" style="' + pillStyle + ';display:none"></select>' +
         '<input class="sac-ren" type="date" style="' + pillStyle + ';font-size:10px" />' +
-        '<select class="sac-from" style="' + pillStyle + '">' + fromOpts + '</select>' +
+        '<div class="sac-from-wrap" style="position:relative">' +
+          '<button type="button" class="sac-from-btn" style="' + pillStyle + '">Geen rekening ▾</button>' +
+          '<input type="hidden" class="sac-from" value="" />' +
+          '<div class="sac-from-menu" style="display:none;position:absolute;top:calc(100% + 6px);left:0;z-index:99;background:#FFFFFF;border-radius:14px;box-shadow:0 8px 24px rgba(0,0,0,0.12);padding:6px;min-width:180px">' +
+            '<div class="sac-from-opt" data-value="" style="display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:10px;cursor:pointer;font-size:13px;color:var(--text-tertiary)">Geen rekening</div>' +
+            accounts.map(a =>
+              '<div class="sac-from-opt" data-value="' + a.catKey + '::' + escapeHtml(a.itemName) + '" style="display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:10px;cursor:pointer;font-size:13px;color:var(--text-primary)">' +
+              ICONS[a.catKey] + ' ' + escapeHtml(a.itemName) + '</div>'
+            ).join('') +
+          '</div>' +
+        '</div>' +
       '</div>' +
       '<input type="hidden" class="sac-auto" value="false" />';
 
@@ -2896,6 +2906,27 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
     wrap.insertBefore(card, wrap.querySelector('#subAddTrigger') || null);
     card.querySelector('.sac-name').focus();
+
+    // Custom from-account dropdown
+    const fromBtn  = card.querySelector('.sac-from-btn');
+    const fromMenu = card.querySelector('.sac-from-menu');
+    const fromHid  = card.querySelector('.sac-from');
+    fromBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      fromMenu.style.display = fromMenu.style.display === 'none' ? 'block' : 'none';
+    });
+    fromMenu.querySelectorAll('.sac-from-opt').forEach(opt => {
+      opt.addEventListener('mouseenter', () => opt.style.background = '#F5F5F5');
+      opt.addEventListener('mouseleave', () => opt.style.background = '');
+      opt.addEventListener('click', () => {
+        fromHid.value = opt.dataset.value;
+        fromBtn.textContent = (opt.dataset.value ? opt.textContent : 'Geen rekening') + ' ▾';
+        fromMenu.style.display = 'none';
+      });
+    });
+    document.addEventListener('click', function closeFrom(e) {
+      if (!card.contains(e.target)) { fromMenu.style.display = 'none'; document.removeEventListener('click', closeFrom); }
+    });
 
     const save = () => {
       const n = card.querySelector('.sac-name').value.trim();
