@@ -2183,10 +2183,24 @@ input[type="date"]::-webkit-calendar-picker-indicator {
         ev.stopPropagation();
         const ts = Number(btn.dataset.ts);
         const all = storeGet(ACTIVITY_KEY) || [];
+        const entry = all.find(e => e.ts === ts);
         const updated = all.filter(e => e.ts !== ts);
         storeSet(ACTIVITY_KEY, updated);
-        renderActivity();
-        renderNetWorthChart();
+
+        // Reverse the delta on the account item so the balance stays in sync.
+        if (entry && entry.cat && Math.abs(Number(entry.delta) || 0) > 0.005) {
+          const items = storeGet('nw:' + entry.cat) || [];
+          const idx = items.findIndex(it => it.name === entry.name);
+          if (idx !== -1) {
+            items[idx].amount = (Number(items[idx].amount) || 0) - (Number(entry.delta) || 0);
+            if (items[idx].amount <= 0.005) items.splice(idx, 1);
+            storeSet('nw:' + entry.cat, items);
+          }
+          renderAllNetWorth();
+        } else {
+          renderActivity();
+          renderNetWorthChart();
+        }
       });
     });
   }
