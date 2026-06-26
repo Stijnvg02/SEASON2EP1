@@ -2035,9 +2035,10 @@ input[type="date"]::-webkit-calendar-picker-indicator {
           wrap.replaceWith(el);
           applyNwCatLabels();
         };
-        nameInp.addEventListener('blur', commit);
-        emojiInp.addEventListener('blur', commit);
-        [emojiInp, nameInp].forEach(i => i.addEventListener('keydown', e => { if (e.key === 'Enter') i.blur(); if (e.key === 'Escape') { wrap.replaceWith(el); applyNwCatLabels(); } }));
+        wrap.addEventListener('focusout', (e) => {
+          if (!wrap.contains(e.relatedTarget)) commit();
+        });
+        [emojiInp, nameInp].forEach(i => i.addEventListener('keydown', e => { if (e.key === 'Enter') { i.blur(); commit(); } if (e.key === 'Escape') { wrap.replaceWith(el); applyNwCatLabels(); } }));
       });
     });
   }
