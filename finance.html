@@ -2871,7 +2871,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
         '<div class="sac-from-wrap" style="position:relative">' +
           '<button type="button" class="sac-from-btn" style="' + pillStyle + '">Geen rekening ▾</button>' +
           '<input type="hidden" class="sac-from" value="" />' +
-          '<div class="sac-from-menu" style="display:none;position:absolute;top:calc(100% + 6px);left:0;z-index:99;background:#FFFFFF;border-radius:14px;box-shadow:0 8px 24px rgba(0,0,0,0.12);padding:6px;min-width:180px">' +
+          '<div class="sac-from-menu" style="display:none;position:fixed;z-index:999;background:#FFFFFF;border-radius:14px;box-shadow:0 8px 24px rgba(0,0,0,0.12);padding:6px;min-width:200px">' +
             '<div class="sac-from-opt" data-value="" style="display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:10px;cursor:pointer;font-size:13px;color:var(--text-tertiary)">Geen rekening</div>' +
             accounts.map(a =>
               '<div class="sac-from-opt" data-value="' + a.catKey + '::' + escapeHtml(a.itemName) + '" style="display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:10px;cursor:pointer;font-size:13px;color:var(--text-primary)">' +
@@ -2913,7 +2913,12 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     const fromHid  = card.querySelector('.sac-from');
     fromBtn.addEventListener('click', (e) => {
       e.stopPropagation();
-      fromMenu.style.display = fromMenu.style.display === 'none' ? 'block' : 'none';
+      const open = fromMenu.style.display !== 'none';
+      if (open) { fromMenu.style.display = 'none'; return; }
+      const r = fromBtn.getBoundingClientRect();
+      fromMenu.style.left = r.left + 'px';
+      fromMenu.style.top  = (r.bottom + 6) + 'px';
+      fromMenu.style.display = 'block';
     });
     fromMenu.querySelectorAll('.sac-from-opt').forEach(opt => {
       opt.addEventListener('mouseenter', () => opt.style.background = '#F5F5F5');
