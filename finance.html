@@ -2869,17 +2869,15 @@ input[type="date"]::-webkit-calendar-picker-indicator {
         '<select class="sac-ren-fake" style="' + pillStyle + ';display:none"></select>' +
         '<input class="sac-ren" type="date" style="' + pillStyle + ';font-size:10px" />' +
         '<select class="sac-from" style="' + pillStyle + '">' + fromOpts + '</select>' +
-        '<label class="sub-auto-toggle"><input class="sac-auto" type="checkbox" /><span class="sub-auto-track"><span class="sub-auto-thumb"></span></span><span class="sub-auto-label">Auto-deduct</span></label>' +
-      '</div>';
+      '</div>' +
+      '<input type="hidden" class="sac-auto" value="false" />';
 
     // RIGHT — amount mirrors existing cost div
     const cost = document.createElement('div');
     cost.style.cssText = 'text-align:right;line-height:1.1';
     cost.innerHTML =
-      '<div style="display:flex;align-items:baseline;gap:4px;justify-content:flex-end">' +
-        '<input class="sac-amt" type="number" step="0.01" placeholder="0.00" style="font-size:20px;font-weight:700;width:80px;border:none;border-bottom:1.5px solid rgba(0,0,0,0.12);background:transparent;text-align:right;outline:none;font-family:inherit;font-variant-numeric:tabular-nums;color:var(--text-primary)" />' +
-        '<select class="sac-ccy" style="' + pillStyle + ';font-size:10px"><option>EUR</option><option>CHF</option><option>USD</option><option>GBP</option></select>' +
-      '</div>' +
+      '<input class="sac-amt" type="number" step="0.01" placeholder="0.00" style="font-size:20px;font-weight:700;width:90px;border:none;border-bottom:1.5px solid rgba(0,0,0,0.12);background:transparent;text-align:right;outline:none;font-family:inherit;font-variant-numeric:tabular-nums;color:var(--text-primary);-webkit-appearance:none;-moz-appearance:textfield" />' +
+      '<input type="hidden" class="sac-ccy" value="EUR" />' +
       '<div style="font-size:10px;color:var(--text-tertiary);margin-top:2px">/ month</div>';
 
     // ACTIONS
@@ -2906,7 +2904,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
       const per = card.querySelector('.sac-per').value;
       const ren = card.querySelector('.sac-ren').value || null;
       const fromVal = card.querySelector('.sac-from').value;
-      const auto = card.querySelector('.sac-auto').checked;
+      const auto = false;
       if (!n || isNaN(a) || a <= 0) { card.querySelector('.sac-name').focus(); return; }
       let fromCat = null, fromAccount = null;
       if (fromVal) { const ix = fromVal.indexOf('::'); if (ix > 0) { fromCat = fromVal.slice(0, ix); fromAccount = fromVal.slice(ix + 2); } }
