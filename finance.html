@@ -55,9 +55,9 @@ body::before { content: ""; display: none; }
 body::after { content: ""; display: none; }
 
 .shell {
-  max-width: 600px;
+  max-width: 880px;
   margin: 0 auto;
-  padding: 24px max(20px, env(safe-area-inset-left)) max(100px, calc(80px + env(safe-area-inset-bottom))) max(20px, env(safe-area-inset-right));
+  padding: 24px 16px 100px;   /* extra bottom padding so tab bar doesn't cover content */
 }
 
 /* ===== Back to dashboard ===== */
@@ -444,17 +444,7 @@ html, body { scrollbar-width: none; -ms-overflow-style: none; }
   gap: 10px;
 }
 @media (max-width: 720px) {
-  .section .card .card-grid,
-  #netWorthTotal + * + .card-grid { grid-template-columns: 1fr; }
-}
-@media (max-width: 600px) {
-  .card { padding: 14px 14px; }
-  .nw-subcard .quick-add {
-    grid-template-columns: 1fr auto !important;
-  }
-  .nw-subcard .quick-add input:first-child {
-    grid-column: 1 / -1;
-  }
+  .section .card .card-grid { grid-template-columns: 1fr; }
 }
 
 /* Stock-style net-worth chart */
