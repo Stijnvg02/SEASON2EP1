@@ -875,7 +875,14 @@ html, body {
     const wKg = getBodyWeightKg();
     const base = wKg * 30;
     const exercise = (p.activityHrsPerWeek || 0) / 7 * 350;
-    const caffeine = Math.max(0, (state.caffeineMgPerDay || 0) - 200) * 1.5;
+    // Use today's logged caffeine from the caffeine tracker if available, else manual setting
+    const cafLogsRaw = localStorage.getItem('caf:logs');
+    let cafMg = state.caffeineMgPerDay || 0;
+    if (cafLogsRaw != null) {
+      const todayMs = new Date().setHours(0, 0, 0, 0);
+      cafMg = (JSON.parse(cafLogsRaw) || []).filter(l => l.ts >= todayMs).reduce((s, l) => s + (l.mg || 0), 0);
+    }
+    const caffeine = Math.max(0, cafMg - 200) * 1.5;
     const subs = (state.substances || []).reduce((s, x) => s + subExtraMl(x), 0);
     let adjust = 0;
     if (p.sex === 'm') adjust += 200;
@@ -883,7 +890,7 @@ html, body {
     const heat = weatherExtra;
     const raw = base + exercise + caffeine + subs + adjust + heat;
     const total = Math.min(raw, 4000);
-    return { base, exercise, caffeine, subs, adjust, heat, total };
+    return { base, exercise, caffeine, cafMg, subs, adjust, heat, total };
   }
 
   async function fetchWeather() {
@@ -1145,7 +1152,7 @@ html, body {
     if (calc.exercise > 0)
       html += '<div class="why-row"><span class="why-label">+ Exercise (' + state.profile.activityHrsPerWeek + ' h/wk)</span><span class="why-val">+ ' + fmtMl(calc.exercise) + '</span></div>';
     if (calc.caffeine > 0)
-      html += '<div class="why-row"><span class="why-label">+ Caffeine (' + state.caffeineMgPerDay + ' mg/day)</span><span class="why-val">+ ' + fmtMl(calc.caffeine) + '</span></div>';
+      html += '<div class="why-row"><span class="why-label">+ Cafeïne (' + calc.cafMg + ' mg vandaag)</span><span class="why-val">+ ' + fmtMl(calc.caffeine) + '</span></div>';
     (state.substances || []).forEach(s => {
       html += '<div class="why-row"><span class="why-label">+ ' + escape(s.name) + ' (' + escape(subDoseLabel(s)) + ')</span><span class="why-val">+ ' + fmtMl(subExtraMl(s)) + '</span></div>';
     });
