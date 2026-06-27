@@ -962,17 +962,15 @@ main {
       <div class="sf-eyebrow stack-add-label">Add to routine</div>
       <div class="stack-add-row">
         <div class="stack-name-wrap">
-          <input id="skinAddName" type="text" placeholder="Product (e.g. Vitamin C serum)" class="stack-input" autocomplete="off" spellcheck="false" />
+          <input id="skinAddName" type="text" placeholder="Search product…" class="stack-input" autocomplete="off" spellcheck="false" />
           <div id="skinSearchResults" class="stack-search-results" hidden></div>
         </div>
-        <input id="skinAddStep" type="text" placeholder="Step / notes" class="stack-input" />
         <select id="skinAddWindow" class="stack-input stack-select">
           <option value="morning">Morning</option>
           <option value="evening">Evening</option>
           <option value="weekly">Weekly</option>
           <option value="anytime">Anytime</option>
         </select>
-        <button id="skinAddBtn" class="stack-add-btn">+ Add</button>
       </div>
     </div>
   </div>
@@ -1582,7 +1580,7 @@ main {
     setLow(getLow().filter(x => x !== id));
     render();
   }
-  function addItem(name, step, windowKey, note = '') {
+  function addItem(name, step, windowKey, note = '', icon = '') {
     const v = String(name || '').trim();
     if (!v) return;
     const items = getItems();
@@ -1592,6 +1590,7 @@ main {
       dose: String(step || '').trim(),
       window: ['morning','evening','weekly','anytime'].includes(windowKey) ? windowKey : 'anytime',
       note: String(note || '').trim(),
+      icon: String(icon || ''),
       tag: null
     });
     setItems(items); render();
@@ -1650,9 +1649,11 @@ main {
         const isLow    = low.includes(item.id);
         const isMissed = !isTaken && isPastCutoff;
 
+        const skinHasIcon = !!item.icon;
         const row = document.createElement('div');
-        row.className = 'stack-item' + (isTaken ? ' taken' : '') + (isMissed ? ' missed' : '');
+        row.className = 'stack-item' + (isTaken ? ' taken' : '') + (isMissed ? ' missed' : '') + (skinHasIcon ? ' has-icon' : '');
         row.innerHTML = `
+          ${skinHasIcon ? `<span class="stack-item-icon">${escapeHtml(item.icon)}</span>` : ''}
           <button class="stack-check ${isTaken ? 'checked' : ''}" data-action="toggle" data-id="${item.id}" aria-label="Mark done">${isTaken ? '✓' : ''}</button>
           <div class="stack-item-body">
             <div class="stack-item-name" data-edit="name" data-id="${item.id}">
@@ -1799,12 +1800,10 @@ main {
   }
 
   // ====== ADD FORM + SEARCH ======
-  const nameInput   = document.getElementById('skinAddName');
-  const stepInput   = document.getElementById('skinAddStep');
-  const winSelect   = document.getElementById('skinAddWindow');
-  const addBtn      = document.getElementById('skinAddBtn');
-  const resultsEl   = document.getElementById('skinSearchResults');
-  let pendingNote   = '';
+  const nameInput = document.getElementById('skinAddName');
+  const winSelect = document.getElementById('skinAddWindow');
+  const resultsEl = document.getElementById('skinSearchResults');
+  let pendingNote = '';
 
   function searchProducts(q) {
     const query = q.toLowerCase().trim();
@@ -1825,7 +1824,7 @@ main {
     resultsEl.closest('.stack-card').style.zIndex = '10';
     resultsEl.innerHTML = matches.map(s => {
       const winMeta = SKIN_WINDOWS.find(w => w.key === s.window) || SKIN_WINDOWS[3];
-      return `<button class="stack-result" data-name="${escapeHtml(s.name)}" data-dose="${escapeHtml(s.step)}" data-window="${s.window}" data-note="${escapeHtml(s.note)}">
+      return `<button class="stack-result" data-name="${escapeHtml(s.name)}" data-dose="${escapeHtml(s.step)}" data-window="${s.window}" data-note="${escapeHtml(s.note)}" data-icon="${escapeHtml(s.icon || '')}">
         <div class="stack-result-icon">${s.icon || '🧴'}</div>
         <div class="stack-result-body">
           <div class="stack-result-name">${escapeHtml(s.name)}</div>
@@ -1845,29 +1844,18 @@ main {
   resultsEl.addEventListener('click', (e) => {
     const btn = e.target.closest('.stack-result');
     if (!btn) return;
-    nameInput.value  = btn.dataset.name;
-    stepInput.value  = btn.dataset.dose;
-    winSelect.value  = btn.dataset.window;
-    pendingNote      = btn.dataset.note;
+    addItem(btn.dataset.name, btn.dataset.dose, winSelect.value, btn.dataset.note, btn.dataset.icon);
+    nameInput.value = '';
     resultsEl.hidden = true;
-    addBtn.focus();
+    resultsEl.closest('.stack-card').style.zIndex = '';
+    nameInput.focus();
   });
-  addBtn.addEventListener('click', () => {
-    addItem(nameInput.value, stepInput.value, winSelect.value, pendingNote);
-    nameInput.value = ''; stepInput.value = ''; pendingNote = '';
-    resultsEl.hidden = true; nameInput.focus();
-  });
-  [nameInput, stepInput].forEach(i => {
-    i.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
-        if (!resultsEl.hidden && i === nameInput) {
-          const first = resultsEl.querySelector('.stack-result');
-          if (first) { e.preventDefault(); first.click(); return; }
-        }
-        addBtn.click();
-      }
-      if (e.key === 'Escape') resultsEl.hidden = true;
-    });
+  nameInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !resultsEl.hidden) {
+      const first = resultsEl.querySelector('.stack-result');
+      if (first) { e.preventDefault(); first.click(); }
+    }
+    if (e.key === 'Escape') { resultsEl.hidden = true; resultsEl.closest('.stack-card').style.zIndex = ''; }
   });
 
   setInterval(() => {
