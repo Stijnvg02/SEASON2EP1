@@ -88,48 +88,51 @@ body::after { content: ""; display: none; }
 /* ===== Bottom tab bar ===== */
 .bottom-tabs {
   position: fixed;
-  bottom: 0; left: 0; right: 0;
+  bottom: max(20px, env(safe-area-inset-bottom));
+  left: 50%;
+  transform: translateX(-50%);
   z-index: 100;
-  display: flex;
-  justify-content: center;
-  gap: 4px;
-  padding: 8px max(12px, env(safe-area-inset-left)) calc(8px + env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-right));
-  background: #F5F5F5;
-  border-top: 1px solid rgba(0,0,0,0.08);
-  /* backdrop removed */
-  -webkit-/* backdrop removed */
+  display: inline-flex;
+  gap: 2px;
+  padding: 5px;
+  background: rgba(255,255,255,0.22);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(255,255,255,0.78);
+  border-bottom-color: rgba(255,255,255,0.35);
+  border-radius: 26px;
+  box-shadow:
+    0 4px 16px rgba(0,0,0,0.08),
+    0 12px 40px rgba(0,0,0,0.06),
+    inset 0 1px 0 rgba(255,255,255,0.9);
+  font-family: inherit;
+  white-space: nowrap;
 }
-.bottom-tabs::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 12px; right: 12px;
-  height: 1px;
-  background: rgba(0,0,0,0.06);
-  pointer-events: none;
-}
+.bottom-tabs::before { display: none; }
 .bot-tab {
-  flex: 1; max-width: 140px;
-  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 2px;
   background: transparent;
   border: 1px solid transparent;
-  color: #AAAAAA;
-  padding: 9px 14px 8px;
-  border-radius: 12px;
+  color: rgba(0,0,0,0.35);
+  padding: 7px 14px 5px;
+  border-radius: 20px;
   font-family: inherit;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
-  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  transition: background 0.15s, color 0.15s, border-color 0.15s, box-shadow 0.15s;
 }
-.bot-tab:hover { color: #8A8A8A; background: #FAFAFA; }
+.bot-tab:hover { color: rgba(0,0,0,0.55); background: rgba(255,255,255,0.40); }
 .bot-tab.active {
-  color: #F45B8B;
-  background: rgba(244,91,139,0.06);
-  border-color: rgba(244,91,139,0.15);
+  color: #1A1A1A;
+  background: rgba(255,255,255,0.60);
+  border-color: rgba(255,255,255,0.80);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.9);
 }
-.bot-tab-icon { font-size: 18px; line-height: 1; }
+.bot-tab-icon { font-size: 20px; line-height: 1; }
 .bot-tab-label {
-  font-size: 10px; font-weight: 700;
-  letter-spacing: 0.10em;
+  font-size: 10px; font-weight: 600;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
 }
 
