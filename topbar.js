@@ -38,78 +38,70 @@ body.has-topbar {
 }
 .topbar-water-wrap {
   display: flex; align-items: stretch;
+  position: relative; overflow: hidden;
+  border-radius: 12px;
+  background: rgba(99,155,255,0.20);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255,255,255,0.78);
+  border-bottom-color: rgba(255,255,255,0.35);
+  border-right-color: rgba(255,255,255,0.35);
+  box-shadow:
+    0 4px 14px rgba(59,130,246,0.15),
+    inset 0 1px 0 rgba(255,255,255,0.90);
 }
 
-/* Shared glass shimmer animation */
+/* Single shimmer across the whole pill */
 @keyframes topbar-shimmer {
-  0%   { background-position: -200% center; }
-  100% { background-position: 200% center; }
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(300%); }
+}
+.topbar-water-wrap::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 30%,
+    rgba(255,255,255,0.45) 50%,
+    transparent 70%
+  );
+  width: 60%;
+  animation: topbar-shimmer 2.8s cubic-bezier(0.4,0,0.6,1) infinite;
+  pointer-events: none;
+  z-index: 2;
+}
+/* Specular top highlight */
+.topbar-water-wrap::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(255,255,255,0.35) 0%, transparent 45%);
+  pointer-events: none; z-index: 1; border-radius: inherit;
 }
 
 .topbar-water-pill {
   display: inline-flex; align-items: center; gap: 8px;
-  padding: 9px 14px;
-  position: relative; overflow: hidden;
-  background: rgba(99,155,255,0.22);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid rgba(255,255,255,0.75);
-  border-right: none;
-  border-radius: 12px 0 0 12px;
+  padding: 9px 12px 9px 14px;
+  background: transparent;
+  border: none;
+  border-radius: 0;
   text-decoration: none;
-  box-shadow:
-    0 4px 14px rgba(59,130,246,0.15),
-    inset 0 1px 0 rgba(255,255,255,0.85);
   -webkit-tap-highlight-color: transparent;
-}
-.topbar-water-pill::before {
-  content: '';
-  position: absolute; inset: 0;
-  background: linear-gradient(
-    105deg,
-    transparent 20%,
-    rgba(255,255,255,0.35) 50%,
-    transparent 80%
-  );
-  background-size: 200% 100%;
-  animation: topbar-shimmer 3s linear infinite;
-  pointer-events: none;
-  border-radius: inherit;
+  position: relative; z-index: 3;
 }
 .topbar-water-emoji {
   display: flex; align-items: center; justify-content: center;
-  width: 44px;
-  position: relative; overflow: hidden;
-  background: rgba(59,130,246,0.18);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid rgba(255,255,255,0.75);
-  border-left: 1px solid rgba(255,255,255,0.40);
-  border-radius: 0 12px 12px 0;
+  width: 40px;
+  background: rgba(59,130,246,0.12);
+  border-left: 1px solid rgba(255,255,255,0.45);
+  border-radius: 0;
   font-size: 18px; line-height: 1;
   text-decoration: none;
-  box-shadow:
-    0 4px 14px rgba(59,130,246,0.15),
-    inset 0 1px 0 rgba(255,255,255,0.85);
   -webkit-tap-highlight-color: transparent;
-}
-.topbar-water-emoji::before {
-  content: '';
-  position: absolute; inset: 0;
-  background: linear-gradient(
-    105deg,
-    transparent 20%,
-    rgba(255,255,255,0.30) 50%,
-    transparent 80%
-  );
-  background-size: 200% 100%;
-  animation: topbar-shimmer 3s linear infinite 0.4s;
-  pointer-events: none;
-  border-radius: inherit;
+  position: relative; z-index: 3;
 }
 .topbar-water-pill .topbar-pill-dot {
   width: 8px; height: 8px; border-radius: 50%;
-  flex-shrink: 0; position: relative; z-index: 1;
+  flex-shrink: 0;
   animation: topbar-dot-pulse 1.8s ease-in-out infinite;
 }
 @keyframes topbar-dot-pulse {
@@ -122,7 +114,6 @@ body.has-topbar {
   color: rgba(0,0,0,0.75);
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
-  position: relative; z-index: 1;
 }
 .topbar-finance-btn {
   display: inline-flex; align-items: center; justify-content: center;
