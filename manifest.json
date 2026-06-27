@@ -1,0 +1,24 @@
+{
+  "name": "Personal Dashboard",
+  "short_name": "Dashboard",
+  "description": "Persoonlijk gezondheids- en gewoontes dashboard",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#F5F5F5",
+  "theme_color": "#1A1A1A",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    { "name": "Water",        "url": "/po-water.html",  "icons": [{ "src": "/icon.svg", "sizes": "any" }] },
+    { "name": "Supplementen", "url": "/health.html",    "icons": [{ "src": "/icon.svg", "sizes": "any" }] },
+    { "name": "Fitness",      "url": "/gym.html",       "icons": [{ "src": "/icon.svg", "sizes": "any" }] },
+    { "name": "Cafeine",      "url": "/caffeine.html",  "icons": [{ "src": "/icon.svg", "sizes": "any" }] }
+  ]
+}
