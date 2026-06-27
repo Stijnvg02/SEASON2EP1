@@ -26,8 +26,11 @@
   display: flex; justify-content: flex-end; align-items: center;
   gap: 8px;
   padding: max(10px, env(safe-area-inset-top)) 14px 8px;
-  background: #F5F5F5;
-  border-bottom: 1px solid rgba(0,0,0,0.08);
+  background: rgba(240,244,255,0.70);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border-bottom: 1px solid rgba(255,255,255,0.75);
+  box-shadow: 0 1px 0 rgba(0,0,0,0.04), inset 0 -1px 0 rgba(255,255,255,0.5);
   font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
 }
 .topbar-water-wrap {
@@ -73,64 +76,79 @@
 .topbar-finance-btn {
   display: inline-flex; align-items: center; justify-content: center;
   width: 44px; height: 42px;
-  border: 1px solid rgba(0,0,0,0.10);
-  background: #FFFFFF;
+  background: rgba(255,255,255,0.35);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.80);
   border-radius: 12px;
   text-decoration: none;
   -webkit-tap-highlight-color: transparent;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.9);
   transition: background 0.15s;
 }
-.topbar-finance-btn:hover { background: #F0F0F0; }
+.topbar-finance-btn:hover { background: rgba(255,255,255,0.55); }
 .topbar-finance-icon {
   font-size: 20px; line-height: 1;
-  filter: grayscale(100%) brightness(1.4);
   opacity: 0.85;
 }
 
-/* Bottom tab bar — Instagram-style */
+/* Bottom tab bar — floating liquid glass pill */
 .bottombar {
-  position: fixed; bottom: 0; left: 0; right: 0; z-index: 40;
-  display: flex; justify-content: space-around; align-items: stretch;
-  padding: 6px 0 calc(6px + env(safe-area-inset-bottom));
-  background: #F5F5F5;
-  border-top: 1px solid rgba(0,0,0,0.08);
+  position: fixed;
+  bottom: max(20px, env(safe-area-inset-bottom));
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 40;
+  display: inline-flex;
+  gap: 2px;
+  padding: 5px;
+  background: rgba(255,255,255,0.22);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(255,255,255,0.78);
+  border-bottom-color: rgba(255,255,255,0.35);
+  border-radius: 26px;
+  box-shadow:
+    0 4px 16px rgba(0,0,0,0.08),
+    0 12px 40px rgba(0,0,0,0.06),
+    inset 0 1px 0 rgba(255,255,255,0.9);
   font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
+  white-space: nowrap;
 }
 .bottombar-tab {
-  flex: 1;
   display: flex; flex-direction: column; align-items: center; justify-content: center;
-  gap: 3px;
-  padding: 6px 8px 4px;
-  margin: 2px 4px;
-  border-radius: 14px;
+  gap: 2px;
+  padding: 7px 14px 5px;
+  border-radius: 20px;
   border: 1px solid transparent;
   text-decoration: none;
-  color: #8A8A8A;
+  color: rgba(0,0,0,0.45);
   font-size: 10px; font-weight: 600;
   letter-spacing: 0.04em;
   -webkit-tap-highlight-color: transparent;
-  transition: color 0.15s, background 0.15s, border-color 0.15s;
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 .bottombar-tab-icon {
-  font-size: 24px; line-height: 1;
-  filter: saturate(0.6) brightness(1.0);
+  font-size: 22px; line-height: 1;
+  filter: saturate(0.5);
   opacity: 0.55;
   transition: opacity 0.15s, filter 0.15s, transform 0.10s;
 }
 .bottombar-tab.active {
-  color: #F45B8B;
-  background: rgba(244,91,139,0.08);
-  border-color: rgba(244,91,139,0.20);
+  background: rgba(255,255,255,0.60);
+  color: rgba(0,0,0,0.80);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,1), 0 1px 4px rgba(0,0,0,0.08);
+  border-color: rgba(255,255,255,0.5);
 }
 .bottombar-tab.active .bottombar-tab-icon {
-  filter: saturate(1.3) brightness(1.0);
+  filter: saturate(1.4) brightness(1.0);
   opacity: 1;
 }
-.bottombar-tab:active .bottombar-tab-icon { transform: scale(0.92); }
+.bottombar-tab:active .bottombar-tab-icon { transform: scale(0.90); }
 
-/* Push page content above the fixed bottom bar */
+/* Push page content above the floating pill */
 body.has-bottombar {
-  padding-bottom: calc(72px + env(safe-area-inset-bottom)) !important;
+  padding-bottom: calc(90px + env(safe-area-inset-bottom)) !important;
 }
 
 @media (max-width: 480px) {
@@ -261,6 +279,16 @@ body.topbar-modal-open {
     style.id = 'topbar-style';
     style.textContent = css;
     document.head.appendChild(style);
+
+    // Liquid Glass SVG distortion filter
+    if (!document.getElementById('lg-svg-filter')) {
+      const svgNS = 'http://www.w3.org/2000/svg';
+      const svg = document.createElementNS(svgNS, 'svg');
+      svg.id = 'lg-svg-filter';
+      svg.setAttribute('style', 'position:absolute;width:0;height:0;overflow:hidden;');
+      svg.innerHTML = '<defs><filter id="lg-distort"><feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="2" result="noise"/><feDisplacementMap in="SourceGraphic" in2="noise" scale="8" xChannelSelector="R" yChannelSelector="G" result="displaced"/><feComposite in="displaced" in2="SourceGraphic" operator="in"/></filter></defs>';
+      document.body.appendChild(svg);
+    }
 
     const topWrap = document.createElement('div');
     topWrap.innerHTML = topbarHtml.trim();
