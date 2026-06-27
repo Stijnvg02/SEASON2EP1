@@ -667,6 +667,95 @@ body::after { content: ""; display: none; }
   .gm-card { padding: 16px; }
   .gm-progress-num { font-size: 36px; }
 }
+
+/* ── Goals Grid ── */
+.gg-add-wrap { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+.gg-desc-input { margin-top: -2px; }
+.gg-inbox-section { margin-bottom: 12px; }
+.gg-inbox-label {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+  color: #AAAAAA; margin-bottom: 7px;
+}
+.gg-inbox-body {
+  display: flex; flex-wrap: wrap; gap: 7px; min-height: 42px;
+  padding: 9px;
+  border: 1.5px dashed rgba(0,0,0,0.10);
+  border-radius: 11px;
+  background: rgba(0,0,0,0.015);
+  transition: border-color 0.18s, background 0.18s;
+}
+.gg-inbox-body.gg-drag-over { border: 2px dashed #F45B8B !important; background: rgba(244,91,139,0.05) !important; }
+.gg-inbox-empty {
+  font-size: 11px; color: #AAAAAA; font-style: italic;
+  align-self: center; padding: 2px 0;
+}
+.gg-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px;
+}
+.gg-quadrant {
+  border-radius: 12px; border: 1.5px solid transparent;
+  padding: 12px; min-height: 110px;
+  transition: border-color 0.18s, background 0.18s;
+}
+.gg-quadrant[data-q="achieve"]   { background: rgba(62,201,138,0.07);  border-color: rgba(62,201,138,0.22); }
+.gg-quadrant[data-q="preserve"]  { background: rgba(59,130,246,0.07);  border-color: rgba(59,130,246,0.22); }
+.gg-quadrant[data-q="avoid"]     { background: rgba(170,170,170,0.07); border-color: rgba(170,170,170,0.20); }
+.gg-quadrant[data-q="eliminate"] { background: rgba(255,107,107,0.07); border-color: rgba(255,107,107,0.22); }
+.gg-quadrant.gg-drag-over { border: 2px dashed #F45B8B !important; background: rgba(244,91,139,0.05) !important; }
+.gg-q-head { display: flex; align-items: center; gap: 7px; margin-bottom: 9px; }
+.gg-q-icon { font-size: 15px; flex-shrink: 0; }
+.gg-q-label { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #1A1A1A; }
+.gg-q-sub { font-size: 10px; color: #AAAAAA; margin-top: 1px; }
+.gg-q-body { display: flex; flex-direction: column; gap: 5px; }
+.gg-q-empty { font-size: 11px; color: #CCCCCC; font-style: italic; padding: 4px 0; text-align: center; }
+
+.gg-goal {
+  display: flex; align-items: flex-start; gap: 8px;
+  padding: 9px 11px;
+  background: #FFFFFF; border: 1px solid rgba(0,0,0,0.08); border-radius: 10px;
+  cursor: grab; position: relative;
+  transition: box-shadow 0.15s, transform 0.12s;
+  user-select: none;
+}
+.gg-goal:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.09); transform: translateY(-1px); }
+.gg-goal.gg-dragging { opacity: 0.38; cursor: grabbing; transform: none; }
+.gg-goal-body { flex: 1; min-width: 0; }
+.gg-goal-name { font-size: 13px; font-weight: 600; color: #1A1A1A; }
+.gg-goal-desc { font-size: 11px; color: #8A8A8A; line-height: 1.4; margin-top: 2px; }
+.gg-goal-actions { display: flex; align-items: center; gap: 3px; flex-shrink: 0; }
+.gg-move-btn {
+  border: 1px solid rgba(0,0,0,0.08); background: rgba(0,0,0,0.025);
+  border-radius: 5px; padding: 2px 6px;
+  font-size: 11px; color: #AAAAAA; cursor: pointer;
+  transition: color 0.12s, border-color 0.12s; line-height: 1.5;
+}
+.gg-move-btn:hover { color: #1A1A1A; border-color: rgba(0,0,0,0.18); }
+.gg-del-btn {
+  border: 0; background: transparent; color: #CCCCCC;
+  font-size: 17px; cursor: pointer; padding: 0 2px;
+  opacity: 0; transition: opacity 0.15s, color 0.12s; line-height: 1;
+}
+.gg-goal:hover .gg-del-btn { opacity: 0.8; }
+.gg-del-btn:hover { color: #FF6B6B; opacity: 1 !important; }
+
+.gg-popup {
+  position: absolute; top: calc(100% + 5px); right: 0;
+  background: #FFFFFF; border: 1px solid rgba(0,0,0,0.10);
+  border-radius: 10px; padding: 6px;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.12);
+  z-index: 100; min-width: 155px; display: none;
+}
+.gg-popup.open { display: block; }
+.gg-popup-opt {
+  display: flex; align-items: center; gap: 7px;
+  padding: 7px 9px; border-radius: 7px;
+  font-size: 12px; font-weight: 600; color: #1A1A1A;
+  cursor: pointer; transition: background 0.1s;
+}
+.gg-popup-opt:hover { background: rgba(0,0,0,0.04); }
+.gg-popup-opt-icon { font-size: 13px; }
+
+@media (max-width: 480px) { .gg-grid { grid-template-columns: 1fr; } }
 </style>
 <link rel="stylesheet" href="glass.css">
 </head>
@@ -714,6 +803,73 @@ body::after { content: ""; display: none; }
         <input type="time" id="drWake"  class="dr-time-input" title="Wake time" />
         <span style="color:#AAAAAA;font-size:12px;">–</span>
         <input type="time" id="drSleep" class="dr-time-input" title="Bedtime" />
+      </div>
+    </div>
+  </div>
+
+  <!-- Goals Grid -->
+  <div class="section" id="ggSection">
+    <div class="section-title">Goals Grid</div>
+    <div class="gm-card" id="ggCard">
+
+      <!-- Add form -->
+      <div class="gg-add-wrap">
+        <input id="ggNameInput" class="gm-input" type="text" placeholder="Nieuw doel toevoegen…" autocomplete="off">
+        <input id="ggDescInput" class="gm-input gg-desc-input" type="text" placeholder="Beschrijving (optioneel)">
+        <button id="ggAddBtn" class="gm-add" type="button">+ Voeg toe</button>
+      </div>
+
+      <!-- Inbox: unplaced goals -->
+      <div class="gg-inbox-section" id="ggInboxSection" style="display:none">
+        <div class="gg-inbox-label">Nog te plaatsen</div>
+        <div class="gg-inbox-body" id="ggInboxBody" data-q="inbox"></div>
+      </div>
+
+      <!-- 2×2 Grid -->
+      <div class="gg-grid">
+        <div class="gg-quadrant" data-q="achieve" id="gg-q-achieve">
+          <div class="gg-q-head">
+            <span class="gg-q-icon">🎯</span>
+            <div>
+              <div class="gg-q-label">Achieve</div>
+              <div class="gg-q-sub">Wil je · Heb je niet</div>
+            </div>
+          </div>
+          <div class="gg-q-body" id="gg-b-achieve"></div>
+        </div>
+
+        <div class="gg-quadrant" data-q="preserve" id="gg-q-preserve">
+          <div class="gg-q-head">
+            <span class="gg-q-icon">🛡️</span>
+            <div>
+              <div class="gg-q-label">Preserve</div>
+              <div class="gg-q-sub">Wil je · Heb je al</div>
+            </div>
+          </div>
+          <div class="gg-q-body" id="gg-b-preserve"></div>
+        </div>
+
+        <div class="gg-quadrant" data-q="avoid" id="gg-q-avoid">
+          <div class="gg-q-head">
+            <span class="gg-q-icon">🚫</span>
+            <div>
+              <div class="gg-q-label">Avoid</div>
+              <div class="gg-q-sub">Wil je niet · Heb je niet</div>
+            </div>
+          </div>
+          <div class="gg-q-body" id="gg-b-avoid"></div>
+        </div>
+
+        <div class="gg-quadrant" data-q="eliminate" id="gg-q-eliminate">
+          <div class="gg-q-head">
+            <span class="gg-q-icon">❌</span>
+            <div>
+              <div class="gg-q-label">Eliminate</div>
+              <div class="gg-q-sub">Wil je niet · Heb je wel</div>
+            </div>
+          </div>
+          <div class="gg-q-body" id="gg-b-eliminate"></div>
+        </div>
       </div>
     </div>
   </div>
@@ -1540,11 +1696,233 @@ body::after { content: ""; display: none; }
 </script>
 
 <script>
+// ===== Goals Grid =====
+(function () {
+  'use strict';
+
+  var GG_KEY = 'goals_grid_v1';
+  var QUADRANTS = [
+    { key: 'inbox',     icon: '📥', label: 'Inbox',     sub: 'Nog te plaatsen' },
+    { key: 'achieve',   icon: '🎯', label: 'Achieve',   sub: 'Wil je · Heb je niet' },
+    { key: 'preserve',  icon: '🛡️', label: 'Preserve',  sub: 'Wil je · Heb je al' },
+    { key: 'avoid',     icon: '🚫', label: 'Avoid',     sub: 'Wil je niet · Heb je niet' },
+    { key: 'eliminate', icon: '❌', label: 'Eliminate', sub: 'Wil je niet · Heb je wel' }
+  ];
+
+  var goals = [];
+  var dragId = null;
+
+  function load() {
+    try { goals = JSON.parse(localStorage.getItem(GG_KEY)) || []; } catch (e) { goals = []; }
+  }
+  function save() { localStorage.setItem(GG_KEY, JSON.stringify(goals)); }
+
+  function genId() { return 'gg_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6); }
+
+  function esc(s) {
+    return String(s || '').replace(/[&<>"']/g, function(c) {
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  }
+
+  function addGoal(name, desc) {
+    name = (name || '').trim();
+    if (!name) return false;
+    goals.push({ id: genId(), name: name, desc: (desc || '').trim(), quadrant: 'inbox' });
+    save();
+    render();
+    return true;
+  }
+
+  function deleteGoal(id) {
+    goals = goals.filter(function(g) { return g.id !== id; });
+    save();
+    render();
+  }
+
+  function moveGoal(id, quadrant) {
+    var g = goals.find(function(g) { return g.id === id; });
+    if (g) { g.quadrant = quadrant; save(); render(); }
+  }
+
+  function makeCard(goal) {
+    var div = document.createElement('div');
+    div.className = 'gg-goal';
+    div.draggable = true;
+    div.dataset.id = goal.id;
+
+    var popupHtml = QUADRANTS.map(function(q) {
+      return '<div class="gg-popup-opt" data-target="' + q.key + '">' +
+             '<span class="gg-popup-opt-icon">' + q.icon + '</span>' + esc(q.label) + '</div>';
+    }).join('');
+
+    div.innerHTML =
+      '<div class="gg-goal-body">' +
+        '<div class="gg-goal-name">' + esc(goal.name) + '</div>' +
+        (goal.desc ? '<div class="gg-goal-desc">' + esc(goal.desc) + '</div>' : '') +
+      '</div>' +
+      '<div class="gg-goal-actions">' +
+        '<button class="gg-move-btn" type="button" title="Verplaats">↔</button>' +
+        '<button class="gg-del-btn" type="button" aria-label="Verwijder">×</button>' +
+        '<div class="gg-popup">' + popupHtml + '</div>' +
+      '</div>';
+
+    div.addEventListener('dragstart', function(e) {
+      dragId = goal.id;
+      div.classList.add('gg-dragging');
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/plain', goal.id);
+    });
+    div.addEventListener('dragend', function() {
+      dragId = null;
+      div.classList.remove('gg-dragging');
+    });
+
+    div.querySelector('.gg-del-btn').addEventListener('click', function(e) {
+      e.stopPropagation();
+      deleteGoal(goal.id);
+    });
+
+    var moveBtn = div.querySelector('.gg-move-btn');
+    var popup   = div.querySelector('.gg-popup');
+    moveBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      var isOpen = popup.classList.contains('open');
+      document.querySelectorAll('.gg-popup.open').forEach(function(p) { p.classList.remove('open'); });
+      if (!isOpen) popup.classList.add('open');
+    });
+    popup.querySelectorAll('.gg-popup-opt').forEach(function(opt) {
+      opt.addEventListener('click', function(e) {
+        e.stopPropagation();
+        popup.classList.remove('open');
+        moveGoal(goal.id, opt.dataset.target);
+      });
+    });
+
+    return div;
+  }
+
+  function setupDrop(el, quadrantKey) {
+    el.addEventListener('dragover', function(e) {
+      if (!dragId) return;
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      el.classList.add('gg-drag-over');
+    });
+    el.addEventListener('dragleave', function(e) {
+      if (!el.contains(e.relatedTarget)) el.classList.remove('gg-drag-over');
+    });
+    el.addEventListener('drop', function(e) {
+      e.preventDefault();
+      el.classList.remove('gg-drag-over');
+      var id = e.dataTransfer.getData('text/plain') || dragId;
+      if (id) moveGoal(id, quadrantKey);
+    });
+  }
+
+  function render() {
+    var inboxBody    = document.getElementById('ggInboxBody');
+    var inboxSection = document.getElementById('ggInboxSection');
+    if (!inboxBody) return;
+
+    inboxBody.innerHTML = '';
+    ['achieve','preserve','avoid','eliminate'].forEach(function(q) {
+      var el = document.getElementById('gg-b-' + q);
+      if (el) el.innerHTML = '';
+    });
+
+    goals.forEach(function(g) {
+      var card = makeCard(g);
+      var q = g.quadrant || 'inbox';
+      if (q === 'inbox') {
+        inboxBody.appendChild(card);
+      } else {
+        var body = document.getElementById('gg-b-' + q);
+        if (body) body.appendChild(card);
+      }
+    });
+
+    var hasInbox = goals.some(function(g) { return !g.quadrant || g.quadrant === 'inbox'; });
+    inboxSection.style.display = hasInbox ? '' : 'none';
+
+    // Empty state placeholders per quadrant
+    ['achieve','preserve','avoid','eliminate'].forEach(function(q) {
+      var body = document.getElementById('gg-b-' + q);
+      if (body && body.children.length === 0) {
+        var p = document.createElement('div');
+        p.className = 'gg-q-empty';
+        p.textContent = 'Sleep doelen hierheen';
+        body.appendChild(p);
+      }
+    });
+  }
+
+  function init() {
+    load();
+
+    var nameEl = document.getElementById('ggNameInput');
+    var descEl = document.getElementById('ggDescInput');
+    var addBtn = document.getElementById('ggAddBtn');
+
+    if (addBtn) {
+      addBtn.addEventListener('click', function() {
+        if (addGoal(nameEl.value, descEl.value)) {
+          nameEl.value = '';
+          descEl.value = '';
+          nameEl.focus();
+        }
+      });
+    }
+    if (nameEl) {
+      nameEl.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+          if (!descEl.value.trim()) {
+            if (addGoal(nameEl.value, '')) { nameEl.value = ''; descEl.value = ''; }
+          } else {
+            descEl.focus();
+          }
+        }
+      });
+    }
+    if (descEl) {
+      descEl.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+          if (addGoal(nameEl.value, descEl.value)) { nameEl.value = ''; descEl.value = ''; nameEl.focus(); }
+        }
+      });
+    }
+
+    // Drop zones
+    var inboxBody = document.getElementById('ggInboxBody');
+    if (inboxBody) setupDrop(inboxBody, 'inbox');
+    ['achieve','preserve','avoid','eliminate'].forEach(function(q) {
+      var el = document.getElementById('gg-q-' + q);
+      if (el) setupDrop(el, q);
+    });
+
+    // Close popups on outside click
+    document.addEventListener('click', function() {
+      document.querySelectorAll('.gg-popup.open').forEach(function(p) { p.classList.remove('open'); });
+    });
+
+    render();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+</script>
+
+<script>
 document.addEventListener('DOMContentLoaded', function () {
   if (typeof initCloudSync !== 'function') return;
   initCloudSync({
     appKey: 'goals',
     syncedPrefixes: ['goals:'],
+    syncedKeys: ['goals_grid_v1'],
     onApplied: function () {
       window.dispatchEvent(new CustomEvent('goals-changed'));
       window.dispatchEvent(new Event('storage'));
