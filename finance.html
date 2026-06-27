@@ -57,7 +57,7 @@ body::after { content: ""; display: none; }
 .shell {
   max-width: 880px;
   margin: 0 auto;
-  padding: 24px 28px 100px;
+  padding: 24px 16px 100px;
 }
 
 /* ===== Back to dashboard ===== */
@@ -1661,8 +1661,8 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   <div class="section-title">
     <span class="section-title-text">NET WORTH</span>
   </div>
-  <div class="card" style="background:transparent;border:none !important;box-shadow:none;padding:0;overflow:visible">
-    <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:12px;margin-bottom:14px">
+  <div class="card" style="margin-bottom:14px">
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:12px">
       <div>
         <div style="font-size:11px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.04em;font-weight:500">Total net worth</div>
         <div id="netWorthTotal" style="font-size:34px;font-weight:700;color:var(--text-primary);line-height:1.05;margin-top:2px">CHF 0</div>
@@ -1676,6 +1676,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
         -webkit-tap-highlight-color: transparent;
       ">EUR</button>
     </div>
+  </div>
 
     <!-- Overview row: stock-style line chart on the left, donut allocation chart on the right -->
     <div class="nw-overview-grid">
@@ -1755,7 +1756,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
       <div class="nw-activity-empty" id="nwActivityEmpty">No activity yet — add your first account.</div>
     </div>
 
-    <div class="card-grid" style="gap:10px;margin-top:20px">
+    <div class="card-grid" style="gap:10px;margin-top:14px">
       <!-- Bank accounts -->
       <div class="card nw-subcard">
         <div class="label" style="display:flex;justify-content:space-between;align-items:center"><span id="bankLabel" style="cursor:pointer;border-radius:4px;padding:1px 3px" title="Klik om te bewerken">🏦 Bank accounts</span><span id="bankTotal" style="font-size:13px;color:var(--text-primary);font-weight:600">0</span></div>
@@ -1797,7 +1798,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
         </div>
       </div>
     </div>
-  </div>
 </div>
 
 <!-- ===== ACTIVE SUBSCRIPTIONS ===== -->
