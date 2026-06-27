@@ -214,6 +214,10 @@ html, body {
   background: linear-gradient(135deg, #059669, #34D399) !important;
   box-shadow: 0 4px 14px rgba(5,150,105,0.25) !important;
 }
+.stack-item.missed {
+  background: linear-gradient(135deg, #EA580C, #FB923C) !important;
+  box-shadow: 0 4px 14px rgba(234,88,12,0.28) !important;
+}
 
 /* ── 13. Why-toggle button ── */
 .why-toggle {
