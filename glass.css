@@ -248,7 +248,11 @@ html, body {
 .sub-add-save,
 .skin-add-btn,
 .dr-add-btn,
-.goal-add-btn {
+.goal-add-btn,
+.btn-primary,
+.set-save,
+.goal-ticker,
+.seg button.active {
   position: relative !important;
   overflow: hidden !important;
   background: linear-gradient(135deg, #F45B8B, #FF6B6B) !important;
@@ -269,7 +273,11 @@ html, body {
 .sub-add-save::after,
 .skin-add-btn::after,
 .dr-add-btn::after,
-.goal-add-btn::after {
+.goal-add-btn::after,
+.btn-primary::after,
+.set-save::after,
+.goal-ticker::after,
+.seg button.active::after {
   content: '';
   position: absolute;
   inset: 0;
@@ -407,7 +415,77 @@ html, body {
   border-radius: inherit !important;
 }
 
-/* ── 21. Fallback for old browsers ── */
+/* ── 22. Caffeine log rows — brown moving glass ── */
+@keyframes brown-gloss {
+  0%   { transform: translateX(-120%); }
+  100% { transform: translateX(250%); }
+}
+
+.log-row {
+  position: relative !important;
+  overflow: hidden !important;
+  border: 1px solid rgba(255,255,255,0.30) !important;
+  border-top-color: rgba(255,255,255,0.55) !important;
+  box-shadow:
+    0 4px 14px rgba(139,94,60,0.30),
+    inset 0 1px 0 rgba(255,255,255,0.38) !important;
+}
+
+.log-row::after {
+  content: '' !important;
+  position: absolute !important;
+  inset: 0 !important;
+  width: 50% !important;
+  background: linear-gradient(
+    105deg,
+    transparent 15%,
+    rgba(255,255,255,0.18) 40%,
+    rgba(255,255,255,0.30) 50%,
+    rgba(255,255,255,0.18) 60%,
+    transparent 85%
+  ) !important;
+  animation: brown-gloss 3.5s ease-in-out infinite !important;
+  pointer-events: none !important;
+  z-index: 1 !important;
+  border-radius: inherit !important;
+}
+
+/* ── 23. Finance order button — green moving glass ── */
+@keyframes green-gloss {
+  0%   { transform: translateX(-120%); }
+  100% { transform: translateX(250%); }
+}
+
+.ord-add-btn {
+  position: relative !important;
+  overflow: hidden !important;
+  border: 1px solid rgba(255,255,255,0.30) !important;
+  border-top-color: rgba(255,255,255,0.55) !important;
+  box-shadow:
+    0 4px 14px rgba(110,231,183,0.35),
+    inset 0 1px 0 rgba(255,255,255,0.38) !important;
+}
+
+.ord-add-btn::after {
+  content: '' !important;
+  position: absolute !important;
+  inset: 0 !important;
+  width: 50% !important;
+  background: linear-gradient(
+    105deg,
+    transparent 15%,
+    rgba(255,255,255,0.18) 40%,
+    rgba(255,255,255,0.30) 50%,
+    rgba(255,255,255,0.18) 60%,
+    transparent 85%
+  ) !important;
+  animation: green-gloss 3.5s ease-in-out infinite !important;
+  pointer-events: none !important;
+  z-index: 1 !important;
+  border-radius: inherit !important;
+}
+
+/* ── 24. Fallback for old browsers ── */
 @supports not (backdrop-filter: blur(1px)) {
   .card, .nw-subcard, .nw-chart-wrap, .nw-donut-wrap, .nw-activity-wrap,
   .stack-item, .sub-row, .water-timing-card {
