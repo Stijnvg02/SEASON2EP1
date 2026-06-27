@@ -1908,6 +1908,10 @@ body::after { content: ""; display: none; }
     render();
   }
 
+  window.addEventListener('goals-grid-applied', function() {
+    load(); render();
+  });
+
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
   } else {
@@ -1926,6 +1930,7 @@ document.addEventListener('DOMContentLoaded', function () {
     onApplied: function () {
       window.dispatchEvent(new CustomEvent('goals-changed'));
       window.dispatchEvent(new Event('storage'));
+      window.dispatchEvent(new CustomEvent('goals-grid-applied'));
     }
   });
 });
