@@ -3726,6 +3726,13 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   safeRenderTicker();
   setInterval(safeRenderTicker, 1500);
 
+  window.addEventListener('finance-sync', function () {
+    try { renderAllNetWorth(); } catch (e) {}
+    try { renderSubs(); } catch (e) {}
+    try { renderWishlist(); } catch (e) {}
+    try { applyNwCatLabels(); } catch (e) {}
+    try { safeRenderTicker(); } catch (e) {}
+  });
 })();
 </script>
 
@@ -3737,10 +3744,7 @@ document.addEventListener('DOMContentLoaded', function () {
     syncedKeys: ['subs', 'wishlist', 'incoming_orders', 'nw_currency', 'nw:activity', 'nw:history', 'nw:cat:labels'],
     syncedPrefixes: ['nw:'],
     onApplied: function () {
-      if (typeof renderAllNetWorth === 'function') renderAllNetWorth();
-      if (typeof renderSubs === 'function') renderSubs();
-      if (typeof renderWishlist === 'function') renderWishlist();
-      if (typeof applyNwCatLabels === 'function') applyNwCatLabels();
+      window.dispatchEvent(new CustomEvent('finance-sync'));
     }
   });
 });
