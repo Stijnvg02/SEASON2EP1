@@ -34,7 +34,7 @@
   font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
 }
 body.has-topbar {
-  padding-top: calc(52px + env(safe-area-inset-top)) !important;
+  padding-top: calc(68px + env(safe-area-inset-top)) !important;
 }
 .topbar-water-wrap {
   display: flex; align-items: stretch;
