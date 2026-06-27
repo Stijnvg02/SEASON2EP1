@@ -199,7 +199,7 @@
     // on the Supabase table or the WebSocket drops).
     setInterval(() => {
       if (document.visibilityState === 'visible') pullNow();
-    }, 30000);
+    }, 5000);
 
     window.addEventListener('beforeunload', flushOnUnload);
     window.addEventListener('pagehide', flushOnUnload);
