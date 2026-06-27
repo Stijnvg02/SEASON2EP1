@@ -328,7 +328,52 @@ html, body {
   animation-delay: 1s !important;
 }
 
-/* ── 20. Gym next-session card — moving glass gloss ── */
+/* ── 20. Gym orange gradient elements — moving glass gloss ── */
+@keyframes orange-gloss {
+  0%   { transform: translateX(-120%); }
+  100% { transform: translateX(250%); }
+}
+
+.po-btn-primary,
+.po-tw-done-btn,
+.wt-save-btn,
+.po-seg-btn.active,
+.po-reps-pill.active,
+.po-modal-seg button.active {
+  position: relative !important;
+  overflow: hidden !important;
+  border: 1px solid rgba(255,255,255,0.30) !important;
+  border-top-color: rgba(255,255,255,0.55) !important;
+  box-shadow:
+    0 4px 16px rgba(255,140,66,0.35),
+    inset 0 1px 0 rgba(255,255,255,0.38) !important;
+}
+
+.po-btn-primary::after,
+.po-tw-done-btn::after,
+.wt-save-btn::after,
+.po-seg-btn.active::after,
+.po-reps-pill.active::after,
+.po-modal-seg button.active::after {
+  content: '' !important;
+  position: absolute !important;
+  inset: 0 !important;
+  width: 50% !important;
+  background: linear-gradient(
+    105deg,
+    transparent 15%,
+    rgba(255,255,255,0.18) 40%,
+    rgba(255,255,255,0.32) 50%,
+    rgba(255,255,255,0.18) 60%,
+    transparent 85%
+  ) !important;
+  animation: orange-gloss 3.5s ease-in-out infinite !important;
+  pointer-events: none !important;
+  z-index: 1 !important;
+  border-radius: inherit !important;
+}
+
+/* ── 21. Gym next-session card — moving glass gloss ── */
 @keyframes rx-gloss {
   0%   { transform: translateX(-120%); }
   100% { transform: translateX(250%); }
