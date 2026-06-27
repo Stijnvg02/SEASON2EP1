@@ -890,7 +890,7 @@ body::after { content: ""; display: none; }
     // Also wipe Supabase so sync doesn't pull old data back on reload
     const supaUrl = window.DASH_SUPABASE_URL;
     const supaKey = window.DASH_SUPABASE_KEY;
-    const appKeys = ['health', 'gym', 'finance', 'caffeine', 'goals', 'push_subscription'];
+    const appKeys = ['health', 'gym', 'po-coach', 'finance', 'caffeine', 'goals', 'push_subscription'];
     if (supaUrl && supaKey) {
       const now = new Date().toISOString();
       Promise.all(appKeys.map(k =>
