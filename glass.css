@@ -286,7 +286,49 @@ html, body {
   border-radius: inherit;
 }
 
-/* ── 18. Fallback for old browsers ── */
+/* ── 18. Stack & skin ticker — subtler floating glow ── */
+@keyframes ticker-float {
+  0%, 100% {
+    box-shadow: 0 3px 12px rgba(244,91,139,0.28), 0 0 0px rgba(255,107,107,0.0);
+    filter: brightness(1.0) saturate(1.0);
+  }
+  50% {
+    box-shadow: 0 6px 22px rgba(244,91,139,0.48), 0 0 28px rgba(255,107,107,0.14);
+    filter: brightness(1.07) saturate(1.08);
+  }
+}
+@keyframes ticker-wave {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.stack-ticker {
+  background: linear-gradient(135deg, #F45B8B, #ff7b8b, #FF6B6B, #F45B8B) !important;
+  background-size: 300% 100% !important;
+  animation: ticker-float 3s ease-in-out infinite, ticker-wave 6s ease-in-out infinite !important;
+  border: 1px solid rgba(255,255,255,0.28) !important;
+  border-top-color: rgba(255,255,255,0.50) !important;
+  box-shadow: 0 3px 12px rgba(244,91,139,0.28) !important;
+}
+
+/* Remove the hard shimmer ::after on tickers */
+.stack-ticker::after {
+  display: none !important;
+}
+
+/* ── 19. Finance ticker — same subtle float ── */
+.finance-ticker {
+  background: linear-gradient(135deg, #F45B8B, #ff7b8b, #FF6B6B, #F45B8B) !important;
+  background-size: 300% 100% !important;
+  animation: ticker-float 3s ease-in-out infinite, ticker-wave 6s ease-in-out infinite !important;
+  border: 1px solid rgba(255,255,255,0.28) !important;
+  border-top-color: rgba(255,255,255,0.50) !important;
+  box-shadow: 0 3px 12px rgba(244,91,139,0.28) !important;
+}
+.finance-ticker::after { display: none !important; }
+
+/* ── 20. Fallback for old browsers ── */
 @supports not (backdrop-filter: blur(1px)) {
   .card, .nw-subcard, .nw-chart-wrap, .nw-donut-wrap, .nw-activity-wrap,
   .stack-item, .sub-row, .water-timing-card {
