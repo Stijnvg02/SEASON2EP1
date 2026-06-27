@@ -984,7 +984,7 @@ html, body {
 
     $('waterUnitLabel').textContent = unitName.toUpperCase() + ' DRANK TODAY';
     $('waterNum').textContent = countDisp;
-    $('waterTarget').textContent = '/ ' + targetUnits;
+    $('waterTarget').textContent = '/ ' + (calc.total / uVol).toFixed(1);
     // update chip subtitles
     if ($('wqBottleSub')) $('wqBottleSub').textContent = state.bottleMl + ' ml';
     if ($('wqGlassSub'))  $('wqGlassSub').textContent  = state.glassMl  + ' ml';
