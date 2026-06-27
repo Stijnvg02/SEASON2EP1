@@ -589,16 +589,17 @@ html, body {
     </div>
     <div class="water-helper" id="waterHelper">Start the day — first one in.</div>
 
-    <div id="weightWarning" style="display:none; margin-top:10px; padding:10px 14px; background:rgba(255,255,255,0.62); backdrop-filter:blur(16px) saturate(160%); -webkit-backdrop-filter:blur(16px) saturate(160%); border:1px solid rgba(251,191,36,0.45); border-bottom-color:rgba(251,191,36,0.22); box-shadow:0 2px 8px rgba(0,0,0,0.05), inset 0 1px 0 rgba(255,255,255,0.90); border-radius:14px; font-size:12.5px; color:#92400E; font-weight:600; line-height:1.4;">
-      <div>⚖️ Waterdoel gebaseerd op <span id="weightWarningVal">—</span> — log vandaag voor een nauwkeurige berekening.</div>
-      <div style="display:flex; align-items:center; gap:8px; margin-top:8px;">
+    <div id="weightWarning" style="display:none; margin-top:10px; padding:18px 20px; background:linear-gradient(135deg,#3B82F6,#60A5FA); border:none; border-radius:14px; box-shadow:0 6px 22px rgba(59,130,246,0.35); line-height:1.4;">
+      <div style="font-size:10.5px; color:rgba(255,255,255,0.70); font-weight:700; letter-spacing:0.10em; text-transform:uppercase; margin-bottom:6px;">Gewicht</div>
+      <div style="font-size:16px; font-weight:700; color:#FFFFFF; margin-bottom:10px;">Waterdoel gebaseerd op <span id="weightWarningVal">—</span></div>
+      <div style="display:flex; align-items:center; gap:8px;">
         <input id="quickWeightInput" type="number" step="0.1" min="30" max="300"
           placeholder="bv. 75"
-          style="width:80px; padding:5px 9px; border-radius:8px; border:1px solid rgba(120,53,15,0.25); background:rgba(255,255,255,0.7); font-size:13px; font-weight:600; color:#78350f; outline:none;" />
-        <span id="quickWeightUnit" style="font-size:12px; color:#92400E;">kg</span>
+          style="width:80px; padding:6px 10px; border-radius:8px; border:none; background:rgba(255,255,255,0.22); font-size:13px; font-weight:600; color:#FFFFFF; outline:none;" />
+        <span id="quickWeightUnit" style="font-size:12px; color:rgba(255,255,255,0.75); font-weight:600;">kg</span>
         <button id="quickWeightBtn" type="button"
-          style="padding:5px 12px; border-radius:8px; border:none; background:rgba(120,53,15,0.15); color:#78350f; font-size:12.5px; font-weight:700; cursor:pointer;">
-          Log
+          style="padding:6px 14px; border-radius:8px; border:none; background:rgba(255,255,255,0.20); color:#FFFFFF; font-size:12.5px; font-weight:700; cursor:pointer; letter-spacing:0.05em;">
+          LOG
         </button>
       </div>
     </div>
@@ -1033,7 +1034,7 @@ html, body {
       $('weightWarningVal').textContent = wi.label;
       warnEl.style.display = 'flex';
       warnEl.style.flexDirection = 'column';
-      try { $('quickWeightUnit').textContent = (JSON.parse(localStorage.getItem('po_coach_v1') || '{}')).units || 'kg'; } catch (e) {}
+      try { const u = (JSON.parse(localStorage.getItem('po_coach_v1') || '{}')).units || 'kg'; $('quickWeightUnit').textContent = u; } catch (e) {}
     } else {
       warnEl.style.display = 'none';
     }
