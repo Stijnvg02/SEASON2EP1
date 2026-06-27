@@ -284,11 +284,11 @@ html, body {
   background: linear-gradient(
     105deg,
     transparent 30%,
-    rgba(255,255,255,0.40) 50%,
+    rgba(255,255,255,0.22) 50%,
     transparent 70%
   );
   width: 60%;
-  animation: pink-shimmer 2.6s cubic-bezier(0.4,0,0.6,1) infinite;
+  animation: pink-shimmer 4s cubic-bezier(0.4,0,0.6,1) infinite;
   pointer-events: none;
   z-index: 1;
   border-radius: inherit;
@@ -321,12 +321,12 @@ html, body {
   background: linear-gradient(
     105deg,
     transparent 15%,
-    rgba(255,255,255,0.18) 40%,
-    rgba(255,255,255,0.32) 50%,
-    rgba(255,255,255,0.18) 60%,
+    rgba(255,255,255,0.10) 40%,
+    rgba(255,255,255,0.18) 50%,
+    rgba(255,255,255,0.10) 60%,
     transparent 85%
   ) !important;
-  animation: ticker-gloss 3.5s ease-in-out infinite !important;
+  animation: ticker-gloss 5s ease-in-out infinite !important;
   pointer-events: none !important;
   z-index: 1 !important;
   border-radius: inherit !important;
@@ -370,12 +370,12 @@ html, body {
   background: linear-gradient(
     105deg,
     transparent 15%,
-    rgba(255,255,255,0.18) 40%,
-    rgba(255,255,255,0.32) 50%,
-    rgba(255,255,255,0.18) 60%,
+    rgba(255,255,255,0.10) 40%,
+    rgba(255,255,255,0.18) 50%,
+    rgba(255,255,255,0.10) 60%,
     transparent 85%
   ) !important;
-  animation: orange-gloss 3.5s ease-in-out infinite !important;
+  animation: orange-gloss 5s ease-in-out infinite !important;
   pointer-events: none !important;
   z-index: 1 !important;
   border-radius: inherit !important;
@@ -404,12 +404,12 @@ html, body {
   background: linear-gradient(
     105deg,
     transparent 15%,
-    rgba(255,255,255,0.18) 40%,
-    rgba(255,255,255,0.32) 50%,
-    rgba(255,255,255,0.18) 60%,
+    rgba(255,255,255,0.10) 40%,
+    rgba(255,255,255,0.18) 50%,
+    rgba(255,255,255,0.10) 60%,
     transparent 85%
   ) !important;
-  animation: rx-gloss 3.5s ease-in-out infinite !important;
+  animation: rx-gloss 5s ease-in-out infinite !important;
   pointer-events: none !important;
   z-index: 1 !important;
   border-radius: inherit !important;
@@ -439,12 +439,12 @@ html, body {
   background: linear-gradient(
     105deg,
     transparent 15%,
-    rgba(255,255,255,0.18) 40%,
-    rgba(255,255,255,0.30) 50%,
-    rgba(255,255,255,0.18) 60%,
+    rgba(255,255,255,0.10) 40%,
+    rgba(255,255,255,0.16) 50%,
+    rgba(255,255,255,0.10) 60%,
     transparent 85%
   ) !important;
-  animation: brown-gloss 3.5s ease-in-out infinite !important;
+  animation: brown-gloss 5s ease-in-out infinite !important;
   pointer-events: none !important;
   z-index: 1 !important;
   border-radius: inherit !important;
@@ -474,12 +474,12 @@ html, body {
   background: linear-gradient(
     105deg,
     transparent 15%,
-    rgba(255,255,255,0.18) 40%,
-    rgba(255,255,255,0.30) 50%,
-    rgba(255,255,255,0.18) 60%,
+    rgba(255,255,255,0.10) 40%,
+    rgba(255,255,255,0.16) 50%,
+    rgba(255,255,255,0.10) 60%,
     transparent 85%
   ) !important;
-  animation: green-gloss 3.5s ease-in-out infinite !important;
+  animation: green-gloss 5s ease-in-out infinite !important;
   pointer-events: none !important;
   z-index: 1 !important;
   border-radius: inherit !important;
