@@ -130,8 +130,13 @@
             broadcastChannel.send({ type: 'broadcast', event: 'updated', payload: {} })
               .catch(() => {});
           }
+        } else {
+          // Push failed — retry after 4 s so data eventually reaches Supabase.
+          setTimeout(pushNow, 4000);
         }
-      } catch (e) {}
+      } catch (e) {
+        setTimeout(pushNow, 4000);
+      }
     }
     function schedulePush() {
       clearTimeout(pushTimer);
