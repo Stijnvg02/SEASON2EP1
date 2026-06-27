@@ -585,7 +585,21 @@ html, body {
     <div class="water-helper" id="waterHelper">Start the day — first one in.</div>
 
     <div id="weightWarning" style="display:none; margin-top:10px; padding:10px 14px; background:rgba(251,191,36,0.12); border:1px solid rgba(251,191,36,0.40); border-radius:12px; font-size:12.5px; color:#92400E; font-weight:600; line-height:1.4;">
-      ⚖️ Geen gewicht gelogd vandaag — waterdoel is gebaseerd op <span id="weightWarningVal">—</span>. Log je gewicht in de Fitness pagina voor een nauwkeurige berekening.
+      <div>⚖️ Waterdoel gebaseerd op <span id="weightWarningVal">—</span> — log vandaag voor een nauwkeurige berekening.</div>
+      <div style="display:flex; align-items:center; gap:8px; margin-top:8px;">
+        <input id="quickWeightInput" type="number" step="0.1" min="30" max="300"
+          placeholder="bv. 75"
+          style="width:80px; padding:5px 9px; border-radius:8px; border:1px solid rgba(120,53,15,0.25); background:rgba(255,255,255,0.7); font-size:13px; font-weight:600; color:#78350f; outline:none;" />
+        <span id="quickWeightUnit" style="font-size:12px; color:#92400E;">kg</span>
+        <button id="quickWeightBtn" type="button"
+          style="padding:5px 12px; border-radius:8px; border:none; background:rgba(120,53,15,0.15); color:#78350f; font-size:12.5px; font-weight:700; cursor:pointer;">
+          Log
+        </button>
+      </div>
+    </div>
+
+    <div id="cafPill" style="display:none; margin-top:8px; padding:8px 14px; background:rgba(120,53,15,0.07); border:1px solid rgba(120,53,15,0.20); border-radius:12px; font-size:12.5px; color:#78350f; font-weight:600; line-height:1.4;">
+      ☕ <span id="cafPillText"></span>
     </div>
 
     <div class="water-timing-card" id="waterTimingCard">
@@ -1014,6 +1028,7 @@ html, body {
       $('weightWarningVal').textContent = wi.label;
       warnEl.style.display = 'flex';
       warnEl.style.flexDirection = 'column';
+      try { $('quickWeightUnit').textContent = (JSON.parse(localStorage.getItem('po_coach_v1') || '{}')).units || 'kg'; } catch (e) {}
     } else {
       warnEl.style.display = 'none';
     }
@@ -1069,6 +1084,15 @@ html, body {
     else { helper.textContent = remaining + ' te gaan. Goed tempo.'; helper.classList.add('good'); }
 
     renderTiming(ml, calc.total);
+
+    // Caffeine pill
+    const cafPill = $('cafPill');
+    if (calc.caffeine > 0) {
+      $('cafPillText').textContent = calc.cafMg + ' mg cafeine vandaag — +' + fmtMl(calc.caffeine) + ' extra water';
+      cafPill.style.display = 'block';
+    } else {
+      cafPill.style.display = 'none';
+    }
 
     // Disable minus when at zero
     $('waterMinusBtn').disabled = ml === 0 || !state.lastAddedMl;
@@ -1278,6 +1302,34 @@ html, body {
     body.classList.toggle('show');
     $('whyToggle').setAttribute('aria-expanded', open ? 'false' : 'true');
   });
+
+  // Quick weight log from water page
+  (function () {
+    function gymUnit() {
+      try { return (JSON.parse(localStorage.getItem('po_coach_v1') || '{}')).units || 'kg'; } catch (e) { return 'kg'; }
+    }
+    function updateUnitLabel() {
+      $('quickWeightUnit').textContent = gymUnit();
+    }
+    updateUnitLabel();
+    $('quickWeightBtn').addEventListener('click', function () {
+      const raw = parseFloat($('quickWeightInput').value);
+      if (!raw || raw < 30 || raw > 300) return;
+      const todayStr = new Date().toISOString().slice(0, 10);
+      try {
+        const entries = JSON.parse(localStorage.getItem('po_coach_weights') || '[]');
+        const idx = entries.findIndex(e => e.dateKey === todayStr);
+        if (idx >= 0) entries[idx].weight = raw;
+        else { entries.push({ dateKey: todayStr, weight: raw }); entries.sort((a, b) => a.dateKey.localeCompare(b.dateKey)); }
+        localStorage.setItem('po_coach_weights', JSON.stringify(entries));
+      } catch (e) {}
+      $('quickWeightInput').value = '';
+      reloadStateAndRender();
+    });
+    $('quickWeightInput').addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') $('quickWeightBtn').click();
+    });
+  })();
 
   // ============================================================
   // SETTINGS
