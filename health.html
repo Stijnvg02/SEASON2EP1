@@ -1629,8 +1629,18 @@ main {
     const now = new Date();
     const nowHour = now.getHours() + now.getMinutes() / 60;
 
+    function stepOrder(dose) {
+      const m = String(dose || '').match(/step\s*(\d+)/i);
+      if (m) return parseInt(m[1]);
+      if (/last/i.test(dose)) return 90;
+      if (/spot/i.test(dose)) return 95;
+      return 50;
+    }
+
     SKIN_WINDOWS.forEach(win => {
-      const winItems = items.filter(i => (i.window || 'anytime') === win.key);
+      const winItems = items
+        .filter(i => (i.window || 'anytime') === win.key)
+        .sort((a, b) => stepOrder(a.dose) - stepOrder(b.dose));
       if (winItems.length === 0) return;
 
       const group = document.createElement('div');
