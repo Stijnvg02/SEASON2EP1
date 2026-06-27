@@ -444,40 +444,47 @@ main {
   top: calc(100% + 6px);
   left: 0;
   width: max(100%, 320px);
-  background: linear-gradient(135deg, #3B82F6, #60A5FA);
-  border: none;
-  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.78);
+  border-radius: 16px;
   max-height: 280px;
   overflow-y: auto;
-  box-shadow: 0 8px 28px rgba(59,130,246,0.45), 0 0 0 1px rgba(96,165,250,0.30);
+  box-shadow: 0 8px 28px rgba(0,0,0,0.10), 0 2px 6px rgba(0,0,0,0.06);
   z-index: 50;
   padding: 6px;
 }
 .stack-search-results[hidden] { display: none; }
 
 .stack-result {
-  display: flex;
-  gap: 12px; align-items: center;
+  display: grid;
+  grid-template-columns: 32px 1fr;
+  gap: 10px;
+  align-items: center;
   width: 100%;
-  padding: 9px 11px;
-  background: transparent; border: none;
-  border-radius: 8px;
+  padding: 10px 12px;
+  background: rgba(0, 0, 0, 0.03);
+  border: 1px solid transparent;
+  border-radius: 10px;
+  margin-bottom: 4px;
   cursor: pointer;
   text-align: left;
   font-family: inherit;
-  color: rgba(255,255,255,0.80);
-  transition: background 0.12s;
+  color: #1A1A1A;
+  transition: background 0.12s, border-color 0.12s;
 }
-.stack-result:hover, .stack-result.is-focused { background: rgba(255,255,255,0.15); }
+.stack-result:last-child { margin-bottom: 0; }
+.stack-result:hover, .stack-result.is-focused { background: rgba(0,0,0,0.06); border-color: rgba(0,0,0,0.06); }
 
-.stack-result-icon { font-size: 17px; flex-shrink: 0; width: 24px; text-align: center; }
-.stack-result-body { min-width: 0; flex: 1; }
+.stack-result-icon { font-size: 17px; width: 32px; text-align: center; }
+.stack-result-body { min-width: 0; }
 .stack-result-name {
   font-size: 13px; font-weight: 600;
-  color: #FFFFFF; line-height: 1.2;
+  color: #1A1A1A; line-height: 1.2;
 }
 .stack-result-meta {
-  font-size: 11px; color: rgba(255,255,255,0.75);
+  font-size: 11px; color: #888;
   margin-top: 2px;
 }
 
