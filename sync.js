@@ -174,9 +174,9 @@
         .subscribe();
     })();
 
-    // Re-fetch when tab becomes visible again (e.g. user switches from phone to computer).
-    document.addEventListener('visibilitychange', async () => {
-      if (document.visibilityState !== 'visible' || !supa) return;
+    // Pull latest from Supabase and apply if changed.
+    async function pullNow() {
+      if (!supa) return;
       try {
         const { data, error } = await supa
           .from('app_state').select('data').eq('key', appKey).maybeSingle();
@@ -188,7 +188,18 @@
           }
         }
       } catch (e) {}
+    }
+
+    // Re-fetch when tab becomes visible (user switches from another device/tab).
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') pullNow();
     });
+
+    // Polling fallback every 30 s (catches cases where Realtime isn't enabled
+    // on the Supabase table or the WebSocket drops).
+    setInterval(() => {
+      if (document.visibilityState === 'visible') pullNow();
+    }, 30000);
 
     window.addEventListener('beforeunload', flushOnUnload);
     window.addEventListener('pagehide', flushOnUnload);
