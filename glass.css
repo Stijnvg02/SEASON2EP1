@@ -312,9 +312,31 @@ html, body {
   box-shadow: 0 3px 12px rgba(244,91,139,0.28) !important;
 }
 
-/* Remove the hard shimmer ::after on tickers */
+/* Soft gloss pass — slow and wide so it reads as light, not flash */
+@keyframes ticker-gloss {
+  0%   { transform: translateX(-120%); opacity: 0; }
+  15%  { opacity: 1; }
+  85%  { opacity: 1; }
+  100% { transform: translateX(220%);  opacity: 0; }
+}
 .stack-ticker::after {
-  display: none !important;
+  content: '' !important;
+  display: block !important;
+  position: absolute !important;
+  inset: 0 !important;
+  width: 55% !important;
+  background: linear-gradient(
+    105deg,
+    transparent 20%,
+    rgba(255,255,255,0.22) 45%,
+    rgba(255,255,255,0.28) 50%,
+    rgba(255,255,255,0.22) 55%,
+    transparent 80%
+  ) !important;
+  animation: ticker-gloss 4s ease-in-out infinite !important;
+  pointer-events: none !important;
+  z-index: 1 !important;
+  border-radius: inherit !important;
 }
 
 /* ── 19. Finance ticker — same subtle float ── */
@@ -326,7 +348,25 @@ html, body {
   border-top-color: rgba(255,255,255,0.50) !important;
   box-shadow: 0 3px 12px rgba(244,91,139,0.28) !important;
 }
-.finance-ticker::after { display: none !important; }
+.finance-ticker::after {
+  content: '' !important;
+  display: block !important;
+  position: absolute !important;
+  inset: 0 !important;
+  width: 55% !important;
+  background: linear-gradient(
+    105deg,
+    transparent 20%,
+    rgba(255,255,255,0.22) 45%,
+    rgba(255,255,255,0.28) 50%,
+    rgba(255,255,255,0.22) 55%,
+    transparent 80%
+  ) !important;
+  animation: ticker-gloss 4s ease-in-out infinite 0.8s !important;
+  pointer-events: none !important;
+  z-index: 1 !important;
+  border-radius: inherit !important;
+}
 
 /* ── 20. Fallback for old browsers ── */
 @supports not (backdrop-filter: blur(1px)) {
