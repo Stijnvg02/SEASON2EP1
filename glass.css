@@ -191,8 +191,8 @@ html, body {
 }
 
 .stack-item.taken {
-  background: linear-gradient(135deg, #1D4ED8, #2563EB) !important;
-  box-shadow: none !important;
+  background: linear-gradient(135deg, #059669, #34D399) !important;
+  box-shadow: 0 4px 14px rgba(5,150,105,0.25) !important;
 }
 
 /* ── 13. Why-toggle button ── */
