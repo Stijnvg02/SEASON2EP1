@@ -39,30 +39,77 @@ body.has-topbar {
 .topbar-water-wrap {
   display: flex; align-items: stretch;
 }
+
+/* Shared glass shimmer animation */
+@keyframes topbar-shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
 .topbar-water-pill {
   display: inline-flex; align-items: center; gap: 8px;
   padding: 9px 14px;
-  background: linear-gradient(135deg, #3B82F6, #60A5FA);
-  border: none;
+  position: relative; overflow: hidden;
+  background: rgba(99,155,255,0.22);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255,255,255,0.75);
+  border-right: none;
   border-radius: 12px 0 0 12px;
   text-decoration: none;
-  color: #FFFFFF;
-  box-shadow: 0 4px 14px rgba(59,130,246,0.35);
+  box-shadow:
+    0 4px 14px rgba(59,130,246,0.15),
+    inset 0 1px 0 rgba(255,255,255,0.85);
   -webkit-tap-highlight-color: transparent;
+}
+.topbar-water-pill::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 20%,
+    rgba(255,255,255,0.35) 50%,
+    transparent 80%
+  );
+  background-size: 200% 100%;
+  animation: topbar-shimmer 3s linear infinite;
+  pointer-events: none;
+  border-radius: inherit;
 }
 .topbar-water-emoji {
   display: flex; align-items: center; justify-content: center;
   width: 44px;
-  background: linear-gradient(135deg, #2563EB, #3B82F6);
+  position: relative; overflow: hidden;
+  background: rgba(59,130,246,0.18);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255,255,255,0.75);
+  border-left: 1px solid rgba(255,255,255,0.40);
   border-radius: 0 12px 12px 0;
   font-size: 18px; line-height: 1;
   text-decoration: none;
-  box-shadow: 0 4px 14px rgba(59,130,246,0.35);
+  box-shadow:
+    0 4px 14px rgba(59,130,246,0.15),
+    inset 0 1px 0 rgba(255,255,255,0.85);
   -webkit-tap-highlight-color: transparent;
+}
+.topbar-water-emoji::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 20%,
+    rgba(255,255,255,0.30) 50%,
+    transparent 80%
+  );
+  background-size: 200% 100%;
+  animation: topbar-shimmer 3s linear infinite 0.4s;
+  pointer-events: none;
+  border-radius: inherit;
 }
 .topbar-water-pill .topbar-pill-dot {
   width: 8px; height: 8px; border-radius: 50%;
-  background: rgba(255,255,255,0.7); flex-shrink: 0;
+  flex-shrink: 0; position: relative; z-index: 1;
   animation: topbar-dot-pulse 1.8s ease-in-out infinite;
 }
 @keyframes topbar-dot-pulse {
@@ -72,27 +119,43 @@ body.has-topbar {
 .topbar-pill-count {
   font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
   font-size: 13px; font-weight: 700;
-  color: #FFFFFF;
+  color: rgba(0,0,0,0.75);
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
+  position: relative; z-index: 1;
 }
 .topbar-finance-btn {
   display: inline-flex; align-items: center; justify-content: center;
   width: 44px; height: 42px;
-  background: rgba(255,255,255,0.35);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255,255,255,0.80);
+  position: relative; overflow: hidden;
+  background: rgba(255,255,255,0.22);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255,255,255,0.78);
   border-radius: 12px;
   text-decoration: none;
   -webkit-tap-highlight-color: transparent;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.9);
-  transition: background 0.15s;
+  box-shadow:
+    0 4px 14px rgba(0,0,0,0.06),
+    inset 0 1px 0 rgba(255,255,255,0.9);
+  transition: background 0.2s;
 }
-.topbar-finance-btn:hover { background: rgba(255,255,255,0.55); }
+.topbar-finance-btn::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(255,255,255,0.50) 0%,
+    rgba(255,255,255,0.0) 50%,
+    rgba(255,255,255,0.15) 100%
+  );
+  pointer-events: none;
+  border-radius: inherit;
+}
+.topbar-finance-btn:hover { background: rgba(255,255,255,0.40); }
 .topbar-finance-icon {
   font-size: 20px; line-height: 1;
-  opacity: 0.85;
+  opacity: 0.90; position: relative; z-index: 1;
 }
 
 /* Bottom tab bar — floating liquid glass pill */
