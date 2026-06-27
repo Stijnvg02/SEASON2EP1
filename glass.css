@@ -190,6 +190,26 @@ html, body {
   box-shadow: 0 4px 14px rgba(59,130,246,0.30), 0 0 0 1px rgba(96,165,250,0.20) !important;
 }
 
+/* ── 28. Stack check buttons — moving glass shimmer ── */
+@keyframes check-gloss {
+  0%   { transform: translateX(-150%); }
+  100% { transform: translateX(300%); }
+}
+.stack-check {
+  position: relative !important;
+  overflow: hidden !important;
+}
+.stack-check::after {
+  content: '' !important;
+  position: absolute !important;
+  inset: 0 !important;
+  width: 55% !important;
+  background: linear-gradient(105deg, transparent 20%, rgba(255,255,255,0.30) 50%, transparent 80%) !important;
+  animation: check-gloss 3.5s ease-in-out infinite !important;
+  pointer-events: none !important;
+  border-radius: inherit !important;
+}
+
 .stack-item.taken {
   background: linear-gradient(135deg, #059669, #34D399) !important;
   box-shadow: 0 4px 14px rgba(5,150,105,0.25) !important;
