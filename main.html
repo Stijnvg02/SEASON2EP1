@@ -343,6 +343,19 @@ body::after { content: ""; display: none; }
   filter: drop-shadow(0 0 6px rgba(242,192,99,0.6));
 }
 
+.streak-cal {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 4px; margin: 8px 0 14px; padding: 0 2px;
+}
+.streak-dot {
+  flex: 1; height: 6px; border-radius: 3px; min-width: 0;
+  transition: transform 0.1s;
+}
+.streak-dot.sc-done    { background: #3EC98A; }
+.streak-dot.sc-missed  { background: #FF6B6B; opacity: 0.7; }
+.streak-dot.sc-empty   { background: rgba(0,0,0,0.08); }
+.streak-dot.sc-today   { outline: 2px solid rgba(242,192,99,0.6); outline-offset: 1px; }
+
 .gm-bar {
   display: flex; gap: 4px;
   height: 6px;
@@ -906,6 +919,7 @@ body::after { content: ""; display: none; }
         </div>
       </div>
       <div class="gm-bar" id="gmBar"></div>
+      <div class="streak-cal" id="streakCal"></div>
       <ul id="goalList" class="goal-list gm-list"></ul>
       <div id="emptyState" class="empty-state">No goals for today yet — add one below.</div>
       <button type="button" id="gmPushBtn" class="gm-push-btn" style="display:none;">Push remaining to tomorrow</button>
@@ -1509,6 +1523,30 @@ body::after { content: ""; display: none; }
     document.getElementById('gmStreak').classList.toggle('gm-streak-active', s.count > 0);
   }
 
+  function renderStreakCal() {
+    const cal = document.getElementById('streakCal');
+    if (!cal) return;
+    const todayStr = getActiveDateString();
+    const dots = [];
+    for (let i = 13; i >= 0; i--) {
+      const d = new Date(); d.setDate(d.getDate() - i);
+      const dateStr = d.toISOString().slice(0, 10);
+      const isToday = dateStr === todayStr;
+      const goals = getGoals('goals:' + dateStr);
+      let cls = 'streak-dot ';
+      if (isToday) {
+        const done = goals.filter(g => g.done).length;
+        cls += goals.length === 0 ? 'sc-empty' : done === goals.length ? 'sc-done' : 'sc-empty';
+        cls += ' sc-today';
+      } else {
+        cls += goals.length === 0 ? 'sc-empty' : goals.every(g => g.done) ? 'sc-done' : 'sc-missed';
+      }
+      const dows = ['Z','M','D','W','D','V','Z'];
+      dots.push('<div class="' + cls + '" title="' + dateStr + ' — ' + (goals.length === 0 ? 'geen doelen' : goals.filter(g=>g.done).length + '/' + goals.length + ' gedaan') + '"></div>');
+    }
+    cal.innerHTML = dots.join('');
+  }
+
   function renderTomorrowCount() {
     const list = getGoals(tomorrowKey());
     document.getElementById('gmTomorrowCount').textContent = list.length + ' planned';
@@ -1671,7 +1709,7 @@ body::after { content: ""; display: none; }
   processStreak();
   loadToday();
   loadTomorrow();
-  renderStreak();
+  renderStreak(); renderStreakCal();
   updateDayRing();
   setInterval(updateDayRing, 60 * 1000);
   startTicker();
@@ -1701,7 +1739,7 @@ body::after { content: ""; display: none; }
 
   // Re-render when storage changes from another tab (or our bridged parent).
   window.addEventListener('storage', () => {
-    loadToday(); loadTomorrow(); renderStreak();
+    loadToday(); loadTomorrow(); renderStreak(); renderStreakCal();
   });
 })();
 </script>
