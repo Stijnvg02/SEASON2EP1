@@ -447,6 +447,31 @@ body::after { content: ""; display: none; }
   </div>
 </div>
 
+<!-- ===== Onboarding overlay ===== -->
+<div id="onboardBg" style="display:none; position:fixed; inset:0; z-index:200; align-items:center; justify-content:center; padding:20px; background:rgba(0,0,0,0.50); backdrop-filter:blur(4px);">
+  <div style="width:100%; max-width:380px; background:#FFFFFF; border-radius:22px; padding:28px 24px; box-shadow:0 12px 48px rgba(0,0,0,0.18);">
+    <div style="font-size:28px; margin-bottom:10px; text-align:center;">👋</div>
+    <div style="font-size:20px; font-weight:700; color:#1A1A1A; letter-spacing:-0.02em; text-align:center; margin-bottom:6px;">Welkom in je dashboard</div>
+    <div style="font-size:13px; color:#8A8A8A; text-align:center; margin-bottom:22px; line-height:1.5;">Stel eerst je profiel in zodat water, cafeïne<br>en andere berekeningen kloppen voor jou.</div>
+    <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:22px;">
+      <div style="display:flex; align-items:center; gap:12px; padding:10px 12px; background:#F8F8F8; border-radius:12px;">
+        <span style="font-size:18px; flex-shrink:0;">💧</span>
+        <div><div style="font-size:12.5px; font-weight:600; color:#1A1A1A;">Water</div><div style="font-size:11.5px; color:#AAAAAA;">Persoonlijk doelwit op basis van gewicht</div></div>
+      </div>
+      <div style="display:flex; align-items:center; gap:12px; padding:10px 12px; background:#F8F8F8; border-radius:12px;">
+        <span style="font-size:18px; flex-shrink:0;">💊</span>
+        <div><div style="font-size:12.5px; font-weight:600; color:#1A1A1A;">Supplementen &amp; Skincare</div><div style="font-size:11.5px; color:#AAAAAA;">Dagelijkse routine bijhouden</div></div>
+      </div>
+      <div style="display:flex; align-items:center; gap:12px; padding:10px 12px; background:#F8F8F8; border-radius:12px;">
+        <span style="font-size:18px; flex-shrink:0;">🏋️</span>
+        <div><div style="font-size:12.5px; font-weight:600; color:#1A1A1A;">Fitness &amp; Financiën</div><div style="font-size:11.5px; color:#AAAAAA;">Progressie en overzicht bijhouden</div></div>
+      </div>
+    </div>
+    <button id="onboardSetup" type="button" style="width:100%; padding:14px; border-radius:14px; border:none; background:#1A1A1A; color:#FFFFFF; font-family:inherit; font-size:14.5px; font-weight:700; cursor:pointer; margin-bottom:10px;">Profiel instellen</button>
+    <button id="onboardSkip" type="button" style="width:100%; padding:11px; border-radius:14px; border:1.5px solid rgba(0,0,0,0.10); background:transparent; color:#8A8A8A; font-family:inherit; font-size:13.5px; font-weight:600; cursor:pointer;">Overslaan</button>
+  </div>
+</div>
+
 <script>
 (function () {
   'use strict';
@@ -852,6 +877,27 @@ body::after { content: ""; display: none; }
     };
     reader.readAsText(file);
     e.target.value = '';
+  });
+})();
+</script>
+
+<script>
+(function () {
+  const ONBOARD_KEY = 'onboarded_v1';
+  const bg = document.getElementById('onboardBg');
+  if (!bg) return;
+  if (!localStorage.getItem(ONBOARD_KEY)) {
+    bg.style.display = 'flex';
+  }
+  function dismiss() {
+    localStorage.setItem(ONBOARD_KEY, '1');
+    bg.style.display = 'none';
+  }
+  document.getElementById('onboardSkip').addEventListener('click', dismiss);
+  document.getElementById('onboardSetup').addEventListener('click', function () {
+    dismiss();
+    const openBtn = document.getElementById('settingsOpen');
+    if (openBtn) openBtn.click();
   });
 })();
 </script>
