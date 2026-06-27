@@ -1010,16 +1010,31 @@ html, body {
     $('waterBarZoneStart').style.left = (65 / 1.5) + '%';
     $('waterBarZoneEnd').style.left   = (100 / 1.5) + '%';
 
-    // Helper text
+    // Helper text — uses same time-based pace as the status card
     const helper = $('waterHelper');
     const remaining = fmtMl(Math.max(0, calc.total - ml));
+    const _now = new Date();
+    const _hour = _now.getHours() + _now.getMinutes() / 60;
+    const _WAKE = 7, _SLEEP = 23;
+    const _pts = [[_WAKE,0],[12,0.30],[18,0.65],[21,0.90],[_SLEEP,1]];
+    let _exp = _hour <= _WAKE ? 0 : _hour >= _SLEEP ? 1 : (() => {
+      for (let i = 1; i < _pts.length; i++) {
+        if (_hour <= _pts[i][0]) {
+          const t = (_hour - _pts[i-1][0]) / (_pts[i][0] - _pts[i-1][0]);
+          return _pts[i-1][1] + t * (_pts[i][1] - _pts[i-1][1]);
+        }
+      }
+      return 1;
+    })();
+    const _diff = (calc.total > 0 ? ml / calc.total : 0) - _exp;
     helper.className = 'water-helper';
     if (ml === 0) { helper.textContent = 'Start de dag — eerste glas is het belangrijkst.'; }
-    else if (pctRaw < 50) { helper.textContent = 'Achter op schema — drink snel een glas.'; helper.classList.add('warn'); }
-    else if (pctRaw < 100) { helper.textContent = remaining + ' te gaan. Goed tempo.'; helper.classList.add('good'); }
-    else if (pctRaw < 130) { helper.textContent = '✓ Doel bereikt — mooi gedaan.'; helper.classList.add('good'); }
-    else if (pctRaw < 150) { helper.textContent = '⚠️ Voorzichtig — je overschrijdt het doel.'; helper.classList.add('warn'); }
-    else { helper.textContent = '🚫 Veel te veel — stop nu en wacht minstens een uur.'; helper.classList.add('bad'); }
+    else if (pctRaw >= 150) { helper.textContent = '🚫 Veel te veel — stop nu en wacht minstens een uur.'; helper.classList.add('bad'); }
+    else if (pctRaw >= 130) { helper.textContent = '⚠️ Voorzichtig — je overschrijdt het doel.'; helper.classList.add('warn'); }
+    else if (pctRaw >= 100) { helper.textContent = '✓ Doel bereikt — mooi gedaan.'; helper.classList.add('good'); }
+    else if (_diff < -0.20) { helper.textContent = 'Achter op schema — drink snel een glas.'; helper.classList.add('warn'); }
+    else if (_diff < -0.08) { helper.textContent = 'Iets achter — één extra glas brengt je op koers.'; helper.classList.add('warn'); }
+    else { helper.textContent = remaining + ' te gaan. Goed tempo.'; helper.classList.add('good'); }
 
     renderTiming(ml, calc.total);
 
