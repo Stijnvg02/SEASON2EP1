@@ -172,7 +172,7 @@ body.has-topbar {
 .bottombar-tab {
   display: flex; flex-direction: column; align-items: center; justify-content: center;
   gap: 2px;
-  padding: 7px 14px 5px;
+  padding: 7px 10px 5px;
   border-radius: 20px;
   border: 1px solid transparent;
   text-decoration: none;
@@ -271,9 +271,6 @@ body.topbar-modal-open {
     </a>
     <a href="po-water.html" class="topbar-water-emoji" aria-label="Go to water">💧</a>
   </div>
-  <a href="finance.html" class="topbar-finance-btn" id="topbarFinance" aria-label="Finance">
-    <span class="topbar-finance-icon">📊</span>
-  </a>
 </header>
 `;
 
@@ -299,17 +296,17 @@ body.topbar-modal-open {
     <span class="bottombar-tab-icon">☕</span>
     <span>Caffeine</span>
   </a>
+  <a href="finance.html" class="bottombar-tab" data-page="finance">
+    <span class="bottombar-tab-icon">📊</span>
+    <span>Finance</span>
+  </a>
 </nav>
 `;
 
-  // Pages where we suppress the app chrome: finance has its own internal
-  // 4-tab bottom nav and self-contained back button.
   function isFinancePage() {
     const p = (window.location.pathname || '').toLowerCase();
     return p.endsWith('/finance.html') || p.endsWith('finance.html');
   }
-  // When the water tracker is iframed inside health.html, the embedded
-  // page shouldn't render its own chrome again.
   function isEmbedded() {
     try { return window.self !== window.top; } catch (e) { return true; }
   }
@@ -322,7 +319,8 @@ body.topbar-modal-open {
     if (p.endsWith('gym.html')) return 'fitness';
     if (p.endsWith('po-water.html')) return 'water';
     if (p.endsWith('caffeine.html')) return 'caffeine';
-    return 'main'; // index.html, /, or anything else falls back to main
+    if (p.endsWith('finance.html')) return 'finance';
+    return 'main';
   }
 
   function injectStyleAndHTML() {
