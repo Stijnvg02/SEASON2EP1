@@ -598,10 +598,67 @@ html, body {
   border-radius: inherit !important;
 }
 
-/* ── 24. Fallback for old browsers ── */
+/* ── 25. Shell padding for .page containers (caffeine, main, home) ── */
+.page {
+  padding-top: 20px !important;
+  padding-left: 16px !important;
+  padding-right: 16px !important;
+  padding-bottom: 100px !important;
+}
+
+/* ── 26. Glass card style for all page content blocks ── */
+.gm-card,
+.stack-card,
+.whoop-card,
+.day-ring-wrap,
+.wt-card {
+  background: rgba(255, 255, 255, 0.22) !important;
+  backdrop-filter: blur(20px) saturate(180%) brightness(1.05) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(180%) brightness(1.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.78) !important;
+  border-bottom-color: rgba(255, 255, 255, 0.35) !important;
+  border-right-color: rgba(255, 255, 255, 0.35) !important;
+  border-radius: 20px !important;
+  box-shadow:
+    0 2px 6px rgba(0,0,0,0.04),
+    0 8px 24px rgba(0,0,0,0.08),
+    0 20px 48px rgba(0,0,0,0.06),
+    inset 0 1px 0 rgba(255,255,255,0.9),
+    inset 0 -1px 0 rgba(255,255,255,0.2) !important;
+  isolation: isolate !important;
+  overflow: hidden !important;
+  position: relative !important;
+}
+
+.stack-card::before,
+.whoop-card::before,
+.day-ring-wrap::before,
+.wt-card::before {
+  content: '' !important;
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: 0 !important;
+  border-radius: inherit !important;
+  background: linear-gradient(
+    135deg,
+    rgba(255,255,255,0.45) 0%,
+    rgba(255,255,255,0.00) 40%,
+    rgba(255,255,255,0.00) 60%,
+    rgba(255,255,255,0.15) 100%
+  ) !important;
+  pointer-events: none !important;
+}
+
+.stack-card > *,
+.whoop-card > *,
+.day-ring-wrap > *,
+.wt-card > * { position: relative !important; z-index: 1 !important; }
+
+/* ── 27. Fallback for old browsers ── */
 @supports not (backdrop-filter: blur(1px)) {
   .card, .nw-subcard, .nw-chart-wrap, .nw-donut-wrap, .nw-activity-wrap,
-  .stack-item, .sub-row, .water-timing-card {
+  .stack-item, .sub-row, .water-timing-card,
+  .gm-card, .stack-card, .whoop-card, .day-ring-wrap, .wt-card {
     background: rgba(255,255,255,0.92) !important;
     box-shadow: 0 8px 32px rgba(0,0,0,0.12) !important;
   }
