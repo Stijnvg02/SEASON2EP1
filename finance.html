@@ -447,14 +447,13 @@ html, body { scrollbar-width: none; -ms-overflow-style: none; }
 .nw-subcard .quick-add input[type=number]::-webkit-outer-spin-button,
 .nw-subcard .quick-add input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 .nw-subcard .quick-add input[type=number] { -moz-appearance: textfield; }
-#netWorthTotal + * + .card-grid,
-.section .card .card-grid {
+.section[data-section="net"] .card-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 10px;
 }
-@media (max-width: 720px) {
-  .section .card .card-grid { grid-template-columns: 1fr; }
+@media (max-width: 600px) {
+  .section[data-section="net"] .card-grid { grid-template-columns: 1fr; }
 }
 
 /* Stock-style net-worth chart */
