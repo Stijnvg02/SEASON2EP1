@@ -979,12 +979,13 @@ html, body {
     const targetUnits = Math.ceil(calc.total / uVol);
     const ml = todayMl();
     const count = ml / uVol;
-    const countDisp = count.toFixed(1);
+    const fmtUnits = v => { const r = Math.round(v * 10) / 10; return Number.isInteger(r) ? String(r) : r.toFixed(1); };
+    const countDisp = fmtUnits(count);
     const unitName = unitLabelPlural();
 
     $('waterUnitLabel').textContent = unitName.toUpperCase() + ' DRANK TODAY';
     $('waterNum').textContent = countDisp;
-    $('waterTarget').textContent = '/ ' + (calc.total / uVol).toFixed(1);
+    $('waterTarget').textContent = '/ ' + fmtUnits(calc.total / uVol);
     // update chip subtitles
     if ($('wqBottleSub')) $('wqBottleSub').textContent = state.bottleMl + ' ml';
     if ($('wqGlassSub'))  $('wqGlassSub').textContent  = state.glassMl  + ' ml';
