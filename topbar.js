@@ -22,7 +22,7 @@
   // -------- CSS --------
   const css = `
 .topbar {
-  position: sticky; top: 0; z-index: 40;
+  position: fixed; top: 0; left: 0; right: 0; z-index: 40;
   display: flex; justify-content: flex-end; align-items: center;
   gap: 8px;
   padding: max(10px, env(safe-area-inset-top)) 14px 8px;
@@ -32,6 +32,9 @@
   border-bottom: 1px solid rgba(255,255,255,0.75);
   box-shadow: 0 1px 0 rgba(0,0,0,0.04), inset 0 -1px 0 rgba(255,255,255,0.5);
   font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
+}
+body.has-topbar {
+  padding-top: calc(52px + env(safe-area-inset-top)) !important;
 }
 .topbar-water-wrap {
   display: flex; align-items: stretch;
@@ -307,6 +310,7 @@ body.topbar-modal-open {
     // Reserve room above the fixed bottom bar so page content can scroll
     // past it without being hidden.
     document.body.classList.add('has-bottombar');
+    document.body.classList.add('has-topbar');
   }
 
   // -------- Active-date helpers (match the goals page 6 AM rollover) --------
