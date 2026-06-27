@@ -721,14 +721,19 @@ body::after { content: ""; display: none; }
       'po_coach_v1', 'po_coach_workout_done', 'po_coach_weights', 'po_coach_photos',
       // WHOOP
       'whoop_tokens_v1', 'whoop_last_sync', 'whoop_access', 'whoop_refresh', 'whoop_expires',
+      // Finance
+      'nw_currency', 'subs', 'incoming_orders', 'wishlist', 'finance_active_tab',
       // Home profile
       'po_profile_v1',
     ];
     // Remove fixed keys
     keysToRemove.forEach(k => localStorage.removeItem(k));
-    // Remove date-suffixed taken keys (stack:taken:YYYY-MM-DD, skin:taken:YYYY-MM-DD)
+    // Remove prefixed keys
     Object.keys(localStorage)
-      .filter(k => k.startsWith('stack:taken:') || k.startsWith('skin:taken:'))
+      .filter(k =>
+        k.startsWith('stack:taken:') || k.startsWith('skin:taken:') ||
+        k.startsWith('nw:')
+      )
       .forEach(k => localStorage.removeItem(k));
     // Reload to fresh state
     location.reload();
