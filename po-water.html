@@ -584,6 +584,10 @@ html, body {
     </div>
     <div class="water-helper" id="waterHelper">Start the day — first one in.</div>
 
+    <div id="weightWarning" style="display:none; margin-top:10px; padding:10px 14px; background:rgba(251,191,36,0.12); border:1px solid rgba(251,191,36,0.40); border-radius:12px; font-size:12.5px; color:#92400E; font-weight:600; line-height:1.4;">
+      ⚖️ Geen gewicht gelogd vandaag — waterdoel is gebaseerd op <span id="weightWarningVal">—</span>. Log je gewicht in de Fitness pagina voor een nauwkeurige berekening.
+    </div>
+
     <div class="water-timing-card" id="waterTimingCard">
       <div class="water-timing-row">
         <span class="water-timing-dot" id="waterTimingDot"></span>
@@ -862,17 +866,26 @@ html, body {
     try {
       const entries = JSON.parse(localStorage.getItem('po_coach_weights') || '[]');
       if (entries.length > 0) {
-        const last = entries[entries.length - 1];
         const gymState = JSON.parse(localStorage.getItem('po_coach_v1') || '{}');
-        return gymState.units === 'lb' ? last.weight / 2.20462 : last.weight;
+        const toLb = gymState.units === 'lb';
+        const todayStr = new Date().toISOString().slice(0, 10);
+        const todayEntry = entries.find(e => e.dateKey === todayStr);
+        if (todayEntry) {
+          return { kg: toLb ? todayEntry.weight / 2.20462 : todayEntry.weight, source: 'today' };
+        }
+        const last = entries[entries.length - 1];
+        const kg = toLb ? last.weight / 2.20462 : last.weight;
+        return { kg, source: 'last', label: last.weight.toFixed(1) + ' ' + (toLb ? 'lb' : 'kg') + ' (' + last.dateKey + ')' };
       }
     } catch (e) {}
-    return state.profile.weightKg || 75;
+    const kg = state.profile.weightKg || null;
+    return kg ? { kg, source: 'manual', label: kg + ' kg (manueel ingesteld)' } : { kg: 70, source: 'default', label: 'standaard 70 kg' };
   }
 
   function computeTargetMl() {
     const p = state.profile;
-    const wKg = getBodyWeightKg();
+    const weightInfo = getBodyWeightKg();
+    const wKg = weightInfo.kg;
     const base = wKg * 30;
     const exercise = (p.activityHrsPerWeek || 0) / 7 * 350;
     // Use today's logged caffeine from the caffeine tracker if available, else manual setting
@@ -890,7 +903,7 @@ html, body {
     const heat = weatherExtra;
     const raw = base + exercise + caffeine + subs + adjust + heat;
     const total = Math.min(raw, 4000);
-    return { base, exercise, caffeine, cafMg, subs, adjust, heat, total };
+    return { base, exercise, caffeine, cafMg, subs, adjust, heat, total, weightInfo };
   }
 
   async function fetchWeather() {
@@ -993,6 +1006,17 @@ html, body {
     $('waterUnitLabel').textContent = unitName.toUpperCase() + ' DRANK TODAY';
     $('waterNum').textContent = countDisp;
     $('waterTarget').textContent = '/ ' + fmtUnits(calc.total / uVol);
+
+    // Weight warning
+    const wi = calc.weightInfo;
+    const warnEl = $('weightWarning');
+    if (wi.source !== 'today') {
+      $('weightWarningVal').textContent = wi.label;
+      warnEl.style.display = 'flex';
+      warnEl.style.flexDirection = 'column';
+    } else {
+      warnEl.style.display = 'none';
+    }
     // update chip subtitles
     if ($('wqBottleSub')) $('wqBottleSub').textContent = state.bottleMl + ' ml';
     if ($('wqGlassSub'))  $('wqGlassSub').textContent  = state.glassMl  + ' ml';
@@ -1260,8 +1284,11 @@ html, body {
   // ============================================================
   function renderSettings() {
     $('setWeight').value = state.profile.weightKg;
-    const wDisp = state.weightUnit === 'lb' ? (state.profile.weightKg * 2.20462).toFixed(1) : state.profile.weightKg.toFixed(1);
-    $('setWeightDisplay').textContent = wDisp + ' ' + (state.weightUnit || 'kg');
+    const wi = getBodyWeightKg();
+    const wDispKg = wi.kg;
+    const wDisp = state.weightUnit === 'lb' ? (wDispKg * 2.20462).toFixed(1) : wDispKg.toFixed(1);
+    const wSuffix = wi.source === 'today' ? '' : wi.source === 'last' ? ' (laatste meting)' : wi.source === 'manual' ? ' (manueel)' : ' (schatting)';
+    $('setWeightDisplay').textContent = wDisp + ' ' + (state.weightUnit || 'kg') + wSuffix;
     $('setAge').value = state.profile.age;
     $('setActivity').value = state.profile.activityHrsPerWeek;
     $('setCaffeine').value = state.caffeineMgPerDay;
