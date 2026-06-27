@@ -677,6 +677,44 @@ html, body {
 .day-ring-wrap > *,
 .wt-card > * { position: relative !important; z-index: 1 !important; }
 
+/* ── 29. Goals Grid — goal card liquid glass + shimmer ── */
+@keyframes gg-goal-gloss {
+  0%   { transform: translateX(-130%); }
+  100% { transform: translateX(260%); }
+}
+.gg-goal {
+  background: rgba(255, 255, 255, 0.68) !important;
+  backdrop-filter: blur(16px) saturate(170%) brightness(1.04) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(170%) brightness(1.04) !important;
+  border: 1px solid rgba(255, 255, 255, 0.88) !important;
+  border-bottom-color: rgba(255, 255, 255, 0.42) !important;
+  border-right-color: rgba(255, 255, 255, 0.42) !important;
+  box-shadow:
+    0 2px 6px rgba(0,0,0,0.05),
+    0 6px 18px rgba(0,0,0,0.07),
+    inset 0 1px 0 rgba(255,255,255,0.95) !important;
+  overflow: hidden !important;
+  position: relative !important;
+}
+.gg-goal::after {
+  content: '' !important;
+  position: absolute !important;
+  inset: 0 !important;
+  width: 55% !important;
+  background: linear-gradient(105deg,
+    transparent 15%,
+    rgba(255,255,255,0.18) 40%,
+    rgba(255,255,255,0.28) 50%,
+    rgba(255,255,255,0.18) 60%,
+    transparent 85%
+  ) !important;
+  animation: gg-goal-gloss 5s ease-in-out infinite !important;
+  pointer-events: none !important;
+  border-radius: inherit !important;
+  z-index: 0 !important;
+}
+.gg-goal > * { position: relative !important; z-index: 1 !important; }
+
 /* ── 27. Fallback for old browsers ── */
 @supports not (backdrop-filter: blur(1px)) {
   .card, .nw-subcard, .nw-chart-wrap, .nw-donut-wrap, .nw-activity-wrap,
