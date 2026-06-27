@@ -750,5 +750,17 @@ body::after { content: ""; display: none; }
   });
 })();
 </script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  if (typeof initCloudSync !== 'function') return;
+  // Profile data lives inside po_water_v1; sync it under the 'health' appKey
+  // so changes made here propagate to po-water.html and health.html.
+  initCloudSync({
+    appKey: 'health',
+    syncedKeys: ['po_water_v1'],
+  });
+});
+</script>
 </body>
 </html>

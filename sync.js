@@ -95,9 +95,23 @@
       return changed;
     }
 
+    // Build push payload: start from last known remote blob, apply local
+    // changes for matched keys only, so unmatched keys from other pages
+    // (e.g. stack:items when pushing from po-water.html) are preserved.
+    function buildPushState() {
+      const local = collect();
+      const base = lastSyncedJson ? JSON.parse(lastSyncedJson) : {};
+      const state = Object.assign({}, base);
+      for (const k of Object.keys(local)) state[k] = local[k];
+      for (const k of Object.keys(base)) {
+        if (matches(k) && !(k in local)) delete state[k];
+      }
+      return state;
+    }
+
     async function pushNow() {
       if (!supa) return;
-      const state = collect();
+      const state = buildPushState();
       const json = JSON.stringify(state);
       if (json === lastSyncedJson) return;
       try {
@@ -113,7 +127,7 @@
       pushTimer = setTimeout(pushNow, 100);
     }
     function flushOnUnload() {
-      const state = collect();
+      const state = buildPushState();
       const json = JSON.stringify(state);
       if (json === lastSyncedJson) return;
       try {
@@ -159,6 +173,22 @@
         })
         .subscribe();
     })();
+
+    // Re-fetch when tab becomes visible again (e.g. user switches from phone to computer).
+    document.addEventListener('visibilitychange', async () => {
+      if (document.visibilityState !== 'visible' || !supa) return;
+      try {
+        const { data, error } = await supa
+          .from('app_state').select('data').eq('key', appKey).maybeSingle();
+        if (!error && data && data.data) {
+          const incoming = JSON.stringify(data.data);
+          if (incoming !== lastSyncedJson) {
+            lastSyncedJson = incoming;
+            applyRemote(data.data);
+          }
+        }
+      } catch (e) {}
+    });
 
     window.addEventListener('beforeunload', flushOnUnload);
     window.addEventListener('pagehide', flushOnUnload);
