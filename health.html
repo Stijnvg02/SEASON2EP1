@@ -1484,6 +1484,7 @@ main {
     render();
   }, 60 * 1000);
 
+  window.addEventListener('health-sync', render);
   render();
   startTicker();
 })();
@@ -1889,6 +1890,7 @@ main {
     render();
   }, 60 * 1000);
 
+  window.addEventListener('health-sync', render);
   render();
   startTicker();
 })();
@@ -1902,7 +1904,7 @@ document.addEventListener('DOMContentLoaded', function () {
     syncedKeys: ['stack:items', 'stack:low', 'po_water_v1', 'skin:items', 'skin:low'],
     syncedPrefixes: ['stack:taken:', 'skin:taken:'],
     onApplied: function () {
-      window.dispatchEvent(new Event('storage'));
+      window.dispatchEvent(new CustomEvent('health-sync'));
     }
   });
 });

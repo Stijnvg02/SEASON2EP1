@@ -1514,7 +1514,7 @@ document.addEventListener('DOMContentLoaded', function () {
     appKey: 'health',
     syncedKeys: ['po_water_v1'],
     onApplied: function () {
-      window.dispatchEvent(new Event('storage'));
+      window.dispatchEvent(new StorageEvent('storage', { key: null }));
     }
   });
 });
