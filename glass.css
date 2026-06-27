@@ -256,11 +256,43 @@ html, body {
   position: relative !important;
   overflow: hidden !important;
   background: linear-gradient(135deg, #F45B8B, #FF6B6B) !important;
-  border: 1px solid rgba(255,255,255,0.35) !important;
-  border-top-color: rgba(255,255,255,0.55) !important;
+  border: 1px solid rgba(255,255,255,0.55) !important;
+  border-bottom-color: rgba(255,255,255,0.20) !important;
+  border-right-color: rgba(255,255,255,0.25) !important;
   box-shadow:
-    0 4px 16px rgba(244,91,139,0.35),
-    inset 0 1px 0 rgba(255,255,255,0.40) !important;
+    0 2px 4px rgba(0,0,0,0.10),
+    0 4px 16px rgba(244,91,139,0.30),
+    0 10px 28px rgba(244,91,139,0.14),
+    inset 0 1px 0 rgba(255,255,255,0.60),
+    inset 0 -1px 0 rgba(0,0,0,0.08) !important;
+}
+
+.wq-add-btn::before,
+.gm-add::before,
+.wish-add-btn::before,
+.stack-add-btn::before,
+.stack-ticker::before,
+.finance-ticker::before,
+.wh-connect::before,
+.sub-add-save::before,
+.skin-add-btn::before,
+.dr-add-btn::before,
+.goal-add-btn::before,
+.btn-primary::before,
+.set-save::before,
+.goal-ticker::before,
+.seg button.active::before {
+  content: '' !important;
+  position: absolute !important;
+  inset: 0 !important;
+  background: linear-gradient(
+    135deg,
+    rgba(255,255,255,0.28) 0%,
+    rgba(255,255,255,0.00) 55%
+  ) !important;
+  pointer-events: none !important;
+  border-radius: inherit !important;
+  z-index: 0 !important;
 }
 
 .wq-add-btn::after,
@@ -304,11 +336,15 @@ html, body {
 .finance-ticker {
   background: linear-gradient(135deg, #F45B8B, #FF6B6B) !important;
   animation: none !important;
-  border: 1px solid rgba(255,255,255,0.30) !important;
-  border-top-color: rgba(255,255,255,0.55) !important;
+  border: 1px solid rgba(255,255,255,0.55) !important;
+  border-bottom-color: rgba(255,255,255,0.20) !important;
+  border-right-color: rgba(255,255,255,0.25) !important;
   box-shadow:
-    0 4px 16px rgba(244,91,139,0.35),
-    inset 0 1px 0 rgba(255,255,255,0.38) !important;
+    0 2px 4px rgba(0,0,0,0.10),
+    0 4px 16px rgba(244,91,139,0.30),
+    0 10px 28px rgba(244,91,139,0.14),
+    inset 0 1px 0 rgba(255,255,255,0.60),
+    inset 0 -1px 0 rgba(0,0,0,0.08) !important;
 }
 
 .stack-ticker::after,
@@ -350,11 +386,34 @@ html, body {
 .po-modal-seg button.active {
   position: relative !important;
   overflow: hidden !important;
-  border: 1px solid rgba(255,255,255,0.30) !important;
-  border-top-color: rgba(255,255,255,0.55) !important;
+  border: 1px solid rgba(255,255,255,0.55) !important;
+  border-bottom-color: rgba(255,255,255,0.20) !important;
+  border-right-color: rgba(255,255,255,0.25) !important;
   box-shadow:
-    0 4px 16px rgba(255,140,66,0.35),
-    inset 0 1px 0 rgba(255,255,255,0.38) !important;
+    0 2px 4px rgba(0,0,0,0.10),
+    0 4px 16px rgba(255,140,66,0.30),
+    0 10px 28px rgba(255,140,66,0.14),
+    inset 0 1px 0 rgba(255,255,255,0.60),
+    inset 0 -1px 0 rgba(0,0,0,0.08) !important;
+}
+
+.po-btn-primary::before,
+.po-tw-done-btn::before,
+.wt-save-btn::before,
+.po-seg-btn.active::before,
+.po-reps-pill.active::before,
+.po-modal-seg button.active::before {
+  content: '' !important;
+  position: absolute !important;
+  inset: 0 !important;
+  background: linear-gradient(
+    135deg,
+    rgba(255,255,255,0.28) 0%,
+    rgba(255,255,255,0.00) 55%
+  ) !important;
+  pointer-events: none !important;
+  border-radius: inherit !important;
+  z-index: 0 !important;
 }
 
 .po-btn-primary::after,
@@ -389,11 +448,29 @@ html, body {
 
 .po-rx-card {
   overflow: hidden !important;
-  border: 1px solid rgba(255,255,255,0.30) !important;
-  border-top-color: rgba(255,255,255,0.55) !important;
+  border: 1px solid rgba(255,255,255,0.55) !important;
+  border-bottom-color: rgba(255,255,255,0.20) !important;
+  border-right-color: rgba(255,255,255,0.25) !important;
   box-shadow:
-    0 6px 22px rgba(59,130,246,0.35),
-    inset 0 1px 0 rgba(255,255,255,0.38) !important;
+    0 2px 4px rgba(0,0,0,0.10),
+    0 6px 22px rgba(59,130,246,0.30),
+    0 12px 32px rgba(59,130,246,0.14),
+    inset 0 1px 0 rgba(255,255,255,0.60),
+    inset 0 -1px 0 rgba(0,0,0,0.08) !important;
+}
+
+.po-rx-card::before {
+  content: '' !important;
+  position: absolute !important;
+  inset: 0 !important;
+  background: linear-gradient(
+    135deg,
+    rgba(255,255,255,0.28) 0%,
+    rgba(255,255,255,0.00) 55%
+  ) !important;
+  pointer-events: none !important;
+  border-radius: inherit !important;
+  z-index: 0 !important;
 }
 
 .po-rx-card::after {
@@ -424,11 +501,29 @@ html, body {
 .log-row {
   position: relative !important;
   overflow: hidden !important;
-  border: 1px solid rgba(255,255,255,0.30) !important;
-  border-top-color: rgba(255,255,255,0.55) !important;
+  border: 1px solid rgba(255,255,255,0.55) !important;
+  border-bottom-color: rgba(255,255,255,0.20) !important;
+  border-right-color: rgba(255,255,255,0.25) !important;
   box-shadow:
-    0 4px 14px rgba(139,94,60,0.30),
-    inset 0 1px 0 rgba(255,255,255,0.38) !important;
+    0 2px 4px rgba(0,0,0,0.10),
+    0 4px 14px rgba(139,94,60,0.28),
+    0 10px 26px rgba(139,94,60,0.12),
+    inset 0 1px 0 rgba(255,255,255,0.60),
+    inset 0 -1px 0 rgba(0,0,0,0.08) !important;
+}
+
+.log-row::before {
+  content: '' !important;
+  position: absolute !important;
+  inset: 0 !important;
+  background: linear-gradient(
+    135deg,
+    rgba(255,255,255,0.28) 0%,
+    rgba(255,255,255,0.00) 55%
+  ) !important;
+  pointer-events: none !important;
+  border-radius: inherit !important;
+  z-index: 0 !important;
 }
 
 .log-row::after {
@@ -459,11 +554,29 @@ html, body {
 .ord-add-btn {
   position: relative !important;
   overflow: hidden !important;
-  border: 1px solid rgba(255,255,255,0.30) !important;
-  border-top-color: rgba(255,255,255,0.55) !important;
+  border: 1px solid rgba(255,255,255,0.55) !important;
+  border-bottom-color: rgba(255,255,255,0.20) !important;
+  border-right-color: rgba(255,255,255,0.25) !important;
   box-shadow:
-    0 4px 14px rgba(110,231,183,0.35),
-    inset 0 1px 0 rgba(255,255,255,0.38) !important;
+    0 2px 4px rgba(0,0,0,0.10),
+    0 4px 14px rgba(110,231,183,0.30),
+    0 10px 26px rgba(110,231,183,0.12),
+    inset 0 1px 0 rgba(255,255,255,0.60),
+    inset 0 -1px 0 rgba(0,0,0,0.08) !important;
+}
+
+.ord-add-btn::before {
+  content: '' !important;
+  position: absolute !important;
+  inset: 0 !important;
+  background: linear-gradient(
+    135deg,
+    rgba(255,255,255,0.28) 0%,
+    rgba(255,255,255,0.00) 55%
+  ) !important;
+  pointer-events: none !important;
+  border-radius: inherit !important;
+  z-index: 0 !important;
 }
 
 .ord-add-btn::after {
