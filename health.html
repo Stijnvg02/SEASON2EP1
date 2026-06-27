@@ -154,6 +154,16 @@ main {
   font-variant-numeric: tabular-nums;
   margin-top: 6px;
 }
+.health-hist-cal {
+  display: flex; gap: 4px; margin-top: 8px;
+}
+.health-hist-cal .hh-dot {
+  flex: 1; height: 5px; border-radius: 3px; min-width: 0;
+}
+.health-hist-cal .hh-done    { background: #3EC98A; }
+.health-hist-cal .hh-partial { background: #F2C063; }
+.health-hist-cal .hh-empty   { background: rgba(0,0,0,0.07); }
+
 .stack-progress-track {
   height: 5px;
   background: #F5F5F5;
@@ -909,6 +919,7 @@ main {
       <div class="sf-eyebrow">Daily stack</div>
       <div class="sf-title">Tap each as you take it</div>
       <div class="stack-progress-text" id="stackProgressText">— / — taken today · resets at 6 AM</div>
+      <div class="health-hist-cal" id="stackHistCal"></div>
     </div>
 
     <div class="stack-progress-track">
@@ -950,6 +961,7 @@ main {
       <div class="sf-eyebrow">Daily routine</div>
       <div class="sf-title">Tap each as you apply it</div>
       <div class="stack-progress-text" id="skinProgressText">— / — done today · resets at 6 AM</div>
+      <div class="health-hist-cal" id="skinHistCal"></div>
     </div>
 
     <div class="stack-progress-track">
@@ -1152,6 +1164,32 @@ main {
     setItems(items);
   }
 
+  function renderHistCal(calId, takenPrefix) {
+    const cal = document.getElementById(calId);
+    if (!cal) return;
+    const currentItems = getItems();
+    const n = currentItems.length;
+    const todayStr = getActiveDate();
+    const dots = [];
+    for (let i = 6; i >= 1; i--) {
+      const d = new Date(); d.setDate(d.getDate() - i);
+      const dateStr = d.toISOString().slice(0, 10);
+      if (dateStr === todayStr) continue;
+      let cls = 'hh-dot ';
+      if (n === 0) {
+        cls += 'hh-empty';
+      } else {
+        let taken;
+        try { taken = JSON.parse(localStorage.getItem(takenPrefix + dateStr) || '{}'); } catch (e) { taken = {}; }
+        const takenCount = currentItems.filter(item => taken[item.id]).length;
+        cls += takenCount === 0 ? 'hh-empty' : takenCount === n ? 'hh-done' : 'hh-partial';
+      }
+      const dows = ['zo','ma','di','wo','do','vr','za'];
+      dots.push('<div class="' + cls + '" title="' + dows[d.getDay()] + ' ' + d.getDate() + '/' + (d.getMonth()+1) + '"></div>');
+    }
+    cal.innerHTML = dots.join('');
+  }
+
   function render() {
     const items = getItems();
     const taken = getTaken();
@@ -1162,6 +1200,7 @@ main {
       `${takenCount} / ${totalCount} taken today · resets at 6 AM`;
     const pct = totalCount === 0 ? 0 : (takenCount / totalCount) * 100;
     document.getElementById('stackProgressBar').style.width = pct + '%';
+    renderHistCal('stackHistCal', 'stack:taken:');
 
     const groupsEl = document.getElementById('stackGroups');
     groupsEl.innerHTML = '';
@@ -1621,6 +1660,32 @@ main {
     return String(str).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   }
 
+  function renderSkinHistCal() {
+    const cal = document.getElementById('skinHistCal');
+    if (!cal) return;
+    const currentItems = getItems();
+    const n = currentItems.length;
+    const todayStr = getActiveDate();
+    const dots = [];
+    for (let i = 6; i >= 1; i--) {
+      const d = new Date(); d.setDate(d.getDate() - i);
+      const dateStr = d.toISOString().slice(0, 10);
+      if (dateStr === todayStr) continue;
+      let cls = 'hh-dot ';
+      if (n === 0) {
+        cls += 'hh-empty';
+      } else {
+        let taken;
+        try { taken = JSON.parse(localStorage.getItem('skin:taken:' + dateStr) || '{}'); } catch (e) { taken = {}; }
+        const takenCount = currentItems.filter(item => taken[item.id]).length;
+        cls += takenCount === 0 ? 'hh-empty' : takenCount === n ? 'hh-done' : 'hh-partial';
+      }
+      const dows = ['zo','ma','di','wo','do','vr','za'];
+      dots.push('<div class="' + cls + '" title="' + dows[d.getDay()] + ' ' + d.getDate() + '/' + (d.getMonth()+1) + '"></div>');
+    }
+    cal.innerHTML = dots.join('');
+  }
+
   function render() {
     const items  = getItems();
     const taken  = getTaken();
@@ -1630,6 +1695,7 @@ main {
       `${takenCount} / ${items.length} done today · resets at 6 AM`;
     const pct = items.length === 0 ? 0 : (takenCount / items.length) * 100;
     document.getElementById('skinProgressBar').style.width = pct + '%';
+    renderSkinHistCal();
 
     const groupsEl = document.getElementById('skinGroups');
     groupsEl.innerHTML = '';
