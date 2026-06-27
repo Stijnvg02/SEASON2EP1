@@ -979,7 +979,7 @@ html, body {
     const targetUnits = Math.ceil(calc.total / uVol);
     const ml = todayMl();
     const count = ml / uVol;
-    const countDisp = Number.isInteger(count) ? count : count.toFixed(1);
+    const countDisp = count.toFixed(1);
     const unitName = unitLabelPlural();
 
     $('waterUnitLabel').textContent = unitName.toUpperCase() + ' DRANK TODAY';
