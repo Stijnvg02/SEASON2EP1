@@ -723,6 +723,8 @@ body::after { content: ""; display: none; }
       'whoop_tokens_v1', 'whoop_last_sync', 'whoop_access', 'whoop_refresh', 'whoop_expires',
       // Finance
       'nw_currency', 'subs', 'incoming_orders', 'wishlist', 'finance_active_tab',
+      // Goals / main
+      'goal_streak_v1', 'po_day_times',
       // Home profile
       'po_profile_v1',
     ];
@@ -732,7 +734,7 @@ body::after { content: ""; display: none; }
     Object.keys(localStorage)
       .filter(k =>
         k.startsWith('stack:taken:') || k.startsWith('skin:taken:') ||
-        k.startsWith('nw:')
+        k.startsWith('nw:') || k.startsWith('tpl:')
       )
       .forEach(k => localStorage.removeItem(k));
     // Reload to fresh state
