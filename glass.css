@@ -625,7 +625,6 @@ html, body {
     0 20px 48px rgba(0,0,0,0.06),
     inset 0 1px 0 rgba(255,255,255,0.9),
     inset 0 -1px 0 rgba(255,255,255,0.2) !important;
-  isolation: isolate !important;
   overflow: visible !important;
   position: relative !important;
 }

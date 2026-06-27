@@ -1421,9 +1421,11 @@ main {
     if (!q.trim() || matches.length === 0) {
       resultsEl.hidden = true;
       resultsEl.innerHTML = '';
+      resultsEl.closest('.stack-card').style.zIndex = '';
       return;
     }
     resultsEl.hidden = false;
+    resultsEl.closest('.stack-card').style.zIndex = '10';
     resultsEl.innerHTML = matches.map(s => {
       const winMeta = STACK_WINDOWS.find(w => w.key === s.window) || STACK_WINDOWS[3];
       return `
@@ -1446,7 +1448,10 @@ main {
   });
 
   document.addEventListener('click', (e) => {
-    if (!e.target.closest('.stack-name-wrap')) resultsEl.hidden = true;
+    if (!e.target.closest('.stack-name-wrap')) {
+      resultsEl.hidden = true;
+      resultsEl.closest('.stack-card').style.zIndex = '';
+    }
   });
 
   resultsEl.addEventListener('click', (e) => {
@@ -1830,8 +1835,9 @@ main {
 
   function renderSearchResults(q) {
     const matches = searchProducts(q);
-    if (!q.trim() || !matches.length) { resultsEl.hidden = true; resultsEl.innerHTML = ''; return; }
+    if (!q.trim() || !matches.length) { resultsEl.hidden = true; resultsEl.innerHTML = ''; resultsEl.closest('.stack-card').style.zIndex = ''; return; }
     resultsEl.hidden = false;
+    resultsEl.closest('.stack-card').style.zIndex = '10';
     resultsEl.innerHTML = matches.map(s => {
       const winMeta = SKIN_WINDOWS.find(w => w.key === s.window) || SKIN_WINDOWS[3];
       return `<button class="stack-result" data-name="${escapeHtml(s.name)}" data-dose="${escapeHtml(s.step)}" data-window="${s.window}" data-note="${escapeHtml(s.note)}">
@@ -1846,7 +1852,10 @@ main {
   nameInput.addEventListener('input', () => { renderSearchResults(nameInput.value); pendingNote = ''; });
   nameInput.addEventListener('focus', () => { if (nameInput.value.trim()) renderSearchResults(nameInput.value); });
   document.addEventListener('click', (e) => {
-    if (!e.target.closest('.stack-name-wrap')) resultsEl.hidden = true;
+    if (!e.target.closest('.stack-name-wrap')) {
+      resultsEl.hidden = true;
+      resultsEl.closest('.stack-card').style.zIndex = '';
+    }
   });
   resultsEl.addEventListener('click', (e) => {
     const btn = e.target.closest('.stack-result');
