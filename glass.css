@@ -328,7 +328,41 @@ html, body {
   animation-delay: 1s !important;
 }
 
-/* ── 20. Fallback for old browsers ── */
+/* ── 20. Gym next-session card — moving glass gloss ── */
+@keyframes rx-gloss {
+  0%   { transform: translateX(-120%); }
+  100% { transform: translateX(250%); }
+}
+
+.po-rx-card {
+  overflow: hidden !important;
+  border: 1px solid rgba(255,255,255,0.30) !important;
+  border-top-color: rgba(255,255,255,0.55) !important;
+  box-shadow:
+    0 6px 22px rgba(59,130,246,0.35),
+    inset 0 1px 0 rgba(255,255,255,0.38) !important;
+}
+
+.po-rx-card::after {
+  content: '' !important;
+  position: absolute !important;
+  inset: 0 !important;
+  width: 50% !important;
+  background: linear-gradient(
+    105deg,
+    transparent 15%,
+    rgba(255,255,255,0.18) 40%,
+    rgba(255,255,255,0.32) 50%,
+    rgba(255,255,255,0.18) 60%,
+    transparent 85%
+  ) !important;
+  animation: rx-gloss 3.5s ease-in-out infinite !important;
+  pointer-events: none !important;
+  z-index: 1 !important;
+  border-radius: inherit !important;
+}
+
+/* ── 21. Fallback for old browsers ── */
 @supports not (backdrop-filter: blur(1px)) {
   .card, .nw-subcard, .nw-chart-wrap, .nw-donut-wrap, .nw-activity-wrap,
   .stack-item, .sub-row, .water-timing-card {
