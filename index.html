@@ -399,6 +399,22 @@ body::after { content: ""; display: none; }
 
     <div class="section-divider"></div>
 
+    <label class="field-label">Backup</label>
+    <div style="display:flex; gap:8px; margin-top:8px;">
+      <button type="button" id="globalExport"
+        style="flex:1; padding:11px; border-radius:12px; border:1.5px solid rgba(0,0,0,0.12); background:transparent; color:#1A1A1A; font-family:inherit; font-size:13.5px; font-weight:600; cursor:pointer;">
+        Export alles
+      </button>
+      <button type="button" id="globalImport"
+        style="flex:1; padding:11px; border-radius:12px; border:1.5px solid rgba(0,0,0,0.12); background:transparent; color:#1A1A1A; font-family:inherit; font-size:13.5px; font-weight:600; cursor:pointer;">
+        Importeer backup
+      </button>
+    </div>
+    <input type="file" id="globalImportFile" accept=".json" style="display:none">
+    <div id="backupStatus" style="text-align:center; font-size:12px; color:#3EC98A; min-height:16px; margin-top:6px;"></div>
+
+    <div class="section-divider"></div>
+
     <label class="field-label">WHOOP</label>
     <div class="whoop-box">
       <div class="whoop-row">
@@ -747,6 +763,66 @@ body::after { content: ""; display: none; }
       .forEach(k => localStorage.removeItem(k));
     // Reload to fresh state
     location.reload();
+  });
+
+  // ── Global backup export / import ──
+  function collectAllData() {
+    const prefixes = ['stack:taken:', 'skin:taken:', 'nw:', 'tpl:', 'goals:'];
+    const out = {};
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i);
+      if (!k) continue;
+      // always include any key that belongs to any page
+      const include =
+        prefixes.some(p => k.startsWith(p)) ||
+        ['po_water_v1','water_weather','stack:items','stack:low','skin:items','skin:low',
+         'caf:logs','caf:custom','po_coach_v1','po_coach_workout_done','po_coach_weights',
+         'po_coach_photos','whoop_tokens_v1','whoop_last_sync','whoop_access','whoop_refresh',
+         'whoop_expires','nw_currency','subs','incoming_orders','wishlist','finance_active_tab',
+         'goal_streak_v1','po_day_times','goals_grid_v1','po_profile_v1'].includes(k);
+      if (include) {
+        try { out[k] = JSON.parse(localStorage.getItem(k)); } catch (e) { out[k] = localStorage.getItem(k); }
+      }
+    }
+    return out;
+  }
+
+  $('globalExport').addEventListener('click', () => {
+    const data = collectAllData();
+    const json = JSON.stringify(data, null, 2);
+    const blob = new Blob([json], { type: 'application/json' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href = url;
+    a.download = 'dashboard-backup-' + new Date().toISOString().slice(0, 10) + '.json';
+    a.click();
+    URL.revokeObjectURL(url);
+    $('backupStatus').textContent = 'Export klaar — ' + Object.keys(data).length + ' sleutels opgeslagen.';
+    setTimeout(() => { $('backupStatus').textContent = ''; }, 3000);
+  });
+
+  $('globalImport').addEventListener('click', () => $('globalImportFile').click());
+  $('globalImportFile').addEventListener('change', e => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      try {
+        const data = JSON.parse(ev.target.result);
+        if (typeof data !== 'object' || Array.isArray(data)) throw new Error('Ongeldig formaat');
+        Object.entries(data).forEach(([k, v]) => {
+          localStorage.setItem(k, typeof v === 'string' ? v : JSON.stringify(v));
+        });
+        $('backupStatus').textContent = 'Importeer geslaagd — pagina herladen…';
+        setTimeout(() => location.reload(), 800);
+      } catch (err) {
+        $('backupStatus').style.color = '#EF4444';
+        $('backupStatus').textContent = 'Ongeldige backup: ' + err.message;
+        setTimeout(() => { $('backupStatus').textContent = ''; $('backupStatus').style.color = '#3EC98A'; }, 4000);
+      }
+    };
+    reader.readAsText(file);
+    e.target.value = '';
   });
 })();
 </script>
