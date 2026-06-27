@@ -179,7 +179,7 @@ main {
 
 .stack-item {
   display: grid;
-  grid-template-columns: 28px 32px 1fr auto auto;
+  grid-template-columns: 32px 1fr auto auto;
   gap: 10px;
   align-items: center;
   padding: 10px 12px;
@@ -190,6 +190,7 @@ main {
   box-shadow: 0 4px 14px rgba(59,130,246,0.30), 0 0 0 1px rgba(96,165,250,0.20);
   transition: opacity 0.2s, box-shadow 0.2s;
 }
+.stack-item.has-icon { grid-template-columns: 28px 32px 1fr auto auto; }
 .stack-item-icon { font-size: 16px; text-align: center; flex-shrink: 0; }
 .stack-item:hover { box-shadow: 0 6px 20px rgba(59,130,246,0.40), 0 0 0 1px rgba(96,165,250,0.30); }
 .stack-item.taken {
@@ -494,8 +495,10 @@ main {
 @media (max-width: 600px) {
   main { padding: 40px 16px 60px; }
   .stack-card { padding: 18px 16px 14px; }
-  .stack-item { grid-template-columns: 24px 28px 1fr auto; gap: 8px; }
-  .stack-item .stack-low-btn { grid-column: 3 / 5; margin-top: 4px; justify-self: start; }
+  .stack-item { grid-template-columns: 32px 1fr auto; gap: 8px; }
+  .stack-item.has-icon { grid-template-columns: 24px 28px 1fr auto; }
+  .stack-item .stack-low-btn { grid-column: 2 / 4; margin-top: 4px; justify-self: start; }
+  .stack-item.has-icon .stack-low-btn { grid-column: 3 / 5; }
   .stack-add-row { grid-template-columns: 1fr 1fr; }
   .stack-add-row .stack-add-btn { grid-column: 1 / -1; }
   .stack-add-row .stack-select { grid-column: 1 / -1; }
@@ -1131,7 +1134,7 @@ main {
     setLow(getLow().filter(x => x !== id));
     render();
   }
-  function addItem(name, dose, windowKey, note = '', icon = '💊') {
+  function addItem(name, dose, windowKey, note = '', icon = '') {
     const v = String(name || '').trim();
     if (!v) return;
     const items = getItems();
@@ -1141,7 +1144,7 @@ main {
       dose: String(dose || '').trim(),
       window: ['morning','lunch','evening','anytime'].includes(windowKey) ? windowKey : 'anytime',
       note: String(note || '').trim(),
-      icon: String(icon || '💊'),
+      icon: String(icon || ''),
       tag: null, ordered: true
     });
     setItems(items);
@@ -1193,14 +1196,15 @@ main {
         const isMissed = !isTaken && isPastCutoff;
 
         const row = document.createElement('div');
-        row.className = 'stack-item' + (isTaken ? ' taken' : '') + (isMissed ? ' missed' : '');
+        const hasIcon = !!item.icon;
+        row.className = 'stack-item' + (isTaken ? ' taken' : '') + (isMissed ? ' missed' : '') + (hasIcon ? ' has-icon' : '');
 
         let tagHtml = '';
         if (item.tag === 'stack') tagHtml = '<span class="stack-item-tag tag-stack">stack</span>';
         else if (item.tag === 'not-ordered') tagHtml = '<span class="stack-item-tag tag-not-ordered">not ordered</span>';
 
         row.innerHTML = `
-          <span class="stack-item-icon">${escapeHtml(item.icon || '💊')}</span>
+          ${hasIcon ? `<span class="stack-item-icon">${escapeHtml(item.icon)}</span>` : ''}
           <button class="stack-check ${isTaken ? 'checked' : ''}" data-action="toggle" data-id="${item.id}" aria-label="Mark taken">${isTaken ? '✓' : ''}</button>
           <div class="stack-item-body">
             <div class="stack-item-name" data-edit="name" data-id="${item.id}">
