@@ -40,15 +40,12 @@ body.has-topbar {
   display: flex; align-items: stretch;
   position: relative; overflow: hidden;
   border-radius: 12px;
-  background: rgba(99,155,255,0.20);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid rgba(255,255,255,0.78);
-  border-bottom-color: rgba(255,255,255,0.35);
-  border-right-color: rgba(255,255,255,0.35);
+  background: linear-gradient(135deg, #3B82F6, #60A5FA);
+  border: 1px solid rgba(255,255,255,0.40);
+  border-top-color: rgba(255,255,255,0.65);
   box-shadow:
-    0 4px 14px rgba(59,130,246,0.15),
-    inset 0 1px 0 rgba(255,255,255,0.90);
+    0 4px 16px rgba(59,130,246,0.40),
+    inset 0 1px 0 rgba(255,255,255,0.45);
 }
 
 /* Single shimmer across the whole pill */
@@ -91,8 +88,8 @@ body.has-topbar {
 .topbar-water-emoji {
   display: flex; align-items: center; justify-content: center;
   width: 40px;
-  background: rgba(59,130,246,0.12);
-  border-left: 1px solid rgba(255,255,255,0.45);
+  background: rgba(0,0,0,0.10);
+  border-left: 1px solid rgba(255,255,255,0.30);
   border-radius: 0;
   font-size: 18px; line-height: 1;
   text-decoration: none;
@@ -111,7 +108,7 @@ body.has-topbar {
 .topbar-pill-count {
   font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
   font-size: 13px; font-weight: 700;
-  color: rgba(0,0,0,0.75);
+  color: #FFFFFF;
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
