@@ -194,7 +194,7 @@ main {
 .stack-item-icon { font-size: 16px; text-align: center; flex-shrink: 0; }
 .stack-item:hover { box-shadow: 0 6px 20px rgba(59,130,246,0.40), 0 0 0 1px rgba(96,165,250,0.30); }
 .stack-item.taken {
-  opacity: 0.55;
+  background: linear-gradient(135deg, #1D4ED8, #2563EB);
   box-shadow: none;
 }
 .stack-item.taken .stack-item-name { text-decoration: line-through; color: rgba(255,255,255,0.70); }
@@ -392,7 +392,7 @@ main {
 .stack-add-label { margin-bottom: 10px; }
 .stack-add-row {
   display: grid;
-  grid-template-columns: 1fr 1fr 110px 90px;
+  grid-template-columns: 1fr 120px;
   gap: 6px;
   align-items: center;
 }
@@ -499,9 +499,7 @@ main {
   .stack-item.has-icon { grid-template-columns: 24px 28px 1fr auto; }
   .stack-item .stack-low-btn { grid-column: 2 / 4; margin-top: 4px; justify-self: start; }
   .stack-item.has-icon .stack-low-btn { grid-column: 3 / 5; }
-  .stack-add-row { grid-template-columns: 1fr 1fr; }
-  .stack-add-row .stack-add-btn { grid-column: 1 / -1; }
-  .stack-add-row .stack-select { grid-column: 1 / -1; }
+  .stack-add-row { grid-template-columns: 1fr 100px; }
   .stack-search-results { width: 100%; }
 }
 
@@ -923,17 +921,15 @@ main {
       <div class="sf-eyebrow stack-add-label">Add to stack</div>
       <div class="stack-add-row">
         <div class="stack-name-wrap">
-          <input id="stackAddName" type="text" placeholder="Name (e.g. B-complex)" class="stack-input" autocomplete="off" spellcheck="false" />
+          <input id="stackAddName" type="text" placeholder="Search supplement…" class="stack-input" autocomplete="off" spellcheck="false" />
           <div id="stackSearchResults" class="stack-search-results" hidden></div>
         </div>
-        <input id="stackAddDose" type="text" placeholder="Dose (e.g. 1 cap)" class="stack-input" />
         <select id="stackAddWindow" class="stack-input stack-select">
           <option value="morning">Morning</option>
           <option value="lunch">Lunch</option>
           <option value="evening">Evening</option>
           <option value="anytime">Anytime</option>
         </select>
-        <button id="stackAddBtn" class="stack-add-btn">+ Add</button>
       </div>
     </div>
   </div>
@@ -1401,12 +1397,10 @@ main {
 
   // ====== ADD FORM + SEARCH AUTOCOMPLETE ======
   const nameInput = document.getElementById('stackAddName');
-  const doseInput = document.getElementById('stackAddDose');
   const winSelect = document.getElementById('stackAddWindow');
-  const addBtn = document.getElementById('stackAddBtn');
   const resultsEl = document.getElementById('stackSearchResults');
 
-  let pendingNote = ''; // hidden note auto-filled when a DB result is selected
+  let pendingNote = '';
 
   function searchSupplements(q) {
     const query = q.toLowerCase().trim();
@@ -1471,27 +1465,12 @@ main {
     nameInput.focus();
   });
 
-  addBtn.addEventListener('click', () => {
-    addItem(nameInput.value, doseInput.value, winSelect.value, pendingNote);
-    nameInput.value = '';
-    doseInput.value = '';
-    pendingNote = '';
-    resultsEl.hidden = true;
-    nameInput.focus();
-  });
-
-  [nameInput, doseInput].forEach(i => {
-    i.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
-        // If search dropdown is open with matches, pick the first one
-        if (!resultsEl.hidden && i === nameInput) {
-          const firstResult = resultsEl.querySelector('.stack-result');
-          if (firstResult) { e.preventDefault(); firstResult.click(); return; }
-        }
-        addBtn.click();
-      }
-      if (e.key === 'Escape') resultsEl.hidden = true;
-    });
+  nameInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !resultsEl.hidden) {
+      const firstResult = resultsEl.querySelector('.stack-result');
+      if (firstResult) { e.preventDefault(); firstResult.click(); }
+    }
+    if (e.key === 'Escape') { resultsEl.hidden = true; resultsEl.closest('.stack-card').style.zIndex = ''; }
   });
 
   setInterval(() => {
