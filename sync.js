@@ -125,6 +125,7 @@
         );
         if (!error) {
           lastSyncedJson = json;
+          try { origSet('__sync_last:' + appKey, String(Date.now())); } catch (e) {}
           // Signal other devices via Broadcast — no table replication needed.
           if (broadcastChannel) {
             broadcastChannel.send({ type: 'broadcast', event: 'updated', payload: {} })
@@ -172,6 +173,7 @@
           const incoming = JSON.stringify(data.data);
           if (incoming !== lastSyncedJson) {
             lastSyncedJson = incoming;
+            try { origSet('__sync_last:' + appKey, String(Date.now())); } catch (e) {}
             applyRemote(data.data);
           }
         }

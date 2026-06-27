@@ -352,6 +352,10 @@ body::after { content: ""; display: none; }
       <span class="modal-title">Your Data</span>
       <button class="modal-close" id="settingsClose" type="button" aria-label="Close">×</button>
     </div>
+    <div id="syncStatusBar" style="display:flex; align-items:center; gap:6px; margin-bottom:14px; font-size:11.5px; color:#AAAAAA; font-weight:500;">
+      <span id="syncDot" style="width:7px; height:7px; border-radius:50%; background:#CCCCCC; flex-shrink:0;"></span>
+      <span id="syncStatusText">Sync status onbekend</span>
+    </div>
 
     <div class="field">
       <label class="field-label">Height</label>
@@ -544,7 +548,32 @@ body::after { content: ""; display: none; }
   }
 
   /* ---------- open / close ---------- */
-  function open() { populate(); renderWhoop(); $('settingsBg').classList.add('show'); syncWhoop(); }
+  function renderSyncStatus() {
+    let latest = 0;
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i);
+      if (k && k.startsWith('__sync_last:')) {
+        const t = parseInt(localStorage.getItem(k)) || 0;
+        if (t > latest) latest = t;
+      }
+    }
+    const dot = $('syncDot');
+    const txt = $('syncStatusText');
+    if (!latest) {
+      dot.style.background = '#CCCCCC';
+      txt.textContent = 'Nog niet gesynchroniseerd';
+      return;
+    }
+    const diff = Math.floor((Date.now() - latest) / 1000);
+    let label;
+    if (diff < 60)        label = 'Zojuist gesynchroniseerd';
+    else if (diff < 3600) label = 'Gesynchroniseerd ' + Math.floor(diff / 60) + ' min geleden';
+    else                  label = 'Gesynchroniseerd ' + Math.floor(diff / 3600) + ' uur geleden';
+    dot.style.background = diff < 600 ? '#3EC98A' : diff < 3600 ? '#F2C063' : '#FF6B6B';
+    txt.textContent = label;
+  }
+
+  function open() { populate(); renderWhoop(); renderSyncStatus(); $('settingsBg').classList.add('show'); syncWhoop(); }
   function close() { $('settingsBg').classList.remove('show'); }
   $('settingsOpen').addEventListener('click', open);
   $('settingsClose').addEventListener('click', close);
