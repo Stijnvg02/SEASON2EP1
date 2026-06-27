@@ -455,7 +455,7 @@ body::after { content: ""; display: none; }
 <div class="confirm-bg" id="confirmBg">
   <div class="confirm-box">
     <div class="confirm-title">Alles resetten?</div>
-    <div class="confirm-sub">Dit wist alle ingevoerde waarden van alle pagina's — supplementen, huidverzorging, cafeïne, water, gym en profiel. Je start opnieuw als een nieuw account. Dit kan niet ongedaan worden gemaakt.</div>
+    <div class="confirm-sub">Dit wist alle data van alle pagina's — supplementen, huidverzorging, cafeïne, water, gym, doelen en profiel. Je start volledig opnieuw en het welkomstscherm verschijnt weer. Dit kan niet ongedaan worden gemaakt.</div>
     <div class="confirm-actions">
       <button class="confirm-cancel" id="confirmCancel">Annuleren</button>
       <button class="confirm-ok" id="confirmOk">Ja, reset alles</button>
@@ -873,6 +873,8 @@ body::after { content: ""; display: none; }
       'goal_streak_v1', 'po_day_times', 'goals_grid_v1',
       // Home profile
       'po_profile_v1',
+      // Onboarding — reset so new user sees welcome screen
+      'onboarded_v1',
     ];
     // Remove fixed keys
     keysToRemove.forEach(k => localStorage.removeItem(k));
@@ -880,7 +882,8 @@ body::after { content: ""; display: none; }
     Object.keys(localStorage)
       .filter(k =>
         k.startsWith('stack:taken:') || k.startsWith('skin:taken:') ||
-        k.startsWith('nw:') || k.startsWith('tpl:')
+        k.startsWith('nw:') || k.startsWith('tpl:') ||
+        k.startsWith('goals:') || k.startsWith('__sync_last:')
       )
       .forEach(k => localStorage.removeItem(k));
     // Reload to fresh state
