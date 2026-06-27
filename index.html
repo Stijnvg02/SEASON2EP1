@@ -424,6 +424,17 @@ body::after { content: ""; display: none; }
 
     <div class="section-divider"></div>
 
+    <label class="field-label">Notificaties</label>
+    <div style="margin-top:8px;">
+      <button type="button" id="notifSubscribeBtn"
+        style="width:100%; padding:11px; border-radius:12px; border:1.5px solid rgba(0,0,0,0.12); background:transparent; color:#1A1A1A; font-family:inherit; font-size:13.5px; font-weight:600; cursor:pointer;">
+        Zet notificaties aan
+      </button>
+      <div id="notifStatus" style="text-align:center; font-size:11.5px; color:#AAAAAA; min-height:16px; margin-top:6px;"></div>
+    </div>
+
+    <div class="section-divider"></div>
+
     <label class="field-label">WHOOP</label>
     <div class="whoop-box">
       <div class="whoop-row">
@@ -603,7 +614,59 @@ body::after { content: ""; display: none; }
     txt.textContent = label;
   }
 
-  function open() { populate(); renderWhoop(); renderSyncStatus(); $('settingsBg').classList.add('show'); syncWhoop(); }
+  // ── Push notification subscription ──
+  const VAPID_PUBLIC = (typeof window !== 'undefined' && window.DASH_VAPID_PUBLIC) || '';
+  async function setupNotifBtn() {
+    const btn = $('notifSubscribeBtn');
+    const status = $('notifStatus');
+    if (!btn) return;
+    if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+      btn.disabled = true;
+      btn.textContent = 'Notificaties niet ondersteund';
+      return;
+    }
+    if (!VAPID_PUBLIC) {
+      btn.disabled = true;
+      btn.textContent = 'VAPID sleutel niet ingesteld';
+      status.textContent = 'Voeg VAPID_PUBLIC_KEY toe aan Vercel env vars.';
+      return;
+    }
+    const perm = Notification.permission;
+    if (perm === 'granted') {
+      btn.textContent = 'Notificaties aan ✓';
+      btn.style.borderColor = 'rgba(62,201,138,0.5)';
+      btn.style.color = '#3EC98A';
+    } else if (perm === 'denied') {
+      btn.disabled = true;
+      btn.textContent = 'Notificaties geweigerd';
+      status.textContent = 'Sta notificaties toe in browserinstellingen.';
+    }
+    btn.addEventListener('click', async function () {
+      try {
+        const perm = await Notification.requestPermission();
+        if (perm !== 'granted') { status.textContent = 'Toestemming geweigerd.'; return; }
+        const reg = await navigator.serviceWorker.ready;
+        const sub = await reg.pushManager.subscribe({
+          userVisibleOnly: true,
+          applicationServerKey: VAPID_PUBLIC
+        });
+        await fetch('/api/push-subscribe', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ subscription: sub.toJSON() })
+        });
+        btn.textContent = 'Notificaties aan ✓';
+        btn.style.borderColor = 'rgba(62,201,138,0.5)';
+        btn.style.color = '#3EC98A';
+        status.textContent = 'Ingesteld — je ontvangt nu herinneringen.';
+        setTimeout(() => { status.textContent = ''; }, 4000);
+      } catch (err) {
+        status.textContent = 'Fout: ' + err.message;
+      }
+    });
+  }
+
+  function open() { populate(); renderWhoop(); renderSyncStatus(); setupNotifBtn(); $('settingsBg').classList.add('show'); syncWhoop(); }
   function close() { $('settingsBg').classList.remove('show'); }
   $('settingsOpen').addEventListener('click', open);
   $('settingsClose').addEventListener('click', close);

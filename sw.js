@@ -18,6 +18,25 @@ self.addEventListener('activate', e => {
   );
 });
 
+self.addEventListener('push', e => {
+  let data = { title: 'Dashboard', body: 'Je hebt een herinnering.', url: '/' };
+  try { if (e.data) data = JSON.parse(e.data.text()); } catch (_) {}
+  e.waitUntil(
+    self.registration.showNotification(data.title, {
+      body: data.body,
+      icon: '/icon.svg',
+      badge: '/icon.svg',
+      data: { url: data.url },
+    })
+  );
+});
+
+self.addEventListener('notificationclick', e => {
+  e.notification.close();
+  const url = (e.notification.data && e.notification.data.url) || '/';
+  e.waitUntil(clients.openWindow(url));
+});
+
 self.addEventListener('fetch', e => {
   if (e.request.method !== 'GET') return;
   const url = new URL(e.request.url);
