@@ -179,21 +179,22 @@ main {
 
 .stack-item {
   display: grid;
-  grid-template-columns: 32px 1fr auto auto;
+  grid-template-columns: 28px 32px 1fr auto auto;
   gap: 10px;
   align-items: center;
   padding: 10px 12px;
   border-radius: 10px;
-  background: var(--bg-secondary);
-  margin-bottom: 6px;
-  border: 1px solid transparent;
-  transition: background 0.2s, border-color 0.2s;
-}
-.stack-item:hover { background: rgba(0,0,0,0.03); }
-.stack-item.taken {
   background: linear-gradient(135deg, #3B82F6, #60A5FA);
-  border-color: transparent;
-  box-shadow: 0 4px 18px rgba(59,130,246,0.35), 0 0 0 1px rgba(96,165,250,0.25);
+  margin-bottom: 6px;
+  border: none;
+  box-shadow: 0 4px 14px rgba(59,130,246,0.30), 0 0 0 1px rgba(96,165,250,0.20);
+  transition: opacity 0.2s, box-shadow 0.2s;
+}
+.stack-item-icon { font-size: 16px; text-align: center; flex-shrink: 0; }
+.stack-item:hover { box-shadow: 0 6px 20px rgba(59,130,246,0.40), 0 0 0 1px rgba(96,165,250,0.30); }
+.stack-item.taken {
+  opacity: 0.55;
+  box-shadow: none;
 }
 .stack-item.taken .stack-item-name { text-decoration: line-through; color: rgba(255,255,255,0.70); }
 .stack-item.taken .stack-item-meta { color: rgba(255,255,255,0.65); }
@@ -221,15 +222,15 @@ main {
 .stack-check {
   width: 28px; height: 28px;
   border-radius: 50%;
-  border: 2px solid var(--border-strong);
-  background: #FFFFFF;
+  border: 2px solid rgba(255,255,255,0.55);
+  background: rgba(255,255,255,0.20);
   cursor: pointer;
   display: flex; align-items: center; justify-content: center;
   font-size: 14px; color: transparent;
   transition: all 0.2s;
   flex-shrink: 0; font-family: inherit; padding: 0;
 }
-.stack-check:hover { border-color: var(--accent); }
+.stack-check:hover { border-color: rgba(255,255,255,0.90); background: rgba(255,255,255,0.30); }
 .stack-check.checked {
   background: #FFFFFF; border-color: #FFFFFF;
   color: #1D9E75;
@@ -239,28 +240,28 @@ main {
 .stack-item-body { min-width: 0; }
 .stack-item-name {
   font-size: 14px; font-weight: 600;
-  color: #1A1A1A;
+  color: #FFFFFF;
   line-height: 1.2;
   display: inline-flex; align-items: center;
   gap: 8px; flex-wrap: wrap;
   outline: none;
 }
 .stack-item-name[contenteditable="true"] {
-  outline: 1px solid rgba(0,0,0,0.18);
+  outline: 1px solid rgba(255,255,255,0.40);
   outline-offset: 4px; border-radius: 4px;
 }
 .stack-item-meta {
-  font-size: 11px; color: #AAAAAA;
+  font-size: 11px; color: rgba(255,255,255,0.75);
   margin-top: 2px; outline: none; cursor: text;
 }
 .stack-item-meta[contenteditable="true"] {
-  outline: 1px solid rgba(0,0,0,0.18);
+  outline: 1px solid rgba(255,255,255,0.40);
   outline-offset: 4px; border-radius: 4px;
-  color: #8A8A8A;
+  color: rgba(255,255,255,0.85);
 }
 .stack-item-meta:empty::before {
   content: 'add notes…';
-  color: var(--text-quaternary);
+  color: rgba(255,255,255,0.40);
   font-style: italic;
 }
 
@@ -271,13 +272,13 @@ main {
   font-weight: 600; letter-spacing: 0.04em;
   text-transform: lowercase;
 }
-.stack-item-tag.tag-stack { background: var(--tag-stack-bg); color: var(--tag-stack); }
-.stack-item-tag.tag-not-ordered { background: var(--warning-bg); color: #AAAAAA; }
+.stack-item-tag.tag-stack { background: rgba(255,255,255,0.22); color: rgba(255,255,255,0.90); }
+.stack-item-tag.tag-not-ordered { background: rgba(255,255,255,0.15); color: rgba(255,255,255,0.65); }
 
 .stack-low-btn {
-  background: transparent;
-  border: 1px solid var(--border-strong);
-  color: #AAAAAA;
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.30);
+  color: rgba(255,255,255,0.75);
   font-size: 10px;
   padding: 5px 9px; border-radius: 6px;
   cursor: pointer;
@@ -287,17 +288,17 @@ main {
   display: inline-flex; align-items: center; gap: 4px;
   transition: all 0.15s;
 }
-.stack-low-btn:hover { border-color: rgba(163,45,45,0.4); color: var(--warning); }
+.stack-low-btn:hover { border-color: rgba(255,255,255,0.60); color: #FFFFFF; background: rgba(255,255,255,0.22); }
 .stack-low-btn.is-low {
-  background: var(--warning-bg);
-  border-color: rgba(163,45,45,0.4);
-  color: var(--warning);
+  background: rgba(255,255,255,0.25);
+  border-color: rgba(255,255,255,0.60);
+  color: #FFFFFF;
 }
 
 .stack-item-del {
   background: transparent;
-  border: 1px solid var(--border-strong);
-  color: #AAAAAA;
+  border: 1px solid rgba(255,255,255,0.30);
+  color: rgba(255,255,255,0.55);
   cursor: pointer;
   font-size: 16px;
   padding: 4px 10px; border-radius: 6px;
@@ -310,9 +311,9 @@ main {
 }
 .stack-item:hover .stack-item-del { opacity: 1; }
 .stack-item-del:hover, .stack-item-del:active {
-  color: #FF6B6B;
-  border-color: rgba(239, 68, 68, 0.45);
-  background: rgba(239, 68, 68, 0.08);
+  color: #FFFFFF;
+  border-color: rgba(255,255,255,0.60);
+  background: rgba(255,255,255,0.15);
   opacity: 1;
 }
 
@@ -444,47 +445,40 @@ main {
   top: calc(100% + 6px);
   left: 0;
   width: max(100%, 320px);
-  background: rgba(255, 255, 255, 0.88);
-  backdrop-filter: blur(20px) saturate(160%);
-  -webkit-backdrop-filter: blur(20px) saturate(160%);
-  border: 1px solid rgba(255, 255, 255, 0.78);
-  border-radius: 16px;
+  background: linear-gradient(135deg, #3B82F6, #60A5FA);
+  border: none;
+  border-radius: 12px;
   max-height: 280px;
   overflow-y: auto;
-  box-shadow: 0 8px 28px rgba(0,0,0,0.10), 0 2px 6px rgba(0,0,0,0.06);
+  box-shadow: 0 8px 28px rgba(59,130,246,0.45), 0 0 0 1px rgba(96,165,250,0.30);
   z-index: 50;
   padding: 6px;
 }
 .stack-search-results[hidden] { display: none; }
 
 .stack-result {
-  display: grid;
-  grid-template-columns: 32px 1fr;
-  gap: 10px;
-  align-items: center;
+  display: flex;
+  gap: 12px; align-items: center;
   width: 100%;
-  padding: 10px 12px;
-  background: rgba(0, 0, 0, 0.03);
-  border: 1px solid transparent;
-  border-radius: 10px;
-  margin-bottom: 4px;
+  padding: 9px 11px;
+  background: transparent; border: none;
+  border-radius: 8px;
   cursor: pointer;
   text-align: left;
   font-family: inherit;
-  color: #1A1A1A;
-  transition: background 0.12s, border-color 0.12s;
+  color: rgba(255,255,255,0.80);
+  transition: background 0.12s;
 }
-.stack-result:last-child { margin-bottom: 0; }
-.stack-result:hover, .stack-result.is-focused { background: rgba(0,0,0,0.06); border-color: rgba(0,0,0,0.06); }
+.stack-result:hover, .stack-result.is-focused { background: rgba(255,255,255,0.15); }
 
-.stack-result-icon { font-size: 17px; width: 32px; text-align: center; }
-.stack-result-body { min-width: 0; }
+.stack-result-icon { font-size: 17px; flex-shrink: 0; width: 24px; text-align: center; }
+.stack-result-body { min-width: 0; flex: 1; }
 .stack-result-name {
   font-size: 13px; font-weight: 600;
-  color: #1A1A1A; line-height: 1.2;
+  color: #FFFFFF; line-height: 1.2;
 }
 .stack-result-meta {
-  font-size: 11px; color: #888;
+  font-size: 11px; color: rgba(255,255,255,0.75);
   margin-top: 2px;
 }
 
@@ -500,8 +494,8 @@ main {
 @media (max-width: 600px) {
   main { padding: 40px 16px 60px; }
   .stack-card { padding: 18px 16px 14px; }
-  .stack-item { grid-template-columns: 28px 1fr auto; gap: 8px; }
-  .stack-item .stack-low-btn { grid-column: 2 / 4; margin-top: 4px; justify-self: start; }
+  .stack-item { grid-template-columns: 24px 28px 1fr auto; gap: 8px; }
+  .stack-item .stack-low-btn { grid-column: 3 / 5; margin-top: 4px; justify-self: start; }
   .stack-add-row { grid-template-columns: 1fr 1fr; }
   .stack-add-row .stack-add-btn { grid-column: 1 / -1; }
   .stack-add-row .stack-select { grid-column: 1 / -1; }
@@ -1137,7 +1131,7 @@ main {
     setLow(getLow().filter(x => x !== id));
     render();
   }
-  function addItem(name, dose, windowKey, note = '') {
+  function addItem(name, dose, windowKey, note = '', icon = '💊') {
     const v = String(name || '').trim();
     if (!v) return;
     const items = getItems();
@@ -1147,6 +1141,7 @@ main {
       dose: String(dose || '').trim(),
       window: ['morning','lunch','evening','anytime'].includes(windowKey) ? windowKey : 'anytime',
       note: String(note || '').trim(),
+      icon: String(icon || '💊'),
       tag: null, ordered: true
     });
     setItems(items);
@@ -1205,6 +1200,7 @@ main {
         else if (item.tag === 'not-ordered') tagHtml = '<span class="stack-item-tag tag-not-ordered">not ordered</span>';
 
         row.innerHTML = `
+          <span class="stack-item-icon">${escapeHtml(item.icon || '💊')}</span>
           <button class="stack-check ${isTaken ? 'checked' : ''}" data-action="toggle" data-id="${item.id}" aria-label="Mark taken">${isTaken ? '✓' : ''}</button>
           <div class="stack-item-body">
             <div class="stack-item-name" data-edit="name" data-id="${item.id}">
@@ -1436,7 +1432,7 @@ main {
     resultsEl.innerHTML = matches.map(s => {
       const winMeta = STACK_WINDOWS.find(w => w.key === s.window) || STACK_WINDOWS[3];
       return `
-        <button class="stack-result" data-name="${escapeHtml(s.name)}" data-dose="${escapeHtml(s.dose)}" data-window="${s.window}" data-note="${escapeHtml(s.note)}">
+        <button class="stack-result" data-name="${escapeHtml(s.name)}" data-dose="${escapeHtml(s.dose)}" data-window="${s.window}" data-note="${escapeHtml(s.note)}" data-icon="${escapeHtml(s.icon || '💊')}">
           <div class="stack-result-icon">${s.icon || '💊'}</div>
           <div class="stack-result-body">
             <div class="stack-result-name">${escapeHtml(s.name)}</div>
@@ -1464,12 +1460,11 @@ main {
   resultsEl.addEventListener('click', (e) => {
     const btn = e.target.closest('.stack-result');
     if (!btn) return;
-    nameInput.value = btn.dataset.name;
-    doseInput.value = btn.dataset.dose;
-    winSelect.value = btn.dataset.window;
-    pendingNote = btn.dataset.note;
+    addItem(btn.dataset.name, btn.dataset.dose, btn.dataset.window, btn.dataset.note, btn.dataset.icon);
+    nameInput.value = '';
     resultsEl.hidden = true;
-    addBtn.focus();
+    resultsEl.closest('.stack-card').style.zIndex = '';
+    nameInput.focus();
   });
 
   addBtn.addEventListener('click', () => {
