@@ -366,14 +366,10 @@ body::after { content: ""; display: none; }
     </div>
 
     <div class="field">
-      <label class="field-label">Weight</label>
-      <div class="field-row">
-        <input class="set-input" id="weight" type="number" min="0" inputmode="decimal" placeholder="weight">
-        <div class="seg" id="weightUnitSeg">
-          <button type="button" data-u="kg" class="on">kg</button>
-          <button type="button" data-u="lb">lb</button>
-        </div>
-      </div>
+      <label class="field-label">Weight <span style="font-size:10px;opacity:0.45;font-weight:400;letter-spacing:0">(synced from Fitness)</span></label>
+      <div id="weightFromFitness" style="padding:12px 14px;border-radius:12px;background:#F5F5F5;border:1px solid rgba(0,0,0,0.08);font-size:15px;font-weight:700;color:#1A1A1A;">—</div>
+      <div id="weightFromFitnessNote" style="font-size:11px;color:#AAAAAA;margin-top:5px;display:none">Nog geen gewicht gelogd in Fitness — log eerst een meting daar.</div>
+      <input type="hidden" id="weight">
     </div>
 
     <div class="field">
@@ -487,14 +483,32 @@ body::after { content: ""; display: none; }
   function populate() {
     const w = loadJSON(WATER_KEY, defaultWater());
     const p = w.profile || {};
-    setWeightUnit(w.weightUnit === 'lb' ? 'lb' : 'kg');
     setHeightUnit(p.heightUnit === 'ft' ? 'ft' : 'cm');
     setSex(p.sex === 'f' ? 'f' : 'm');
     fillHeight(p.heightCm || null);
-    if (p.weightKg) $('weight').value = weightUnit === 'lb' ? Math.round(p.weightKg * 2.20462) : Math.round(p.weightKg);
-    else $('weight').value = '';
     $('age').value = p.age || '';
     $('activity').value = (p.activityHrsPerWeek != null ? p.activityHrsPerWeek : '');
+
+    // Weight: read from fitness log (po_coach_weights), fall back to saved profile
+    try {
+      const entries = JSON.parse(localStorage.getItem('po_coach_weights') || '[]');
+      const gymState = JSON.parse(localStorage.getItem('po_coach_v1') || '{}');
+      const isLb = gymState.units === 'lb';
+      if (entries.length > 0) {
+        const last = entries[entries.length - 1];
+        const kg = isLb ? last.weight / 2.20462 : last.weight;
+        $('weight').value = kg;
+        $('weightFromFitness').textContent = last.weight.toFixed(1) + ' ' + (isLb ? 'lb' : 'kg') + '  ·  ' + last.dateKey;
+        $('weightFromFitnessNote').style.display = 'none';
+      } else {
+        $('weight').value = p.weightKg || '';
+        $('weightFromFitness').textContent = p.weightKg ? (p.weightKg.toFixed(1) + ' kg  ·  manueel') : '—';
+        $('weightFromFitnessNote').style.display = 'block';
+      }
+    } catch (e) {
+      $('weight').value = p.weightKg || '';
+      $('weightFromFitness').textContent = p.weightKg ? (p.weightKg.toFixed(1) + ' kg') : '—';
+    }
   }
 
   /* ---------- save back into po_water_v1 (merge, never overwrite logs) ---------- */
@@ -504,7 +518,7 @@ body::after { content: ""; display: none; }
     const cm = getHeightCm();
     if (cm) { w.profile.heightCm = cm; w.profile.heightUnit = heightUnit; }
     const wv = parseFloat($('weight').value);
-    if (wv > 0) { w.profile.weightKg = weightUnit === 'lb' ? +(wv / 2.20462).toFixed(1) : wv; w.weightUnit = weightUnit; }
+    if (wv > 0) { w.profile.weightKg = +wv.toFixed(2); }
     const age = parseInt($('age').value, 10); if (age > 0) w.profile.age = age;
     w.profile.sex = sex;
     const act = parseFloat($('activity').value); if (act >= 0 && !isNaN(act)) w.profile.activityHrsPerWeek = act;
@@ -523,12 +537,6 @@ body::after { content: ""; display: none; }
   $('settingsSave').addEventListener('click', save);
   $('heightUnitSeg').querySelectorAll('button').forEach(b => b.addEventListener('click', () => {
     const cm = getHeightCm(); setHeightUnit(b.dataset.u); fillHeight(cm);
-  }));
-  $('weightUnitSeg').querySelectorAll('button').forEach(b => b.addEventListener('click', () => {
-    const v = parseFloat($('weight').value);
-    const kg = v > 0 ? (weightUnit === 'lb' ? v / 2.20462 : v) : null;
-    setWeightUnit(b.dataset.u);
-    if (kg) $('weight').value = weightUnit === 'lb' ? Math.round(kg * 2.20462) : Math.round(kg);
   }));
   $('sexSeg').querySelectorAll('button').forEach(b => b.addEventListener('click', () => setSex(b.dataset.s)));
 

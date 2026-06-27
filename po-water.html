@@ -1168,7 +1168,7 @@ html, body {
 
   function renderWhy(calc, targetUnits) {
     const wrap = $('whyBody');
-    const wKg = getBodyWeightKg();
+    const wKg = getBodyWeightKg().kg;
     const u = state.weightUnit;
     const wDisp = u === 'lb' ? (wKg * 2.20462).toFixed(1) : wKg.toFixed(1);
     let html = '';
