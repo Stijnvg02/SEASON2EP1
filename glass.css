@@ -286,86 +286,46 @@ html, body {
   border-radius: inherit;
 }
 
-/* ── 18. Stack & skin ticker — subtler floating glow ── */
-@keyframes ticker-float {
-  0%, 100% {
-    box-shadow: 0 3px 12px rgba(244,91,139,0.28), 0 0 0px rgba(255,107,107,0.0);
-    filter: brightness(1.0) saturate(1.0);
-  }
-  50% {
-    box-shadow: 0 6px 22px rgba(244,91,139,0.48), 0 0 28px rgba(255,107,107,0.14);
-    filter: brightness(1.07) saturate(1.08);
-  }
-}
-@keyframes ticker-wave {
-  0%   { background-position: 0% 50%; }
-  50%  { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-.stack-ticker {
-  background: linear-gradient(135deg, #F45B8B, #ff7b8b, #FF6B6B, #F45B8B) !important;
-  background-size: 300% 100% !important;
-  animation: ticker-float 3s ease-in-out infinite, ticker-wave 6s ease-in-out infinite !important;
-  border: 1px solid rgba(255,255,255,0.28) !important;
-  border-top-color: rgba(255,255,255,0.50) !important;
-  box-shadow: 0 3px 12px rgba(244,91,139,0.28) !important;
-}
-
-/* Soft gloss pass — slow and wide so it reads as light, not flash */
+/* ── 18. Stack/skin/finance ticker — moving glass gloss ── */
 @keyframes ticker-gloss {
-  0%   { transform: translateX(-120%); opacity: 0; }
-  15%  { opacity: 1; }
-  85%  { opacity: 1; }
-  100% { transform: translateX(220%);  opacity: 0; }
-}
-.stack-ticker::after {
-  content: '' !important;
-  display: block !important;
-  position: absolute !important;
-  inset: 0 !important;
-  width: 55% !important;
-  background: linear-gradient(
-    105deg,
-    transparent 20%,
-    rgba(255,255,255,0.22) 45%,
-    rgba(255,255,255,0.28) 50%,
-    rgba(255,255,255,0.22) 55%,
-    transparent 80%
-  ) !important;
-  animation: ticker-gloss 4s ease-in-out infinite !important;
-  pointer-events: none !important;
-  z-index: 1 !important;
-  border-radius: inherit !important;
+  0%   { transform: translateX(-120%); }
+  100% { transform: translateX(250%); }
 }
 
-/* ── 19. Finance ticker — same subtle float ── */
+.stack-ticker,
 .finance-ticker {
-  background: linear-gradient(135deg, #F45B8B, #ff7b8b, #FF6B6B, #F45B8B) !important;
-  background-size: 300% 100% !important;
-  animation: ticker-float 3s ease-in-out infinite, ticker-wave 6s ease-in-out infinite !important;
-  border: 1px solid rgba(255,255,255,0.28) !important;
-  border-top-color: rgba(255,255,255,0.50) !important;
-  box-shadow: 0 3px 12px rgba(244,91,139,0.28) !important;
+  background: linear-gradient(135deg, #F45B8B, #FF6B6B) !important;
+  animation: none !important;
+  border: 1px solid rgba(255,255,255,0.30) !important;
+  border-top-color: rgba(255,255,255,0.55) !important;
+  box-shadow:
+    0 4px 16px rgba(244,91,139,0.35),
+    inset 0 1px 0 rgba(255,255,255,0.38) !important;
 }
+
+.stack-ticker::after,
 .finance-ticker::after {
   content: '' !important;
   display: block !important;
   position: absolute !important;
   inset: 0 !important;
-  width: 55% !important;
+  width: 50% !important;
   background: linear-gradient(
     105deg,
-    transparent 20%,
-    rgba(255,255,255,0.22) 45%,
-    rgba(255,255,255,0.28) 50%,
-    rgba(255,255,255,0.22) 55%,
-    transparent 80%
+    transparent 15%,
+    rgba(255,255,255,0.18) 40%,
+    rgba(255,255,255,0.32) 50%,
+    rgba(255,255,255,0.18) 60%,
+    transparent 85%
   ) !important;
-  animation: ticker-gloss 4s ease-in-out infinite 0.8s !important;
+  animation: ticker-gloss 3.5s ease-in-out infinite !important;
   pointer-events: none !important;
   z-index: 1 !important;
   border-radius: inherit !important;
+}
+
+.finance-ticker::after {
+  animation-delay: 1s !important;
 }
 
 /* ── 20. Fallback for old browsers ── */
