@@ -886,8 +886,28 @@ body::after { content: ""; display: none; }
         k.startsWith('goals:') || k.startsWith('__sync_last:')
       )
       .forEach(k => localStorage.removeItem(k));
-    // Reload to fresh state
-    location.reload();
+
+    // Also wipe Supabase so sync doesn't pull old data back on reload
+    const supaUrl = window.DASH_SUPABASE_URL;
+    const supaKey = window.DASH_SUPABASE_KEY;
+    const appKeys = ['health', 'gym', 'finance', 'caffeine', 'goals', 'push_subscription'];
+    if (supaUrl && supaKey) {
+      const now = new Date().toISOString();
+      Promise.all(appKeys.map(k =>
+        fetch(supaUrl + '/rest/v1/app_state?on_conflict=key', {
+          method: 'POST',
+          headers: {
+            'apikey': supaKey,
+            'Authorization': 'Bearer ' + supaKey,
+            'Content-Type': 'application/json',
+            'Prefer': 'resolution=merge-duplicates',
+          },
+          body: JSON.stringify({ key: k, data: {}, updated_at: now }),
+        }).catch(() => {})
+      )).finally(() => location.reload());
+    } else {
+      location.reload();
+    }
   });
 
   // ── Global backup export / import ──
