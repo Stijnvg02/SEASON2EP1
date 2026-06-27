@@ -193,6 +193,17 @@ body::after { content: ""; display: none; }
 .set-save:active { transform: translateY(1px); }
 .set-status { text-align: center; font-size: 12px; color: var(--success); min-height: 16px; margin-top: 8px; }
 .section-divider { height: 1px; background: rgba(0,0,0,0.03); margin: 20px 0 14px; }
+.reset-btn { width: 100%; padding: 13px; border-radius: 12px; border: 1.5px solid rgba(239,68,68,0.35); background: transparent; color: #EF4444; font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer; transition: background 0.15s, border-color 0.15s; }
+.reset-btn:hover { background: rgba(239,68,68,0.06); border-color: rgba(239,68,68,0.60); }
+/* Confirm overlay */
+.confirm-bg { position: fixed; inset: 0; z-index: 130; display: none; align-items: center; justify-content: center; padding: 20px; background: rgba(0,0,0,0.45); }
+.confirm-bg.show { display: flex; }
+.confirm-box { width: 100%; max-width: 340px; background: #FFFFFF; border-radius: 16px; padding: 24px 22px; box-shadow: 0 8px 32px rgba(0,0,0,0.15); }
+.confirm-title { font-size: 16px; font-weight: 700; color: #1A1A1A; margin-bottom: 8px; }
+.confirm-sub { font-size: 13px; color: #888; line-height: 1.5; margin-bottom: 20px; }
+.confirm-actions { display: flex; gap: 10px; }
+.confirm-cancel { flex: 1; padding: 11px; border-radius: 10px; border: 1.5px solid rgba(0,0,0,0.10); background: transparent; color: #555; font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer; }
+.confirm-ok { flex: 1; padding: 11px; border-radius: 10px; border: 0; background: #EF4444; color: #FFF; font-family: inherit; font-size: 14px; font-weight: 700; cursor: pointer; }
 .whoop-box { margin-top: 8px; padding: 16px; border-radius: 14px; background: #FFFFFF; border: 1px solid rgba(0,0,0,0.08); }
 .whoop-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
 .whoop-status { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: #1A1A1A; }
@@ -388,6 +399,10 @@ body::after { content: ""; display: none; }
 
     <div class="section-divider"></div>
 
+    <button class="reset-btn" id="resetBtn" type="button">Reset alle data naar standaard</button>
+
+    <div class="section-divider"></div>
+
     <label class="field-label">WHOOP</label>
     <div class="whoop-box">
       <div class="whoop-row">
@@ -400,6 +415,18 @@ body::after { content: ""; display: none; }
         <div class="whoop-stat"><div class="v" id="whRhr">—</div><div class="l">Rest HR</div></div>
       </div>
       <button class="whoop-btn" id="whAction" type="button">Sync now</button>
+    </div>
+  </div>
+</div>
+
+<!-- Reset confirmation -->
+<div class="confirm-bg" id="confirmBg">
+  <div class="confirm-box">
+    <div class="confirm-title">Alles resetten?</div>
+    <div class="confirm-sub">Dit wist alle ingevoerde waarden van alle pagina's — supplementen, huidverzorging, cafeïne, water, gym en profiel. Je start opnieuw als een nieuw account. Dit kan niet ongedaan worden gemaakt.</div>
+    <div class="confirm-actions">
+      <button class="confirm-cancel" id="confirmCancel">Annuleren</button>
+      <button class="confirm-ok" id="confirmOk">Ja, reset alles</button>
     </div>
   </div>
 </div>
@@ -670,6 +697,42 @@ body::after { content: ""; display: none; }
   renderDayRing();
   setInterval(renderDayRing, 60 * 1000);
   window.addEventListener('storage', renderDayRing);
+
+  // ── Reset all data ──
+  $('resetBtn').addEventListener('click', () => {
+    $('confirmBg').classList.add('show');
+  });
+  $('confirmCancel').addEventListener('click', () => {
+    $('confirmBg').classList.remove('show');
+  });
+  $('confirmBg').addEventListener('click', (e) => {
+    if (e.target === $('confirmBg')) $('confirmBg').classList.remove('show');
+  });
+  $('confirmOk').addEventListener('click', () => {
+    const keysToRemove = [
+      // Water
+      'po_water_v1', 'water_weather',
+      // Health — supplements & skincare
+      'stack:items', 'stack:low',
+      'skin:items', 'skin:low',
+      // Caffeine
+      'caf:logs', 'caf:custom',
+      // Gym / fitness
+      'po_coach_v1', 'po_coach_workout_done', 'po_coach_weights', 'po_coach_photos',
+      // WHOOP
+      'whoop_tokens_v1', 'whoop_last_sync', 'whoop_access', 'whoop_refresh', 'whoop_expires',
+      // Home profile
+      'po_profile_v1',
+    ];
+    // Remove fixed keys
+    keysToRemove.forEach(k => localStorage.removeItem(k));
+    // Remove date-suffixed taken keys (stack:taken:YYYY-MM-DD, skin:taken:YYYY-MM-DD)
+    Object.keys(localStorage)
+      .filter(k => k.startsWith('stack:taken:') || k.startsWith('skin:taken:'))
+      .forEach(k => localStorage.removeItem(k));
+    // Reload to fresh state
+    location.reload();
+  });
 })();
 </script>
 </body>
