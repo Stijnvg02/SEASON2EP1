@@ -1569,7 +1569,7 @@ document.addEventListener('DOMContentLoaded', function () {
   if (typeof initCloudSync !== 'function') return;
   initCloudSync({
     appKey: 'health',
-    syncedKeys: ['po_water_v1'],
+    syncedKeys: ['po_water_v1', 'po_coach_weights'],
     onApplied: function () {
       window.dispatchEvent(new StorageEvent('storage', { key: null }));
     }

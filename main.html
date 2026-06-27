@@ -1898,7 +1898,10 @@ body::after { content: ""; display: none; }
       if (el) el.innerHTML = '';
     });
 
-    goals.forEach(function(g) {
+    var sorted = goals.slice().sort(function(a, b) {
+      return (a.done ? 1 : 0) - (b.done ? 1 : 0);
+    });
+    sorted.forEach(function(g) {
       var card = makeCard(g);
       var q = g.quadrant || 'inbox';
       if (q === 'inbox') {
