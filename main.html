@@ -737,6 +737,17 @@ body::after { content: ""; display: none; }
 }
 .gg-goal:hover .gg-del-btn { opacity: 0.8; }
 .gg-del-btn:hover { color: #FF6B6B; opacity: 1 !important; }
+.gg-done-btn {
+  width: 20px; height: 20px; border-radius: 50%; flex-shrink: 0; margin-top: 1px;
+  border: 1.5px solid rgba(0,0,0,0.18); background: transparent;
+  cursor: pointer; font-size: 11px; color: transparent;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+.gg-goal.gg-done .gg-done-btn { background: #3EC98A; border-color: #3EC98A; color: #fff; }
+.gg-goal.gg-done .gg-goal-name { text-decoration: line-through; color: #8A8A8A; }
+.gg-goal.gg-done { opacity: 0.62; }
+.gg-goal.gg-done:hover { opacity: 0.85; }
 
 .gg-popup {
   position: absolute; top: calc(100% + 5px); right: 0;
@@ -1747,7 +1758,7 @@ body::after { content: ""; display: none; }
 
   function makeCard(goal) {
     var div = document.createElement('div');
-    div.className = 'gg-goal';
+    div.className = 'gg-goal' + (goal.done ? ' gg-done' : '');
     div.draggable = true;
     div.dataset.id = goal.id;
 
@@ -1757,6 +1768,7 @@ body::after { content: ""; display: none; }
     }).join('');
 
     div.innerHTML =
+      '<button class="gg-done-btn" type="button" title="Markeer als gedaan">✓</button>' +
       '<div class="gg-goal-body">' +
         '<div class="gg-goal-name">' + esc(goal.name) + '</div>' +
         (goal.desc ? '<div class="gg-goal-desc">' + esc(goal.desc) + '</div>' : '') +
@@ -1766,6 +1778,12 @@ body::after { content: ""; display: none; }
         '<button class="gg-del-btn" type="button" aria-label="Verwijder">×</button>' +
         '<div class="gg-popup">' + popupHtml + '</div>' +
       '</div>';
+
+    div.querySelector('.gg-done-btn').addEventListener('click', function(e) {
+      e.stopPropagation();
+      var g = goals.find(function(x) { return x.id === goal.id; });
+      if (g) { g.done = !g.done; save(); render(); }
+    });
 
     div.addEventListener('dragstart', function(e) {
       dragId = goal.id;
