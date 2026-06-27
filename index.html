@@ -25,7 +25,12 @@
 * { box-sizing: border-box; }
 html, body {
   margin: 0; padding: 0;
-  background: #F5F5F5;
+  background:
+    radial-gradient(ellipse at 20% 20%, rgba(147,197,253,0.4) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 10%, rgba(196,181,253,0.35) 0%, transparent 45%),
+    radial-gradient(ellipse at 60% 80%, rgba(167,243,208,0.3) 0%, transparent 50%),
+    radial-gradient(ellipse at 10% 70%, rgba(253,186,116,0.2) 0%, transparent 40%),
+    linear-gradient(135deg, #f0f4ff 0%, #faf0ff 50%, #f0fff4 100%);
   color: #8A8A8A;
   font-family: var(--font);
   -webkit-font-smoothing: antialiased;
@@ -60,14 +65,19 @@ body::after { content: ""; display: none; }
   position: relative; overflow: hidden;
   display: flex; flex-direction: column;
   padding: 20px;
-  border-radius: 18px;
+  border-radius: 20px;
   text-decoration: none;
-  background: #FFFFFF;
-  border: 1px solid rgba(0,0,0,0.08);
-  /* backdrop removed */
-  -webkit-/* backdrop removed */
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-  transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+  background: rgba(255,255,255,0.22);
+  backdrop-filter: blur(20px) saturate(180%) brightness(1.05);
+  -webkit-backdrop-filter: blur(20px) saturate(180%) brightness(1.05);
+  border: 1px solid rgba(255,255,255,0.78);
+  border-bottom-color: rgba(255,255,255,0.35);
+  border-right-color: rgba(255,255,255,0.35);
+  box-shadow:
+    0 2px 6px rgba(0,0,0,0.04),
+    0 8px 24px rgba(0,0,0,0.08),
+    inset 0 1px 0 rgba(255,255,255,0.9);
+  transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.2s ease;
 }
 /* The "its own style" bit — a faint accent glow per tile. */
 .tile::before {
@@ -77,9 +87,12 @@ body::after { content: ""; display: none; }
   opacity: 0.7; transition: opacity 0.18s ease;
 }
 .tile:hover {
-  transform: translateY(-3px);
-  border-color: color-mix(in srgb, var(--accent) 40%, transparent);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  transform: translateY(-2px);
+  background: rgba(255,255,255,0.32);
+  box-shadow:
+    0 4px 12px rgba(0,0,0,0.08),
+    0 16px 40px rgba(0,0,0,0.10),
+    inset 0 1px 0 rgba(255,255,255,1);
 }
 .tile:hover::before { opacity: 1; }
 
@@ -193,6 +206,7 @@ body::after { content: ""; display: none; }
 .whoop-btn { width: 100%; margin-top: 14px; padding: 11px; border: 1px solid rgba(0,0,0,0.08); border-radius: 11px; background: transparent; color: #8A8A8A; font-family: inherit; font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; cursor: pointer; transition: background 0.15s, color 0.15s; }
 .whoop-btn:hover { background: rgba(0,0,0,0.03); color: #1A1A1A; }
 </style>
+<link rel="stylesheet" href="glass.css">
 </head>
 <body>
 <div class="page">
