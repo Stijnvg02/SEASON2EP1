@@ -55,9 +55,9 @@ body::before { content: ""; display: none; }
 body::after { content: ""; display: none; }
 
 .shell {
-  max-width: 880px;
+  max-width: 600px;
   margin: 0 auto;
-  padding: 24px 16px 100px;   /* extra bottom padding so tab bar doesn't cover content */
+  padding: 24px max(16px, env(safe-area-inset-left)) max(100px, calc(80px + env(safe-area-inset-bottom))) max(16px, env(safe-area-inset-right));
 }
 
 /* ===== Back to dashboard ===== */
@@ -445,6 +445,15 @@ html, body { scrollbar-width: none; -ms-overflow-style: none; }
 }
 @media (max-width: 720px) {
   .section .card .card-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 480px) {
+  .card { padding: 14px 14px; }
+  .nw-subcard .quick-add {
+    grid-template-columns: 1fr auto !important;
+  }
+  .nw-subcard .quick-add input:first-child {
+    grid-column: 1 / -1;
+  }
 }
 
 /* Stock-style net-worth chart */
